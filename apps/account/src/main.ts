@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AccountModule } from './account.module';
 import { Transport } from '@nestjs/microservices';
-import { ValidationPipe } from '@nestjs/common';
-import { MicroServiceExceptionFilter } from '@app/common/microservice-exception.filter';
-import { MicroserviceErrorTable } from '@app/errors/microservice.error';
+import {
+    MicroServiceExceptionFilter,
+    createValidationPipe,
+} from '@app/common/microservice-exception.filter';
 
 async function bootstrap() {
     const app = await NestFactory.createMicroservice(AccountModule, {
@@ -14,18 +15,7 @@ async function bootstrap() {
             url: 'localhost:5000',
         },
     });
-    app.useGlobalPipes(
-        new ValidationPipe({
-            exceptionFactory(errors) {
-                const details = [];
-                for (let i = 0; i < errors.length; i++) {
-                    const err = errors[i];
-                    details.push(...Object.values(err.constraints));
-                }
-                throw MicroserviceErrorTable.PARAM_INVALIDATE(details);
-            },
-        }),
-    );
+    app.useGlobalPipes(createValidationPipe());
     app.useGlobalFilters(new MicroServiceExceptionFilter());
     await app.listen();
 }
