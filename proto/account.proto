@@ -1,0 +1,40 @@
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+syntax = "proto3";
+package account;
+
+message LoginRequest {
+    string tid=1;
+    string password=2;
+}
+message RegisterRequest {
+    string tid=1;
+    string nick=2;
+    string password=3;
+    string sex=4;
+    map<string,string> question = 5;
+    string birthday=6;
+    string email=7;
+}
+message CheckQuestionRequest {
+    string tid=1;
+    map<string,string> question = 2;
+}
+message ChangePasswordRequest {
+    string tid=1;
+    string new_pass=2;
+}
+
+message LoginResponse {
+    string access_token=1;
+    string refresh_token=2;
+}
+
+service AccountService {
+    rpc register(RegisterRequest) returns (google.protobuf.Empty);
+    rpc account_exists(google.protobuf.Empty) returns (LoginRequest);
+    rpc checkQuestion(CheckQuestionRequest) returns (bool);
+    rpc changePassword(ChangePasswordRequest) returns (google.protobuf.Empty);
+}
+

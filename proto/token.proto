@@ -1,0 +1,11 @@
+syntax = "proto3";
+package token;
+message TokenPair {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+service TokenService {
+    rpc sign(map<string,string>) returns (TokenPair);
+    rpc verify(TokenPair) returns (TokenPair);
+    rpc refresh(TokenPair) returns (TokenPair)
+}
