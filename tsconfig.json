@@ -79,6 +79,12 @@
       ],
       "@app/errors/*": [
         "libs/errors/src/*"
+      ],
+      "@app/keypair": [
+        "libs/keypair/src"
+      ],
+      "@app/keypair/*": [
+        "libs/keypair/src/*"
       ]
     }
   }
