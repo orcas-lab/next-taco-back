@@ -31,6 +31,19 @@ export interface ConfigOption {
             request: [number, number?];
         };
     };
+    key: {
+        storage: {
+            enable: boolean;
+            path: string;
+        };
+        passphrase: string;
+        userIDs?: {
+            name: string;
+            comment: string;
+            email: string;
+        };
+        expire: number;
+    };
 }
 
 type Keys<T> = keyof T;

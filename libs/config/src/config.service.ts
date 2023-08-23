@@ -1,5 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ConfigTemplate } from '@app/interface/configure.interface';
+import {
+    ConfigTemplate,
+    GetTypeByTemplate,
+} from '@app/interface/configure.interface';
 import { CONFIG_OPTION } from './constance';
 import { parse } from 'toml';
 
@@ -9,7 +12,7 @@ export class ConfigService {
     constructor(@Inject(CONFIG_OPTION) private readonly configOption: any) {
         this.config = parse(this.configOption);
     }
-    get<T>(key: ConfigTemplate): T {
+    get<T extends ConfigTemplate>(key: ConfigTemplate): GetTypeByTemplate<T> {
         const path = key.split('.');
         let tmp = this.config;
         while (path.length) {
@@ -19,6 +22,6 @@ export class ConfigService {
                 return null;
             }
         }
-        return tmp as T;
+        return tmp as GetTypeByTemplate<T>;
     }
 }
