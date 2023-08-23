@@ -121,6 +121,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/token/tsconfig.app.json"
       }
+    },
+    "reputation": {
+      "type": "application",
+      "root": "apps/reputation",
+      "entryFile": "main",
+      "sourceRoot": "apps/reputation/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reputation/tsconfig.app.json"
+      }
+    },
+    "keypair": {
+      "type": "library",
+      "root": "libs/keypair",
+      "entryFile": "index",
+      "sourceRoot": "libs/keypair/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/keypair/tsconfig.lib.json"
+      }
     }
   }
 }
