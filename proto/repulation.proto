@@ -1,0 +1,11 @@
+syntax = "proto3";
+package repulation;
+
+message ChangeReputationRequest {
+    string tid=1;
+    bool up=2;
+}
+
+service ReputationService {
+    rpc change(ChangeReputationRequest) returns (bool);
+}
