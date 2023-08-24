@@ -5,10 +5,14 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs-extra';
 import {
     Key,
     PrivateKey,
+    WebStream,
     createMessage,
+    decrypt,
     decryptKey,
+    encrypt,
     generateKey,
     readKey,
+    readMessage,
     readPrivateKey,
     sign,
     verify,
@@ -95,5 +99,23 @@ export class KeypairService {
         })
             .then((v) => v.signatures[0].verified)
             .catch(() => false);
+    }
+    async encrypt(message: any) {
+        const msg = await createMessage({
+            text:
+                typeof message === 'string' ? message : JSON.stringify(message),
+        });
+        return await encrypt({
+            message: msg,
+            encryptionKeys: await this.pub,
+            signingKeys: await this.pri,
+        });
+    }
+    async decrypt(encryptMessage: string | WebStream<string>) {
+        return await decrypt({
+            message: await readMessage({ armoredMessage: encryptMessage }),
+            decryptionKeys: await this.pri,
+            verificationKeys: await this.pub,
+        });
     }
 }
