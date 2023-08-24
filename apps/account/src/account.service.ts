@@ -29,7 +29,9 @@ export class AccountService {
             {
                 ...dto,
                 reputation:
-                    this.config.get<number>('account.reputation.default') ?? 5,
+                    this.config.get<'account.reputation.default'>(
+                        'account.reputation.default',
+                    ) ?? 5,
                 password: createHash('sha256')
                     .update(dto.password)
                     .digest('hex'),

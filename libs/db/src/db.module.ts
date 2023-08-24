@@ -14,7 +14,7 @@ let mongod: MongoMemoryReplSet;
             imports: [ConfigModule.forRoot('config.toml')],
             inject: [ConfigService],
             useFactory: async (service: ConfigService) => {
-                let uri = service.get<string>('db.uri');
+                let uri = service.get<'db.uri'>('db.uri');
                 if (isDev()) {
                     mongod = await MongoMemoryReplSet.create({
                         replSet: {
