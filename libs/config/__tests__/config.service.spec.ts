@@ -18,10 +18,14 @@ describe('ConfigService', () => {
         expect(service).toBeDefined();
     });
     it('get', () => {
-        expect(service.get<boolean>('cluster.enable')).toBeDefined();
-        expect(() =>
-            service.get<boolean>('cluster.undefined' as any),
+        expect(service.get<'cluster.enable'>('cluster.enable')).toBeDefined();
+    });
+    it('should be null', () => {
+        expect(
+            () =>
+                service.get <
+                ('cluster.undefined' as any) >
+                ('cluster.undefined' as any),
         ).not.toThrow();
-        expect(service.get<boolean>('cluster.undefined' as any)).toBe(null);
     });
 });

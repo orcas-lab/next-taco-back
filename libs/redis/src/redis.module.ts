@@ -36,10 +36,11 @@ import { isDev } from '@app/utils';
                 return {
                     readyLog: true,
                     config: {
-                        host: config.get<string>('redis.host'),
-                        port: config.get<number>('redis.port'),
-                        db: config.get<number>('redis.db'),
-                        password: config.get<string>('redis.password'),
+                        host: config.get<'redis.host'>('redis.host'),
+                        port: config.get<'redis.port'>('redis.port'),
+                        db: config.get<'redis.db'>('redis.db'),
+                        password:
+                            config.get<'redis.password'>('redis.password'),
                     },
                 };
             },

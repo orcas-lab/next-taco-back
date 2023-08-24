@@ -17,8 +17,9 @@ export class ConfigService {
         let tmp = this.config;
         while (path.length) {
             const key = path.shift();
-            tmp = tmp?.[key];
-            if (!tmp) {
+            if (tmp[key]) {
+                tmp = tmp[key];
+            } else {
                 return null;
             }
         }
