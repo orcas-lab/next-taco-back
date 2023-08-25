@@ -20,7 +20,7 @@ describe('KeypairService', () => {
         expect(service).toBeDefined();
     });
     it('generate', async () => {
-        expect(await service.generate()).toBeUndefined();
+        expect(await service.generate()).toBeDefined();
         expect(existsSync('./keys/key.pri')).toBeTruthy();
         return expect(existsSync('./keys/key.pub')).toBeTruthy();
     });
@@ -44,5 +44,8 @@ describe('KeypairService', () => {
         return expect(
             service.decrypt(encyrptMessages[0]),
         ).resolves.not.toThrow();
+    });
+    it('armor', async () => {
+        return expect(service.getKeyPair()).resolves.not.toThrow();
     });
 });
