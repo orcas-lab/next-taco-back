@@ -17,44 +17,44 @@ import {
     sign,
     verify,
 } from 'openpgp';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { isEmpty } from 'ramda';
 
 @Injectable()
 export class KeypairService {
     private pri: Promise<PrivateKey>;
     private pub: Promise<Key>;
+    private logger: Logger = new Logger('KeyPair');
     constructor(private readonly config: ConfigService) {
-        const { enable, path } = config.get<'key.storage'>('key.storage');
-        if (!enable) {
-            const privateKeyPath = join(path, 'key.pri');
-            const pubKeyPath = join(path, 'key.pub');
-            if (!existsSync(path)) {
-                mkdirSync(path);
-            }
-            this.pri = readPrivateKey({
-                armoredKey: readFileSync(privateKeyPath).toString(),
-            })
-                .then((key) => {
+        const { path } = config.get<'key.storage'>('key.storage');
+        const privateKeyPath = join(resolve('./', path, 'key.pri'));
+        const pubKeyPath = join(resolve('./', path, 'key.pub'));
+        this.pri = readPrivateKey({
+            armoredKey: readFileSync(privateKeyPath).toString(),
+        })
+            .then((key) => {
+                if (!key.isDecrypted()) {
                     return decryptKey({
                         privateKey: key,
                         passphrase:
                             config.get<'key.passphrase'>('key.passphrase'),
                     });
-                })
-                .catch(() => {
-                    Logger.error(`Not find ${privateKeyPath}`);
-                    process.exit(-1);
-                });
-            this.pub = readKey({
-                armoredKey: readFileSync(pubKeyPath).toString(),
+                }
+                return key;
             })
-                .then((key) => key)
-                .catch(() => {
-                    Logger.error(`Not find ${pubKeyPath}`);
-                    process.exit(-1);
-                });
-        }
+            .catch((err) => {
+                this.logger.error(err);
+                this.logger.error(`Not find ${privateKeyPath}`);
+                process.exit(-1);
+            });
+        this.pub = readKey({
+            armoredKey: readFileSync(pubKeyPath).toString(),
+        })
+            .then((key) => key)
+            .catch(() => {
+                this.logger.error(`Not find ${pubKeyPath}`);
+                process.exit(-1);
+            });
     }
     async generate() {
         let pass = this.config.get<'key.passphrase'>('key.passphrase');
@@ -69,6 +69,7 @@ export class KeypairService {
         const { publicKey, privateKey } = await generateKey({
             format: 'armored',
             type: 'ecc',
+            curve: 'p521',
             passphrase: pass,
             userIDs: this.config.get<'key.userIDs'>('key.userIDs') ?? {},
             keyExpirationTime: this.config.get<'key.expire'>('key.expire'),
@@ -80,8 +81,10 @@ export class KeypairService {
         }
         writeFileSync(pubKeyPath, publicKey);
         writeFileSync(privateKeyPath, privateKey);
-        this.pub = readKey({ armoredKey: publicKey });
-        this.pri = readPrivateKey({ armoredKey: privateKey });
+        return {
+            pub: readKey({ armoredKey: publicKey }),
+            pri: readPrivateKey({ armoredKey: privateKey }),
+        };
     }
     async sign(data: any) {
         let standardizationData = String(data);
@@ -117,5 +120,26 @@ export class KeypairService {
             decryptionKeys: await this.pri,
             verificationKeys: await this.pub,
         });
+    }
+    async getKeyPair<T extends boolean>(
+        armor?: T,
+    ): Promise<
+        T extends false
+            ? { pub: Promise<Key>; pri: Promise<PrivateKey> }
+            : { pub: string; pri: string }
+    > {
+        return (
+            armor
+                ? {
+                      pub: (await this.pub).armor(),
+                      pri: (await this.pri).armor(),
+                  }
+                : {
+                      pub: this.pub,
+                      pri: this.pri,
+                  }
+        ) as T extends false
+            ? { pub: Promise<Key>; pri: Promise<PrivateKey> }
+            : { pub: string; pri: string };
     }
 }
