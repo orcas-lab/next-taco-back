@@ -85,6 +85,12 @@
       ],
       "@app/keypair/*": [
         "libs/keypair/src/*"
+      ],
+      "@app/jwt": [
+        "libs/jwt/src"
+      ],
+      "@app/jwt/*": [
+        "libs/jwt/src/*"
       ]
     }
   }
