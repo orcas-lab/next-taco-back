@@ -32,9 +32,9 @@ export interface ConfigOption {
         };
     };
     key: {
-        storage: {
-            enable: boolean;
-            path: string;
+        path: {
+            pub: string;
+            pri: string;
         };
         passphrase: string;
         userIDs?: {
