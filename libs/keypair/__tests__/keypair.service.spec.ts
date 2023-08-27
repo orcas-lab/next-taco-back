@@ -19,8 +19,8 @@ describe('KeypairService', () => {
     it('read', () => {
         expect(() =>
             service.read({
-                pub: 'keys/pub.pem',
-                pri: 'keys/pri.pem',
+                pub: 'keys/key.pub',
+                pri: 'keys/key.pri',
                 passphrase: '',
             }),
         ).not.toThrow();

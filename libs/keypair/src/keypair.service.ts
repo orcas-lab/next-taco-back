@@ -33,6 +33,7 @@ export class KeypairService {
         return {
             pri: this.pri,
             pub: this.pub,
+            type: this.config.get<'key.type'>('key.type') ?? 'ES512',
         };
     }
 }

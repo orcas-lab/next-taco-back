@@ -6,6 +6,6 @@ message TokenPair {
 }
 service TokenService {
     rpc sign(map<string,string>) returns (TokenPair);
-    rpc verify(TokenPair) returns (TokenPair);
+    rpc verify(TokenPair) returns (bool);
     rpc refresh(TokenPair) returns (TokenPair)
 }
