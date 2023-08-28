@@ -2,13 +2,18 @@ import { ConfigService } from '@app/config';
 import { TokenPair } from '@app/dto';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { JwtService } from '@app/jwt';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 import { Injectable } from '@nestjs/common';
+import { NameSpace } from '@app/utils';
 
 @Injectable()
 export class TokenService {
     constructor(
         private readonly jwt: JwtService,
         private readonly config: ConfigService,
+        @InjectRedis()
+        private readonly redis: Redis,
     ) {}
     async sign(data: Record<string, any>) {
         const access_token = await this.jwt.sign(data, {
@@ -65,5 +70,12 @@ export class TokenService {
             access_token: await access_token,
             refresh_token: await refresh_token,
         };
+    }
+    async decode(access_token: string) {
+        return this.jwt.decode(access_token, { json: true });
+    }
+    async revoke(tid: string) {
+        await this.redis.del(NameSpace.TOKEN(tid));
+        return true;
     }
 }
