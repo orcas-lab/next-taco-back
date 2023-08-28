@@ -36,7 +36,10 @@ export class TokenService {
         return { access_token, refresh_token };
     }
     async verify(pair: TokenPair) {
-        return this.jwt.verify(pair.access_token);
+        return this.jwt
+            .verify(pair.access_token)
+            .then(() => true)
+            .catch(() => false);
     }
     async refresh(pair: TokenPair) {
         const oldAccess = pair.access_token;
