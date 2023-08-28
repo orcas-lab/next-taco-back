@@ -36,13 +36,19 @@ export interface ConfigOption {
             pub: string;
             pri: string;
         };
+        type: string;
         passphrase: string;
         userIDs?: {
             name: string;
             comment: string;
             email: string;
         };
-        expire: number;
+        access_token: {
+            expire: string;
+        };
+        refresh_token: {
+            expire: string;
+        };
     };
 }
 

@@ -1,6 +1,6 @@
 import { KeypairService } from '@app/keypair';
 import { Injectable } from '@nestjs/common';
-import { SignOptions, VerifyOptions, decode, sign, verify } from 'jsonwebtoken';
+import { SignOptions, VerifyOptions, decode, verify, sign } from 'jsonwebtoken';
 
 @Injectable()
 export class JwtService {
@@ -13,7 +13,10 @@ export class JwtService {
         const { pub } = this.keypair.keyPair;
         return verify(token, pub, options);
     }
-    async decode(token: string) {
-        return decode(token, { json: true });
+    async decode(
+        token: string,
+        options?: { json?: boolean; complete?: boolean },
+    ) {
+        return decode(token, options);
     }
 }
