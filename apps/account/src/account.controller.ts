@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { GrpcMethod } from '@nestjs/microservices';
-import { ChnagePassword, Register } from '@app/dto';
+import { ChnagePassword, DeleteAccount, Register } from '@app/dto';
 import { Login } from '@app/dto';
 
 @Controller()
@@ -19,5 +19,9 @@ export class AccountController {
     @GrpcMethod('AccountService', 'change_password')
     changePassword(data: ChnagePassword) {
         return this.accountService.changePassword(data);
+    }
+    @GrpcMethod('AccountService', 'deleteAccount')
+    deleteAccount(data: DeleteAccount) {
+        return this.accountService.deleteAccount(data);
     }
 }
