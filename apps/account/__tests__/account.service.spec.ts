@@ -81,4 +81,16 @@ describe('AccountController', () => {
             }),
         ).resolves.toBeFalsy();
     });
+    it('delete account', () => {
+        return expect(accountService.deleteAccount({ tid: 'test' }))
+            .resolves.toBeDefined()
+            .then(() => {
+                return expect(
+                    accountService.accountExists({
+                        tid: 'test',
+                        password: '123456789',
+                    }),
+                ).resolves.toBeDefined();
+            });
+    });
 });

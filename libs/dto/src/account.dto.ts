@@ -45,3 +45,8 @@ export class ChnagePassword {
     @IsString()
     new_pass: string;
 }
+export class DeleteAccount {
+    @IsNotEmpty()
+    @IsString()
+    tid: string;
+}

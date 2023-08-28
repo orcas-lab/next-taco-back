@@ -1,4 +1,4 @@
-import { Register, Login, ChnagePassword } from '@app/dto';
+import { Register, Login, ChnagePassword, DeleteAccount } from '@app/dto';
 import {
     AccountExistsServiceResponse,
     AccountRegisterServiceResponse,
@@ -64,6 +64,10 @@ export class AccountService {
                 { $set: { password: dto.new_pass } },
             )
             .exec();
+        return true;
+    }
+    async deleteAccount(dto: DeleteAccount) {
+        await this.accountModel.findOneAndRemove({ tid: dto.tid }).exec();
         return true;
     }
 }
