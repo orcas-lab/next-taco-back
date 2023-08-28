@@ -7,5 +7,7 @@ message TokenPair {
 service TokenService {
     rpc sign(map<string,string>) returns (TokenPair);
     rpc verify(TokenPair) returns (bool);
-    rpc refresh(TokenPair) returns (TokenPair)
+    rpc refresh(TokenPair) returns (TokenPair);
+    rpc decode(string) returns (map<string,string>);
+    rpc revoke(string) returns (bool);
 }

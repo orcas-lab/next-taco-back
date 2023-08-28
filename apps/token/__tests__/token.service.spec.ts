@@ -4,7 +4,7 @@ import { JwtModule } from '@app/jwt';
 import { ConfigModule } from '@app/config';
 import { getRedisToken } from '@liaoliaots/nestjs-redis';
 
-describe('TokenController', () => {
+describe('TokenSerivce', () => {
     let tokenService: TokenService;
 
     beforeEach(async () => {
