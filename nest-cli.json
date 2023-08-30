@@ -148,6 +148,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
+    },
+    "black-list": {
+      "type": "application",
+      "root": "apps/black-list",
+      "entryFile": "main",
+      "sourceRoot": "apps/black-list/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/black-list/tsconfig.app.json"
+      }
     }
   }
 }

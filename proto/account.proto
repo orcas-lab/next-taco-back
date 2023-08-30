@@ -1,5 +1,6 @@
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 syntax = "proto3";
 package account;
@@ -35,10 +36,10 @@ message DeleteAccount {
 }
 
 service AccountService {
-    rpc register(RegisterRequest) returns (bool);
-    rpc account_exists(LoginRequest) returns (bool);
-    rpc checkQuestion(CheckQuestionRequest) returns (bool);
-    rpc changePassword(ChangePasswordRequest) returns (bool);
-    rpc deleteAccount(DeleteAccount) returns (bool)
+    rpc register(RegisterRequest) returns (google.protobuf.BoolValue);
+    rpc account_exists(LoginRequest) returns (google.protobuf.BoolValue);
+    rpc checkQuestion(CheckQuestionRequest) returns (google.protobuf.BoolValue);
+    rpc changePassword(ChangePasswordRequest) returns (google.protobuf.BoolValue);
+    rpc deleteAccount(DeleteAccount) returns (google.protobuf.BoolValue);
 }
 
