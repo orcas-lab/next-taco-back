@@ -1,4 +1,6 @@
+import { MicroServiceExceptionFilter } from '@app/common/microservice-exception.filter';
 import { UpdateProfile } from '@app/dto/user.dto';
+import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { Profile } from '@app/interface/profile.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
 import { Injectable } from '@nestjs/common';
@@ -12,9 +14,11 @@ export class UserService {
         private accountDocument: Model<AccountDocument>,
     ) {}
     async profile(tid: string) {
-        return await this.accountDocument
+        const profile = await this.accountDocument
             .findOne(
-                { tid },
+                {
+                    tid: tid,
+                },
                 {
                     tid: 1,
                     nick: 1,
@@ -26,6 +30,10 @@ export class UserService {
             )
             .lean<Profile>()
             .exec();
+        if (!profile) {
+            throw MicroserviceErrorTable.ACCOUNT_NOT_EXISTS;
+        }
+        return profile;
     }
 
     async updateProfile(data: UpdateProfile) {

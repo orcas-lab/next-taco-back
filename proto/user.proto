@@ -15,7 +15,11 @@ message UpdateProfileRequest {
     Profile profile=2;
 }
 
-service UserToken {
-    rpc getProfile(google.protobuf.StringValue) returns (Profile);
+message GetProfileRequest {
+    string tid=1;
+}
+
+service UserService {
+    rpc getProfile(GetProfileRequest) returns (Profile);
     rpc updateProfile(UpdateProfileRequest) returns (google.protobuf.BoolValue);
 }

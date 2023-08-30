@@ -57,4 +57,11 @@ export const MicroserviceErrorTable = {
         'ACCOUNT',
         'LOGIN',
     ),
+    ACCOUNT_NOT_EXISTS: new MicroserviceError(
+        2010003,
+        'ACCOUNT_NOT_EXISTS',
+        [],
+        'ACCOUNT',
+        'LOGIN',
+    ),
 };

@@ -5,12 +5,14 @@ import { Observable, throwError } from 'rxjs';
 
 @Catch()
 export class MicroServiceExceptionFilter<T> implements ExceptionFilter {
+    private logger: Logger = new Logger('Microservice');
     catch(exception: T): Observable<never> {
         if (!(exception instanceof MicroserviceError)) {
             return throwError(() => MicroserviceErrorTable.UNKNOWN_ERROR);
         }
-        Logger.error(exception.code);
-        Logger.error(exception.detail);
+        this.logger.error(exception.code);
+        this.logger.error(exception.message);
+        exception.detail.forEach((d) => this.logger.error(d));
         return throwError(() => exception);
     }
 }

@@ -7,6 +7,7 @@ import { ConfigModule } from '@app/config';
 
 describe('UserService', () => {
     let service: UserService;
+    let ans = true;
     beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
             imports: [DbModule, ConfigModule.forRoot('config.toml')],
@@ -19,7 +20,7 @@ describe('UserService', () => {
                             return {
                                 lean: () => {
                                     return {
-                                        exec: jest.fn(),
+                                        exec: () => ans,
                                     };
                                 },
                             };
@@ -28,7 +29,7 @@ describe('UserService', () => {
                             return {
                                 lean: () => {
                                     return {
-                                        exec: jest.fn(),
+                                        exec: () => true,
                                     };
                                 },
                             };
@@ -43,7 +44,9 @@ describe('UserService', () => {
         expect(service).toBeDefined();
     });
     it('get profile', () => {
-        return expect(service.profile('test')).resolves.not.toBeNull();
+        expect(service.profile('test')).resolves.not.toBeNull();
+        ans = null;
+        return expect(service.profile('test')).rejects.toThrow();
     });
     it('update profile', () => {
         return expect(
