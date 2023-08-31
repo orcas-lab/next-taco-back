@@ -1,4 +1,3 @@
-import { MicroServiceExceptionFilter } from '@app/common/microservice-exception.filter';
 import { UpdateProfile } from '@app/dto/user.dto';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { Profile } from '@app/interface/profile.interface';
