@@ -1,0 +1,25 @@
+syntax = "proto3";
+package user;
+import "google/protobuf/wrappers.proto";
+message Profile {
+    string tid = 1;
+    string nick=2;
+    string description=3;
+    string email=4;
+    string sex=5;
+    string locaion=6;
+}
+
+message UpdateProfileRequest {
+    string tid=1;
+    Profile profile=2;
+}
+
+message GetProfileRequest {
+    string tid=1;
+}
+
+service UserService {
+    rpc getProfile(GetProfileRequest) returns (Profile);
+    rpc updateProfile(UpdateProfileRequest) returns (google.protobuf.BoolValue);
+}
