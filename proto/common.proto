@@ -1,6 +1,11 @@
 syntax = "proto3";
 package common;
 
-message EmptyResponse {
-    
+message Profile {
+    string tid=1;
+    string nick=2;
+    string description=3;
+    string email=4;
+    string sex=5;
+    string location=6;
 }

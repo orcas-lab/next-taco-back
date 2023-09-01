@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { GrpcMethod } from '@nestjs/microservices';
-import { ChnagePassword, DeleteAccount, Register } from '@app/dto';
+import {
+    AccountExists,
+    ChnagePassword,
+    DeleteAccount,
+    Register,
+} from '@app/dto';
 import { Login } from '@app/dto';
 
 @Controller()
@@ -12,9 +17,9 @@ export class AccountController {
     addUser(data: Register) {
         return this.accountService.addUser(data);
     }
-    @GrpcMethod('AccountService', 'accountExists')
-    accountExists(data: Login) {
-        return this.accountService.accountExists(data);
+    @GrpcMethod('AccountService', 'login')
+    login(data: Login) {
+        return this.accountService.login(data);
     }
     @GrpcMethod('AccountService', 'change_password')
     changePassword(data: ChnagePassword) {
@@ -23,5 +28,9 @@ export class AccountController {
     @GrpcMethod('AccountService', 'deleteAccount')
     deleteAccount(data: DeleteAccount) {
         return this.accountService.deleteAccount(data);
+    }
+    @GrpcMethod('AccountService', 'accountExists')
+    accountExists(data: AccountExists) {
+        return this.accountService.accountExists(data);
     }
 }

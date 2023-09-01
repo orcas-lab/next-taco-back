@@ -50,6 +50,9 @@ export interface ConfigOption {
             expire: string;
         };
     };
+    blackList: {
+        size: number;
+    };
 }
 
 type Keys<T> = keyof T;

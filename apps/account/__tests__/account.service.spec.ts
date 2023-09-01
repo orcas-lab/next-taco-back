@@ -41,6 +41,17 @@ describe('AccountController', () => {
                 question: {},
             }),
         ).resolves.not.toThrow();
+        expect(
+            accountService.addUser({
+                tid: 'test-2',
+                nick: 'test',
+                birthday: '1234-2-7',
+                password: '123456789',
+                email: 'test@no-reply.com',
+                sex: 'other',
+                question: {},
+            }),
+        ).resolves.not.toThrow();
         return expect(
             accountService.addUser({
                 tid: 'test',
@@ -55,13 +66,13 @@ describe('AccountController', () => {
     });
     it('account_exists', () => {
         expect(
-            accountService.accountExists({
+            accountService.login({
                 tid: 'test',
                 password: '123456789',
             }),
         ).resolves.toBeTruthy();
         return expect(
-            accountService.accountExists({
+            accountService.login({
                 tid: 'sadisaod',
                 password: '123456789',
             }),
@@ -75,7 +86,7 @@ describe('AccountController', () => {
             }),
         ).toBeTruthy();
         return expect(
-            accountService.accountExists({
+            accountService.login({
                 tid: 'test',
                 password: '123456789',
             }),
@@ -86,7 +97,7 @@ describe('AccountController', () => {
             .resolves.toBeDefined()
             .then(() => {
                 return expect(
-                    accountService.accountExists({
+                    accountService.login({
                         tid: 'test',
                         password: '123456789',
                     }),
