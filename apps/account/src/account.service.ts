@@ -1,4 +1,10 @@
-import { Register, Login, ChnagePassword, DeleteAccount } from '@app/dto';
+import {
+    Register,
+    Login,
+    ChnagePassword,
+    DeleteAccount,
+    AccountExists,
+} from '@app/dto';
 import {
     AccountExistsServiceResponse,
     AccountRegisterServiceResponse,
@@ -39,7 +45,12 @@ export class AccountService {
         ]);
         return true;
     }
-    async accountExists(dto: Login): Promise<AccountExistsServiceResponse> {
+    async accountExists(data: AccountExists): Promise<boolean> {
+        const { tid } = data;
+        const info = await this.accountModel.findOne({ tid }).exec();
+        return !isEmpty(info ?? {});
+    }
+    async login(dto: Login): Promise<AccountExistsServiceResponse> {
         const accountLoginData = {
             ...dto,
             password: createHash('sha256').update(dto.password).digest('hex'),

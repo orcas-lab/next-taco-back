@@ -50,3 +50,8 @@ export class DeleteAccount {
     @IsString()
     tid: string;
 }
+export class AccountExists {
+    @IsNotEmpty()
+    @IsString()
+    tid: string;
+}
