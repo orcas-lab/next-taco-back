@@ -17,29 +17,21 @@ import { isEmpty, isNil } from 'ramda';
 
 @Injectable()
 export class BlackListService {
-    private accountService: AccountService;
+    private accountService: AccountService =
+        this.client.getService<AccountService>(AccountService.name);
     constructor(
         @Inject('ACCOUNT_SERVICE') private client: ClientGrpc,
         @InjectModel(Account.name) private Account: Model<AccountDocument>,
         @InjectModel(BlackList.name)
         private BlackList: Model<BlackListDocument>,
         private config: ConfigService,
-    ) {
-        console.log(this.accountService);
-    }
-    onModuleInit() {
-        this.accountService = this.client.getService<AccountService>(
-            AccountService.name,
-        );
-        console.log(this.accountService);
-    }
+    ) {}
     async _hasTarget(source: string, target: string) {
         const profile = this.BlackList.findOne({ source, target }).exec();
-        return isEmpty(profile) || isNil(profile);
+        return !isNil(await profile);
     }
     async add(data: AppendToBlackList) {
         const { source, target } = data;
-        console.log(this.accountService);
         if (!(await this.accountService.accountExists({ tid: target }))) {
             throw MicroserviceErrorTable.ACCOUNT_NOT_EXISTS;
         }
@@ -55,17 +47,17 @@ export class BlackListService {
     async query(data: GetBlackList) {
         const { source, page } = data;
         const size = this.config.get<'blackList.size'>('blackList.size') ?? 10;
-        const targets = this.BlackList.find(
-            { source },
-            { target: 1, source: 0 },
-        )
-            .skip(page - 1 * size)
+        const targets = await this.BlackList.find({ source }, { target: 1 })
+            .skip((page >= 1 ? page - 1 : 0) * size)
             .lean<BlackList[]>()
             .exec();
+        if (isEmpty(targets)) {
+            return [];
+        }
         return await this.Account.aggregate<Profile>([
             {
                 $match: {
-                    $or: (await targets).map((target) => ({
+                    $or: targets.map((target) => ({
                         tid: target.target,
                     })),
                 },
