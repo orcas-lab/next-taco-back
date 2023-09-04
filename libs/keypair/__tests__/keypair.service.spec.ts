@@ -28,4 +28,20 @@ describe('KeypairService', () => {
     it('get pair should not be throw', () => {
         expect(() => service.keyPair).not.toThrow();
     });
+    describe('sign', () => {
+        it('string', () => {
+            expect(service.sign(true)).toBeDefined();
+            expect(service.sign([])).toBeDefined();
+            expect(service.sign('123')).toBeDefined();
+            expect(service.sign(123)).toBeDefined();
+            expect(service.sign({ value: 123 })).toBeDefined();
+        });
+        it('buf', () => {
+            expect(service.sign(true, false)).toBeDefined();
+            expect(service.sign([], false)).toBeDefined();
+            expect(service.sign('123', false)).toBeDefined();
+            expect(service.sign(123, false)).toBeDefined();
+            expect(service.sign({ value: 123 }, false)).toBeDefined();
+        });
+    });
 });
