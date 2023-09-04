@@ -44,4 +44,13 @@ describe('KeypairService', () => {
             expect(service.sign({ value: 123 }, false)).toBeDefined();
         });
     });
+    describe('verify', () => {
+        it('string', () => {
+            const data = [true, [], '123', 123, { value: 123 }];
+            const signs = data.map((v) => service.sign(v));
+            for (let i = 0; i < signs.length; i++) {
+                expect(service.verify(data[i], signs[i])).toBeTruthy();
+            }
+        });
+    });
 });

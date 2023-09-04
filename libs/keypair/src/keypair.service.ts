@@ -1,6 +1,6 @@
 import { ConfigService } from '@app/config';
 import { Injectable, Logger } from '@nestjs/common';
-import { createSign } from 'crypto';
+import { createSign, createVerify } from 'crypto';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -33,10 +33,17 @@ export class KeypairService {
     sign<T extends true | false = true>(msg: any, string?: T) {
         const sign = createSign('sm3');
         sign.write(typeof msg === 'string' ? msg : JSON.stringify(msg));
+        sign.end();
         const buf = sign.sign(this.pri, 'hex');
         return (string ? buf.toString() : buf) as T extends true
             ? string
             : Buffer;
+    }
+    verify(raw: any, signature: string) {
+        const verify = createVerify('sm3');
+        verify.write(typeof raw === 'string' ? raw : JSON.stringify(raw));
+        verify.end();
+        return verify.verify(this.pub, signature, 'hex');
     }
     get keyPair() {
         return {
