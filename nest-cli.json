@@ -157,6 +157,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/black-list/tsconfig.app.json"
       }
+    },
+    "request": {
+      "type": "application",
+      "root": "apps/request",
+      "entryFile": "main",
+      "sourceRoot": "apps/request/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/request/tsconfig.app.json"
+      }
     }
   }
 }
