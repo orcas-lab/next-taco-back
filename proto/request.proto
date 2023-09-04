@@ -1,0 +1,69 @@
+import "google/protobuf/wrappers.proto";
+
+syntax = "proto3";
+package request;
+
+/*
+User recive Request
+*/
+message PublicRequest {
+    string rid=1;
+    string sender=2;
+    string reciver=3;
+    map meta=4;
+    string sign=5;
+    int64 create_at=6;
+    int64 update_at=7;
+}
+
+message InnerRequest {
+    string rid=1;
+    string sender=2;
+    string reciver=3;
+    map meta=4;
+    string sign=5;
+    int64 create_at=6;
+    int64 update_at=7;
+    string cmd=8;
+}
+
+message ListRequestData {
+    string tid=1;
+}
+message GetRequestData {
+    string rid=1;
+}
+message AddRequestData {
+    string sender=1;
+    string reciver=2;
+    map meta=3;
+}
+
+message DeleteRequestData {
+    string rid=1;
+}
+
+message UpdateRequestData{
+    string rid=1;
+    PublicRequest req=2;
+}
+
+message AcceptReuqestData {
+    string rid=1;
+}
+
+message RefuseRequest {
+    string rid=1;
+}
+
+
+service RequestService {
+    rpc ListRequests(ListRequestsData) returns (repeacted PublicRequest);
+    rpc GetRequest(GetRequestData) returns (PublicRequest);
+    rpc AddRequest(AddRequestData) returns (google.protobuf.BoolValue);
+    rpc DeleteRequest(DeleteRequestData) returns (google.protobuf.BoolValue);
+    rpc UpdateRequest(UpdateRequestData) returns (google.protobuf.BoolValue);
+    rpc AcceptRequest(AcceptRequestData) returns (google.protobuf.BoolValue);
+    rpc RefuseRequest(RefuseRequestData) returns (google.protobuf.BoolValue);
+}
+
