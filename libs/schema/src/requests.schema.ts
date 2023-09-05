@@ -1,5 +1,7 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
+@Schema()
 export class Requests {
     @Prop({ index: true })
     rid: string;
@@ -13,4 +15,11 @@ export class Requests {
     update_at: number;
     @Prop({ required: true })
     sign: string;
+    @Prop()
+    meta: Record<string, string>;
+    @Prop()
+    cmd: string;
 }
+
+export type RequestsDocument = HydratedDocument<Requests>;
+export const RequestSchema = SchemaFactory.createForClass(Requests);

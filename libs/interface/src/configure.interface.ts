@@ -53,6 +53,9 @@ export interface ConfigOption {
     blackList: {
         size: number;
     };
+    requests: {
+        size: number;
+    };
 }
 
 type Keys<T> = keyof T;
