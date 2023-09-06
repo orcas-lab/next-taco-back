@@ -166,6 +166,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/request/tsconfig.app.json"
       }
+    },
+    "factory": {
+      "type": "library",
+      "root": "libs/factory",
+      "entryFile": "index",
+      "sourceRoot": "libs/factory/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/factory/tsconfig.lib.json"
+      }
     }
   }
 }
