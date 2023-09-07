@@ -37,17 +37,9 @@ describe('RequestService', () => {
             }),
         ).resolves.toBeTruthy();
     });
-    describe('list requests', () => {
-        it('success', async () => {
-            await service.add({
-                sender: 'test-1',
-                reciver: 'test',
-                cmd: 'FRIEND:ADD:SENDER',
-                meta: {},
-            });
-            expect(
-                service.listReuqests({ tid: 'test', page: 1 }),
-            ).resolves.not.toThrow();
-        });
+    it('list requests', () => {
+        return expect(
+            service.listReuqests({ tid: 'test', page: 1 }),
+        ).resolves.not.toThrow();
     });
 });

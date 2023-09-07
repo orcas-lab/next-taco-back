@@ -54,45 +54,6 @@ export class RequestService {
             (page - 1) * this.config.get<'requests.size'>('requests.size') ??
             10;
         const limit = this.config.get<'requests.size'>('requests.size') ?? 10;
-        console.log(
-            await this.RequestsModel.aggregate<{
-                rid: string;
-                tid: string;
-                nick: string;
-            }>([
-                {
-                    $match: {
-                        reciver: tid,
-                    },
-                },
-                {
-                    $skip: skip,
-                },
-                {
-                    $limit: limit,
-                },
-                {
-                    $lookup: {
-                        from: Account.name.toLowerCase(),
-                        as: 'result',
-                        localField: 'sender',
-                        foreignField: 'tid',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$result',
-                    },
-                },
-                {
-                    $project: {
-                        tid: '$result.tid',
-                        nick: '$result.nick',
-                        rid: 1,
-                    },
-                },
-            ]).exec(),
-        );
         return await this.RequestsModel.aggregate<{
             rid: string;
             tid: string;
