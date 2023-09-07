@@ -15,21 +15,27 @@ export class CmdProcessService {
         const meta: Record<string, string> = JSON.parse(tmp.shift() || '{}');
         return { module, action, reciver, meta };
     }
-    get(
+    get<EMPTY extends boolean = false>(
         cmd: string,
         data?: Record<string, any>[],
-    ): (
-        | {
+    ): EMPTY extends true
+        ? Record<never, never>[]
+        : {
               module: string;
               action: string;
               reciver: string;
               meta: Record<string, string>;
-          }
-        | Record<never, never>
-    )[] {
+          }[] {
         const cmds = cmd.split(';');
         if (!cmds.length) {
-            return [{}];
+            return [{}] as EMPTY extends true
+                ? Record<never, never>[]
+                : {
+                      module: string;
+                      action: string;
+                      reciver: string;
+                      meta: Record<string, string>;
+                  }[];
         }
         const info = cmds
             .filter((cmd) => this._invalidate(cmd))
