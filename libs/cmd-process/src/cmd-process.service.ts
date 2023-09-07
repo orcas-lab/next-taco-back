@@ -15,10 +15,21 @@ export class CmdProcessService {
         const meta: Record<string, string> = JSON.parse(tmp.shift() || '{}');
         return { module, action, reciver, meta };
     }
-    get(cmd: string, data?: Record<string, any>[]) {
+    get(
+        cmd: string,
+        data?: Record<string, any>[],
+    ): (
+        | {
+              module: string;
+              action: string;
+              reciver: string;
+              meta: Record<string, string>;
+          }
+        | Record<never, never>
+    )[] {
         const cmds = cmd.split(';');
         if (!cmds.length) {
-            return {};
+            return [{}];
         }
         const info = cmds
             .filter((cmd) => this._invalidate(cmd))
