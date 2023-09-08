@@ -51,3 +51,15 @@ export class UpdateReuqestData {
     @IsObject()
     req: Requests;
 }
+
+export class AcceptRequestData {
+    @IsString()
+    @IsNotEmpty()
+    rid: string;
+}
+
+export class RefuseRequestData {
+    @IsString()
+    @IsNotEmpty()
+    rid: string;
+}
