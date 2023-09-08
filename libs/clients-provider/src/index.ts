@@ -19,6 +19,24 @@ const providers: Record<string, ClientProviderOptions> = {
             url: process.env.BLACKLIST_SERVICE_URL ?? 'localhost:8000',
         },
     },
+    FRIEND_SERVICE: {
+        name: 'FRIEND_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'friend',
+            protoPath: './proto/friend.proto',
+            url: process.env.FRIEND_SERVICE_URL ?? '',
+        },
+    },
+    NOTICE_SERVICE: {
+        name: 'NOTICE_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'NOTICE_SERVICE',
+            protoPath: './proto/notice.proto',
+            url: process.env.NOTICE_SERVICE_URL ?? '',
+        },
+    },
     REPUTATION_SERVICE: {
         name: 'REPUTATION_SERVICE',
         transport: Transport.GRPC,
