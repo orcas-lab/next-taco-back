@@ -64,4 +64,11 @@ export const MicroserviceErrorTable = {
         'ACCOUNT',
         'LOGIN',
     ),
+    ACCEPT_ADD_FRIEND_REQUEST_FAIL: new MicroserviceError(
+        2020001,
+        'ACCEPT_ADD_FRIEND_REQUEST_FAIL',
+        [],
+        'FRIEND',
+        'ACCEPT',
+    ),
 };
