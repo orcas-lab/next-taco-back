@@ -71,4 +71,11 @@ export const MicroserviceErrorTable = {
         'FRIEND',
         'ACCEPT',
     ),
+    DELETE_FRIEND_REQUEST_FAIL: new MicroserviceError(
+        2020002,
+        'DELETE_FRIEND_REQUEST_FAIL',
+        [],
+        'FRIEND',
+        'ACCEPT',
+    ),
 };

@@ -6,6 +6,7 @@ import { Account, AccountSchema } from '@app/schema/account.schema';
 import { Friends, FriendsSchema } from '@app/schema/friends.schema';
 import { ConfigModule } from '@app/config';
 import mongoose from 'mongoose';
+import { BlackList } from '@app/schema/black-list.schema';
 
 describe('Friends Service', () => {
     let service: FriendsService;
@@ -21,6 +22,11 @@ describe('Friends Service', () => {
                     },
                     {
                         name: Friends.name,
+                        collection: Friends.name.toLowerCase(),
+                        schema: FriendsSchema,
+                    },
+                    {
+                        name: BlackList.name,
                         collection: Friends.name.toLowerCase(),
                         schema: FriendsSchema,
                     },
@@ -84,5 +90,17 @@ describe('Friends Service', () => {
         return expect(
             service.getFriendList({ tid: 'tester', page: 1 }),
         ).resolves.toMatchObject({ page: 0 });
+    });
+    it('delete', () => {
+        expect(
+            service.deleteFriend({ source: 'tester', target: 'test-1' }),
+        ).resolves.toBeTruthy();
+        return expect(
+            service.deleteFriend({
+                source: 'tester',
+                target: 'test-2',
+                black_list: true,
+            }),
+        ).resolves.toBeTruthy();
     });
 });

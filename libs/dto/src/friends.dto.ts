@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class GetFriendListData {
     @IsString()
@@ -18,3 +18,7 @@ export class FriendRequestAction {
 
 export class AcceptFriendRequestData extends FriendRequestAction {}
 export class RefuseFriendRequestData extends FriendRequestAction {}
+export class DeleteFriendData extends FriendRequestAction {
+    @IsBoolean()
+    black_list?: boolean;
+}

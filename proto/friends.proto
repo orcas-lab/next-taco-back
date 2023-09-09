@@ -24,8 +24,15 @@ message GetFriendListResponse {
     int64 total=3;
 }
 
+message DeleteFriend{
+    string source=1;
+    string target=2;
+    bool black_list=3;
+}
+
 service FriendsService {
     rpc getFriendList(GetFriendListData) returns (Friend[]);
     rpc accept(AcceptFriendAddRequestData) retruns (google.protobuf.BoolValue);
     rpc refuse(RefuseFriendAddRequestData) retruns (google.protobuf.BoolValue);
+    rpc delete(DeleteFriend) returns (google.protobuf.BoolValue);
 }

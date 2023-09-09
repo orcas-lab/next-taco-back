@@ -1,14 +1,16 @@
 import { ConfigService } from '@app/config';
 import {
     AcceptFriendRequestData,
+    DeleteFriendData,
     GetFriendListData,
 } from '@app/dto/friends.dto';
 import { GetFriendListResponse } from '@app/dto/response/micro-service/friends.response';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { Friend } from '@app/interface/friends.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
+import { BlackList, BlackListDocument } from '@app/schema/black-list.schema';
 import { Friends, FriendsDocument } from '@app/schema/friends.schema';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { isEmpty } from 'ramda';
@@ -18,6 +20,8 @@ export class FriendsService {
     constructor(
         @InjectModel(Friends.name) private Friends: Model<FriendsDocument>,
         @InjectModel(Account.name) private Account: Model<AccountDocument>,
+        @InjectModel(BlackList.name)
+        private BlackList: Model<BlackListDocument>,
         private config: ConfigService,
     ) {}
     async getFriendList(
@@ -93,6 +97,40 @@ export class FriendsService {
         return true;
     }
     async refuse() {
+        return true;
+    }
+    async deleteFriend(data: DeleteFriendData) {
+        const session = await this.Account.db.startSession();
+        try {
+            await session.withTransaction(async (session) => {
+                await this.Friends.findOneAndDelete(
+                    {
+                        source: data.target,
+                        target: data.source,
+                    },
+                    { session },
+                ).exec();
+                await this.Friends.findOneAndDelete(
+                    {
+                        source: data.source,
+                        target: data.target,
+                    },
+                    { session },
+                );
+                if (data.black_list) {
+                    const blackList = new this.BlackList();
+                    blackList.source = data.source;
+                    blackList.target = data.target;
+                    await blackList.save({ session });
+                }
+            });
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw MicroserviceErrorTable.DELETE_FRIEND_REQUEST_FAIL;
+        } finally {
+            await session.endSession();
+        }
         return true;
     }
 }
