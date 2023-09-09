@@ -32,36 +32,42 @@ export class FriendsService {
             { tid: data.tid },
             { friend_total: 1 },
         ).findOne();
-        const friends = await this.Friends.aggregate<Friend>([
-            {
-                $match: {
-                    source: data.tid,
-                },
-            },
-            {
-                $limit: size,
-            },
-            {
-                $skip: (data.page - 1) * size,
-            },
-            {
-                $lookup: {
-                    from: Account.name.toLowerCase(),
-                    as: 'friends',
-                    localField: 'target',
-                    foreignField: 'tid',
-                },
-            },
-            {
-                $project: {
-                    friends: {
-                        password: 0,
+        const friends = (
+            await this.Friends.aggregate<{ friends: Friend[] }>([
+                {
+                    $match: {
+                        source: data.tid,
                     },
                 },
-            },
-        ]);
+                {
+                    $limit: size,
+                },
+                {
+                    $skip: (data.page - 1) * size,
+                },
+                {
+                    $lookup: {
+                        from: Account.name.toLowerCase(),
+                        as: 'friends',
+                        localField: 'target',
+                        foreignField: 'tid',
+                    },
+                },
+                {
+                    $project: {
+                        friends: {
+                            friend_total: 0,
+                            _id: 0,
+                            __v: 0,
+                        },
+                    },
+                },
+            ])
+        )
+            .map((v) => v.friends)
+            .reduce((pre, cur) => [...pre, ...cur]);
         const page = Math.floor(friend_total / size);
-        return { friends, total: friend_total, page };
+        return { friends, total: friend_total, page: page + 1 };
     }
     async _isFriend(source: string, target: string) {
         return isEmpty(await this.Friends.findOne({ source, target }).exec());
@@ -71,14 +77,18 @@ export class FriendsService {
         if (this._isFriend(source, target)) {
             return true;
         }
-        const friend = new this.Friends();
-        friend.source = source;
-        friend.target = target;
-        const session = await mongoose.startSession();
+        const friends = [new this.Friends(), new this.Friends()];
+        friends[0].source = source;
+        friends[0].target = target;
+        friends[1].source = target;
+        friends[1].target = source;
+        const session = await this.Friends.db.startSession();
         session.startTransaction();
         try {
             session.withTransaction(async (session) => {
-                await friend.save();
+                for (let i = 0; i < friends.length; i++) {
+                    await friends[i].save({ session });
+                }
                 await this.Account.findOneAndUpdate(
                     { tid: data.source },
                     { $inc: { friend_total: 1 } },

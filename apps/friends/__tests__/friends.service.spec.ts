@@ -79,17 +79,25 @@ describe('Friends Service', () => {
         it('not friends', () => {
             service._isFriend = async () => true;
             return expect(
-                service.accept({ source: 'source', target: 'target' }),
+                service.accept({ source: 'tester', target: 'test-1' }),
             ).resolves.toBeTruthy();
         });
     });
     it('refuse', () => {
         return expect(service.refuse()).resolves.toBeTruthy();
     });
-    it('get friend list', () => {
-        return expect(
+    it('get friend list', async () => {
+        expect(
             service.getFriendList({ tid: 'tester', page: 1 }),
-        ).resolves.toMatchObject({ page: 0 });
+        ).resolves.toMatchObject({ page: 1 });
+        expect(
+            (await service.getFriendList({ tid: 'tester', page: 1 })).friends
+                .length,
+        ).not.toBe(0);
+        return expect(
+            (await service.getFriendList({ tid: 'tester', page: 1 })).friends
+                .length,
+        ).not.toBe(0);
     });
     it('delete', () => {
         expect(
