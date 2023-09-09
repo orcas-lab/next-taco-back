@@ -10,9 +10,9 @@ import { Friend } from '@app/interface/friends.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
 import { BlackList, BlackListDocument } from '@app/schema/black-list.schema';
 import { Friends, FriendsDocument } from '@app/schema/friends.schema';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { isEmpty } from 'ramda';
 
 @Injectable()
