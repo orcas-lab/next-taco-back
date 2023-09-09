@@ -1,0 +1,31 @@
+syntax = "proto3";
+package friends;
+import "./common.proto";
+import "google/protobuf/wrappers.proto";
+
+message GetFriendListData {
+    string tid=1;
+    int64 page=2;
+}
+
+message AcceptFriendAddRequestData {
+    string source=1;
+    string target=2;
+}
+
+message RefuseFriendAddRequestData {
+    string source=1;
+    string target=2;
+}
+
+message GetFriendListResponse {
+    repeated Friend friends=1;
+    int64 page=2;
+    int64 total=3;
+}
+
+service FriendsService {
+    rpc getFriendList(GetFriendListData) returns (Friend[]);
+    rpc accept(AcceptFriendAddRequestData) retruns (google.protobuf.BoolValue);
+    rpc refuse(RefuseFriendAddRequestData) retruns (google.protobuf.BoolValue);
+}
