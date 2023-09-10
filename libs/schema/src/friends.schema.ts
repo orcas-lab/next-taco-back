@@ -7,7 +7,7 @@ export class Friends {
     source: string;
     @Prop({ index: true })
     target: string;
-    @Prop()
+    @Prop({ default: '' })
     tag: string;
     @Prop()
     pet_name: string;

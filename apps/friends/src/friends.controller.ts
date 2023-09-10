@@ -3,6 +3,7 @@ import { FriendsService } from './friends.service';
 import {
     AcceptFriendRequestData,
     GetFriendListData,
+    UpdateFriendInfo,
 } from '@app/dto/friends.dto';
 import { GrpcMethod } from '@nestjs/microservices';
 
@@ -20,5 +21,9 @@ export class FriendsController {
     @GrpcMethod('FriendsService', 'refuse')
     async refuse() {
         return this.friendsService.refuse();
+    }
+    @GrpcMethod('FriendsService', 'update')
+    async update(data: UpdateFriendInfo) {
+        return this.friendsService.update(data);
     }
 }

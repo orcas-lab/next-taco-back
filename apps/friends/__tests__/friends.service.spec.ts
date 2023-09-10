@@ -111,4 +111,33 @@ describe('Friends Service', () => {
             }),
         ).resolves.toBeTruthy();
     });
+    it('update', async () => {
+        expect(
+            service.update({ source: 'tester', target: 'test-2' }),
+        ).resolves.toBeTruthy();
+        expect(
+            service.update({
+                source: 'tester',
+                target: 'test-2',
+                tag: 'test',
+            }),
+        ).resolves.toBeTruthy();
+        expect(
+            (
+                await service.getFriendList({ tid: 'tester', page: 1 })
+            ).friends.filter((v) => v.profile.tid === 'test-2')[0],
+        ).toMatchObject({ tag: 'test' });
+        expect(
+            service.update({
+                source: 'tester',
+                target: 'test-2',
+                pet_name: 'test_',
+            }),
+        ).resolves.toBeTruthy();
+        expect(
+            (
+                await service.getFriendList({ tid: 'tester', page: 1 })
+            ).friends.filter((v) => v.profile.tid === 'test-2')[0],
+        ).toMatchObject({ tag: 'test', pet_name: 'test_' });
+    });
 });

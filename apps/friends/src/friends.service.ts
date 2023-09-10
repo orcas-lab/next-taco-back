@@ -3,17 +3,19 @@ import {
     AcceptFriendRequestData,
     DeleteFriendData,
     GetFriendListData,
+    UpdateFriendInfo,
 } from '@app/dto/friends.dto';
 import { GetFriendListResponse } from '@app/dto/response/micro-service/friends.response';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { Friend } from '@app/interface/friends.interface';
+import { Profile } from '@app/interface/profile.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
 import { BlackList, BlackListDocument } from '@app/schema/black-list.schema';
 import { Friends, FriendsDocument } from '@app/schema/friends.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { isEmpty } from 'ramda';
+import { filter, isEmpty, omit } from 'ramda';
 
 @Injectable()
 export class FriendsService {
@@ -33,7 +35,11 @@ export class FriendsService {
             { friend_total: 1 },
         ).findOne();
         const friends = (
-            await this.Friends.aggregate<{ friends: Friend[] }>([
+            await this.Friends.aggregate<{
+                profile: Profile;
+                tag: string;
+                pet_name: string;
+            }>([
                 {
                     $match: {
                         source: data.tid,
@@ -48,24 +54,37 @@ export class FriendsService {
                 {
                     $lookup: {
                         from: Account.name.toLowerCase(),
-                        as: 'friends',
+                        as: 'profile',
                         localField: 'target',
                         foreignField: 'tid',
                     },
                 },
                 {
                     $project: {
-                        friends: {
-                            friend_total: 0,
-                            _id: 0,
-                            __v: 0,
+                        tag: 1,
+                        pet_name: 1,
+                        profile: {
+                            tid: 1,
+                            nick: 1,
+                            description: 1,
+                            email: 1,
+                            sex: 1,
+                            location: 1,
+                            reputation: 1,
                         },
                     },
                 },
+                {
+                    $unwind: '$profile',
+                },
             ])
-        )
-            .map((v) => v.friends)
-            .reduce((pre, cur) => [...pre, ...cur]);
+        ).map<Friend>((v) => {
+            return {
+                profile: v['profile'],
+                tag: v['tag'],
+                pet_name: v['pet_name'] ?? v['profile']['nick'],
+            };
+        });
         const page = Math.floor(friend_total / size);
         return { friends, total: friend_total, page: page + 1 };
     }
@@ -141,6 +160,26 @@ export class FriendsService {
         } finally {
             await session.endSession();
         }
+        return true;
+    }
+    async update(data: UpdateFriendInfo) {
+        const { source, target } = data;
+        let update = filter((v) => !isEmpty(v))(data as Record<string, any>);
+        update = omit(['source', 'target'])(update);
+        if (isEmpty(update)) {
+            return true;
+        }
+        await this.Friends.findOneAndUpdate(
+            {
+                source,
+                target,
+            },
+            {
+                $set: {
+                    ...update,
+                },
+            },
+        ).exec();
         return true;
     }
 }

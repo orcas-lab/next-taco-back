@@ -18,7 +18,7 @@ export class Account {
     sex: string;
     @Prop({ type: () => Object })
     quesion: { [x: string]: string };
-    @Prop()
+    @Prop({ default: '' })
     location: string;
     @Prop({ default: 5 })
     reputation: number;

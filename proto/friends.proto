@@ -29,10 +29,17 @@ message DeleteFriend{
     string target=2;
     bool black_list=3;
 }
+message UpdateFriendInfo {
+    string source=1;
+    string target=2;
+    optional string pet_name=3;
+    optional string tag=4;
+}
 
 service FriendsService {
     rpc getFriendList(GetFriendListData) returns (Friend[]);
     rpc accept(AcceptFriendAddRequestData) retruns (google.protobuf.BoolValue);
     rpc refuse(RefuseFriendAddRequestData) retruns (google.protobuf.BoolValue);
     rpc delete(DeleteFriend) returns (google.protobuf.BoolValue);
+    rpc update(UpdateFriendInfo) returns (google.protobuf.BoolValue)
 }

@@ -22,3 +22,16 @@ export class DeleteFriendData extends FriendRequestAction {
     @IsBoolean()
     black_list?: boolean;
 }
+
+export class UpdateFriendInfo {
+    @IsString()
+    @IsNotEmpty()
+    source: string;
+    @IsString()
+    @IsNotEmpty()
+    target: string;
+    @IsString()
+    pet_name?: string;
+    @IsString()
+    tag?: string;
+}
