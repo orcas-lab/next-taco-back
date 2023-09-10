@@ -56,6 +56,9 @@ export interface ConfigOption {
     requests: {
         size: number;
     };
+    friends: {
+        size: number;
+    };
 }
 
 type Keys<T> = keyof T;

@@ -175,6 +175,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/factory/tsconfig.lib.json"
       }
+    },
+    "friends": {
+      "type": "application",
+      "root": "apps/friends",
+      "entryFile": "main",
+      "sourceRoot": "apps/friends/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/friends/tsconfig.app.json"
+      }
     }
   }
 }

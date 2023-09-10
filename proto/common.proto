@@ -9,3 +9,14 @@ message Profile {
     string sex=5;
     string location=6;
 }
+
+message Friend {
+    string tid=1;
+    string nick=2;
+    string description=3;
+    string email=4;
+    string sex=5;
+    string location=6;
+    string tag=7;
+    string pet_name=8;
+}
