@@ -91,6 +91,12 @@
       ],
       "@app/jwt/*": [
         "libs/jwt/src/*"
+      ],
+      "@app/factory": [
+        "libs/factory/src"
+      ],
+      "@app/factory/*": [
+        "libs/factory/src/*"
       ]
     }
   }
