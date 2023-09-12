@@ -1,0 +1,44 @@
+package notice;
+syntax = "proto3";
+import "./common.proto";
+
+
+// Generated according to https://cloud.google.com/apis/design/standard_methods
+service NoticeService {
+  rpc ListNotices(ListNoticesRequest) returns (ListNoticesResponse);
+  rpc GetNotice(GetNoticeRequest) returns (Notice);
+  rpc CreateNotice(CreateNoticeRequest) returns (Notice);
+  rpc UpdateNotice(UpdateNoticeRequest) returns (Notice);
+  rpc DeleteNotice(DeleteNoticeRequest) returns (google.protobuf.Empty);
+}
+message ListNoticesRequest {
+  string tid=1;
+}
+
+message ListNoticesResponse {
+  repeated Notice notices = 1;
+  int64 pages=2;
+}
+
+message GetNoticeRequest {
+  string nid=1;
+}
+
+message CreateNoticeRequest {
+    string nid=1;
+    string sender=2;
+    string reciver=3;
+    bool group=4;
+    string message=5;
+    string sign=6;
+    optional string action=7;
+}
+
+message UpdateNoticeRequest {
+  Notice notice = 1;
+  string nid=2;
+}
+
+message DeleteNoticeRequest {
+  string nid=1;
+}

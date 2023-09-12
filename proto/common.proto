@@ -20,3 +20,13 @@ message Friend {
     string tag=7;
     string pet_name=8;
 }
+
+message Notice {
+    string nid=1;
+    string sender=2;
+    string reciver=3;
+    bool group=4;
+    string message=5;
+    string sign=6;
+    optional string action=7;
+}
