@@ -53,7 +53,7 @@ export class NoticeService {
     async deleteNotice(data: DeleteNoticeReuqest) {
         const { nid } = data;
         const [ns, rank] = await this.getRank(nid);
-        await this.redis.zremrangebyrank(ns, rank, rank);
+        await this.redis.zremrangebyscore(ns, rank, rank);
         await this.redis.hdel(NameSpace.NOTICE_RECORD(), nid);
         return;
     }
@@ -61,34 +61,24 @@ export class NoticeService {
         const { notice, nid } = data;
         const [ns, rank] = await this.getRank(nid);
         const rawNotice = JSON.parse(
-            (
-                await this.redis.zrange(ns, Number(rank) - 1, Number(rank) - 1)
-            )[0] ?? '{}',
+            (await this.redis.zrangebyscore(ns, rank, rank))[0] || '{}',
         ) as Notice;
-        await this.redis.zremrangebyrank(
-            ns,
-            Number(rank) - 1,
-            Number(rank) - 1,
-        );
-        const pubNotice = new Notice();
-        pubNotice.sender = notice.sender ?? rawNotice.sender;
-        pubNotice.reciver = notice.reciver ?? rawNotice.reciver;
-        pubNotice.message = notice.message ?? rawNotice.message;
-        pubNotice.group = notice.group ?? rawNotice.group;
-        pubNotice.nid = nid;
-        pubNotice.action = notice.action ?? rawNotice.action;
-        pubNotice.sign = this.keyPair.sign(JSON.stringify(pubNotice));
-        await this.redis.zadd(ns, Number(rank) - 1, JSON.stringify(pubNotice));
-        await this.setRank(nid, rank.toString(), ns);
+        const newNotice = {
+            ...rawNotice,
+            ...notice,
+        } as Notice;
+        newNotice.sign = this.keyPair.sign(JSON.stringify(newNotice));
+        await this.redis.zremrangebyscore(ns, rank, rank);
+        await this.redis.zadd(ns, rank, JSON.stringify(newNotice));
     }
     async listNotice(data: ListNoticesRequest) {
         const { tid, page } = data;
         const ns = NameSpace.NOTICE(tid);
         const limit = this.config.get<'notices.size'>('notices.size') ?? 10;
-        const start = page - 1 * limit;
+        const start = (page - 1) * limit;
         const end = page * limit;
         const notices = (
-            await this.redis.zrange(ns, start, end)
+            await this.redis.zrangebyscore(ns, start, end)
         ).map<CreateNoticeRequest>((v) => JSON.parse(v));
         await this.redis.zremrangebyrank(ns, start, end);
         const total = await this.redis.zcard(ns);

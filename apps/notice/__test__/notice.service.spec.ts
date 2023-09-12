@@ -9,7 +9,7 @@ import { Notice } from '@app/interface/notice.interface';
 
 describe('Notice Serivce', () => {
     let service: NoticeService;
-    const notices: Promise<Notice>[] = [];
+    const notices: Notice[] = [];
     beforeAll(async () => {
         await memoryRedis();
         const app: TestingModule = await Test.createTestingModule({
@@ -30,9 +30,9 @@ describe('Notice Serivce', () => {
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
-    it('add notice', () => {
+    it('add notice', async () => {
         notices.push(
-            service.createNotice({
+            await service.createNotice({
                 sender: 'test',
                 reciver: 'test-2',
                 message: 'bye',
@@ -40,15 +40,23 @@ describe('Notice Serivce', () => {
             }),
         );
         notices.push(
-            service.createNotice({
+            await service.createNotice({
                 sender: 'test',
                 reciver: 'test-2',
                 message: 'bye-2',
                 group: false,
             }),
         );
-        expect(notices[0]).resolves.toBeDefined();
-        return expect(notices[1]).resolves.toBeDefined();
+        notices.push(
+            await service.createNotice({
+                sender: 'test',
+                reciver: 'test-2',
+                message: 'bye-3',
+                group: false,
+            }),
+        );
+        expect(notices[0]).toBeDefined();
+        return expect(notices[1]).toBeDefined();
     });
     it('update notice', async () => {
         return expect(
@@ -58,24 +66,34 @@ describe('Notice Serivce', () => {
             }),
         ).resolves.toBeUndefined();
     });
+    it('delete notice', async () => {
+        return expect(
+            service.deleteNotice({
+                nid: notices[notices.length - 1].nid,
+            }),
+        ).resolves.toBeUndefined();
+    });
     it('list notices', async () => {
         return expect(
             service.listNotice({ tid: 'test-2', page: 1 }),
-        ).resolves.toMatchObject({
-            notices: [
-                {
-                    sender: 'test',
-                    reciver: 'test-2',
-                    message: 'before update',
-                    group: false,
-                },
-                {
-                    sender: 'test',
-                    reciver: 'test-2',
-                    message: 'bye-2',
-                    group: false,
-                },
-            ],
-        });
+        ).resolves.toEqual(
+            expect.objectContaining({
+                notices: expect.arrayContaining([
+                    expect.objectContaining({
+                        sender: 'test',
+                        reciver: 'test-2',
+                        message: 'before update',
+                        group: false,
+                    }),
+                    expect.objectContaining({
+                        sender: 'test',
+                        reciver: 'test-2',
+                        message: 'bye-2',
+                        group: false,
+                    }),
+                ]),
+                pages: 0,
+            }),
+        );
     });
 });
