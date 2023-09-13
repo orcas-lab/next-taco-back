@@ -51,11 +51,13 @@ message UpdateRequestData{
 }
 
 message AcceptReuqestData {
-    string rid=1;
+    string tid=1;
+    string rid=2;
 }
 
 message RefuseRequest {
-    string rid=1;
+    string tid=1;
+    string rid=2;
 }
 
 
