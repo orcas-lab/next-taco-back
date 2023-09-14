@@ -23,7 +23,7 @@ const build = async (modules?: string[]) => {
     const scopeModules = modules ?? readdirSync('apps/');
     const bar = new ProgressBar('Building [:bar] :percent :name', {
         total: scopeModules.length,
-        width: 20,
+        width: 80,
     });
     for (let i = 0; i < scopeModules.length; i++) {
         const name = scopeModules[i];
