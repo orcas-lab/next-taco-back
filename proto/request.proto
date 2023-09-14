@@ -63,7 +63,8 @@ message RefuseRequest {
 
 service RequestService {
     rpc ListRequests(ListRequestsData) returns (repeacted PublicRequest);
-    rpc GetRequest(GetRequestData) returns (PublicRequest);
+    // TODO: Do i need it ?
+    // rpc GetRequest(GetRequestData) returns (PublicRequest);
     rpc AddRequest(AddRequestData) returns (google.protobuf.BoolValue);
     rpc DeleteRequest(DeleteRequestData) returns (google.protobuf.BoolValue);
     rpc UpdateRequest(UpdateRequestData) returns (google.protobuf.BoolValue);
