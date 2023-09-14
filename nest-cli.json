@@ -185,5 +185,23 @@
         "tsConfigPath": "apps/notice/tsconfig.app.json"
       }
     },
+    "clients-provider": {
+      "type": "library",
+      "root": "libs/clients-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/clients-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/clients-provider/tsconfig.lib.json"
+      }
+    },
+    "cmd-process": {
+        "type": "library",
+        "root": "libs/cmd-process",
+        "entryFile": "index",
+        "sourceRoot": "libs/cmd-process/src",
+        "compilerOptions": {
+          "tsConfigPath": "libs/cmd-process/tsconfig.lib.json"
+        }
+      }
   }
 }

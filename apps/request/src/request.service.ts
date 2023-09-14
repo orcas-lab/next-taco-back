@@ -10,26 +10,23 @@ import {
 import { KeypairService } from '@app/keypair';
 import { Account } from '@app/schema/account.schema';
 import { Requests, RequestsDocument } from '@app/schema/requests.schema';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Client, ClientGrpc } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
-import { FriendsService } from 'apps/friends/src/friends.service';
-import { NoticeService } from 'apps/notice/src/notice.service';
-import providers from 'libs/clients-provider/src';
-import { CmdProcessService } from 'libs/cmd-process/src';
+import { FriendsService } from '../../friends/src/friends.service';
+import { NoticeService } from '../../notice/src/notice.service';
+import providers from '@app/clients-provider';
+import { CmdProcessService } from '@app/cmd-process';
 import { Model, Types } from 'mongoose';
 @Injectable()
 export class RequestService {
-    @Client(providers['FRIEND_SERVICE'])
-    private friendClient: ClientGrpc;
-    @Client(providers['NOTICE_SERVICE'])
-    private noticeClient: ClientGrpc;
-
     private friendService: FriendsService;
     private noticeSerivce: NoticeService;
 
     private record = new Map();
     constructor(
+        @Inject(providers.FRIEND_SERVICE.name) private friendClient: ClientGrpc,
+        @Inject(providers.NOTICE_SERVICE.name) private noticeClient: ClientGrpc,
         private keyPair: KeypairService,
         @InjectModel(Requests.name)
         private RequestsModel: Model<RequestsDocument>,
