@@ -27,7 +27,7 @@ export class CmdProcessService {
               meta: Record<string, string>;
           }[] {
         const cmds = cmd.split(';');
-        if (!cmds.length) {
+        if (!cmds?.length) {
             return [{}] as EMPTY extends true
                 ? Record<never, never>[]
                 : {
@@ -40,7 +40,7 @@ export class CmdProcessService {
         const info = cmds
             .filter((cmd) => this._invalidate(cmd))
             .map((cmd) => this.parse(cmd));
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data?.length; i++) {
             const [[key, value]] = Object.entries(data[i]);
             for (let j = 0; j < info.length; j++) {
                 if (info[j][key]) {

@@ -97,6 +97,18 @@
       ],
       "@app/factory/*": [
         "libs/factory/src/*"
+      ],
+      "@app/clients-provider": [
+        "libs/clients-provider/src"
+      ],
+      "@app/clients-provider/*": [
+        "libs/clients-provider/src/*"
+      ],
+      "@app/cmd-process": [
+        "libs/cmd-process/src"
+      ],
+      "@app/cmd-process/*": [
+        "libs/cmd-process/src/*"
       ]
     }
   }

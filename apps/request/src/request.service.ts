@@ -1,25 +1,43 @@
 import { ConfigService } from '@app/config';
 import {
+    AcceptRequestData,
     DeleteRequestData,
     ListRequestData,
     MicroService_AddRequestData,
+    RefuseRequestData,
     UpdateReuqestData,
 } from '@app/dto/request.dto';
 import { KeypairService } from '@app/keypair';
 import { Account } from '@app/schema/account.schema';
 import { Requests, RequestsDocument } from '@app/schema/requests.schema';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Client, ClientGrpc } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
+import { FriendsService } from '../../friends/src/friends.service';
+import { NoticeService } from '../../notice/src/notice.service';
+import providers from '@app/clients-provider';
+import { CmdProcessService } from '@app/cmd-process';
 import { Model, Types } from 'mongoose';
-
 @Injectable()
 export class RequestService {
+    private friendService: FriendsService;
+    private noticeSerivce: NoticeService;
+
+    private record = new Map();
     constructor(
+        @Inject(providers.FRIEND_SERVICE.name) private friendClient: ClientGrpc,
+        @Inject(providers.NOTICE_SERVICE.name) private noticeClient: ClientGrpc,
         private keyPair: KeypairService,
         @InjectModel(Requests.name)
         private RequestsModel: Model<RequestsDocument>,
         private config: ConfigService,
-    ) {}
+        private cmdProcess: CmdProcessService,
+    ) {
+        this.friendService = this.friendClient.getService(FriendsService.name);
+        this.noticeSerivce = this.noticeClient.getService(NoticeService.name);
+        this.record.set('friend', this.friendService);
+        this.record.set('notice', this.noticeSerivce);
+    }
     async add(data: MicroService_AddRequestData) {
         const { sender, reciver, meta, cmd } = data;
         const sign = this.keyPair.sign(data, true);
@@ -91,5 +109,41 @@ export class RequestService {
                 },
             },
         ]).exec();
+    }
+    async accept(data: AcceptRequestData) {
+        const { rid } = data;
+        const request = await this.RequestsModel.findOne({ rid })
+            .lean<Requests>()
+            .exec();
+        const { sender: source, reciver: target, cmd } = request;
+        const cmdObjects = this.cmdProcess.get(cmd);
+        for (const cmdObject of cmdObjects) {
+            const { module, action } = cmdObject;
+            if (!this.record.has(module)) {
+                continue;
+            }
+            const m: new () => void = this.record.get(module);
+            if (action in m.prototype) {
+                await m[action]({ source, target });
+            }
+        }
+        await this.RequestsModel.findOneAndRemove({ rid }).exec();
+        return true;
+    }
+    async refuse(data: RefuseRequestData) {
+        const { rid } = data;
+        const request = await this.RequestsModel.findOneAndRemove({ rid })
+            .lean<Requests>()
+            .exec();
+        const { sender, reciver } = request;
+        const noticeService: NoticeService = this.record.get('notice');
+        await noticeService.createNotice({
+            sender,
+            reciver,
+            message: `REQUEST_REFUSE`,
+            group: false,
+            action: null,
+        });
+        return true;
     }
 }

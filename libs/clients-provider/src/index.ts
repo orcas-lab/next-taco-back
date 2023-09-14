@@ -1,40 +1,13 @@
 import { ClientProviderOptions, Transport } from '@nestjs/microservices';
 
-const providers: Record<string, ClientProviderOptions> = {
+const providers = {
     ACCOUNT_SERVICE: {
         name: 'ACCOUNT_SERVICE',
         transport: Transport.GRPC,
         options: {
             package: 'account',
             protoPath: './proto/account.proto',
-            url: process.env.ACCOUNT_SERVICE_URL ?? 'localhost:50000',
-        },
-    },
-    BLACKLIST_SERVICE: {
-        name: 'BLACKLIST_SERVICE',
-        transport: Transport.GRPC,
-        options: {
-            package: 'blackList',
-            protoPath: './proto/black-list.proto',
-            url: process.env.BLACKLIST_SERVICE_URL ?? 'localhost:8000',
-        },
-    },
-    FRIEND_SERVICE: {
-        name: 'FRIEND_SERVICE',
-        transport: Transport.GRPC,
-        options: {
-            package: 'friend',
-            protoPath: './proto/friend.proto',
-            url: process.env.FRIEND_SERVICE_URL ?? '',
-        },
-    },
-    NOTICE_SERVICE: {
-        name: 'NOTICE_SERVICE',
-        transport: Transport.GRPC,
-        options: {
-            package: 'NOTICE_SERVICE',
-            protoPath: './proto/notice.proto',
-            url: process.env.NOTICE_SERVICE_URL ?? '',
+            url: process.env.ACCOUNT_SERVICE_URL ?? 'localhost:5000',
         },
     },
     REPUTATION_SERVICE: {
@@ -55,15 +28,53 @@ const providers: Record<string, ClientProviderOptions> = {
             url: process.env.TOKEN_SERVICE_URL ?? 'localhost:7000',
         },
     },
+    BLACKLIST_SERVICE: {
+        name: 'BLACKLIST_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'blackList',
+            protoPath: './proto/black-list.proto',
+            url: process.env.BLACKLIST_SERVICE_URL ?? 'localhost:8000',
+        },
+    },
     USER_SERVICE: {
         name: 'USER_SERVICE',
         transport: Transport.GRPC,
         options: {
             package: 'user',
             protoPath: './proto/user.proto',
-            url: process.env.USER_SERVICE_URL ?? 'localhost:7000',
+            url: process.env.USER_SERVICE_URL ?? 'localhost:9000',
+        },
+    },
+    FRIEND_SERVICE: {
+        name: 'FRIEND_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'friend',
+            protoPath: './proto/friend.proto',
+            url: process.env.FRIEND_SERVICE_URL ?? 'localhost:10000',
+        },
+    },
+    NOTICE_SERVICE: {
+        name: 'NOTICE_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'notice',
+            protoPath: './proto/notice.proto',
+            url: process.env.NOTICE_SERVICE_URL ?? 'localhost:11000',
+        },
+    },
+    REQUEST_SERVICE: {
+        name: 'REQUEST_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+            package: 'request',
+            protoPath: './proto/request.proto',
+            url: process.env.REQUEST_SERVICE_URL ?? 'localhost:12000',
         },
     },
 };
 
-export default providers;
+export default providers as {
+    [key in keyof typeof providers]: ClientProviderOptions;
+};
