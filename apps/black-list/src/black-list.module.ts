@@ -1,27 +1,18 @@
 import { Module } from '@nestjs/common';
 import { BlackListController } from './black-list.controller';
 import { BlackListService } from './black-list.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
 import { Account, AccountSchema } from '@app/schema/account.schema';
 import { DbModule } from '@app/db';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@app/config';
 import { BlackList, BlackListSchema } from '@app/schema/black-list.schema';
+import providers from '@app/clients-provider';
 
 @Module({
     imports: [
         ClientsModule.register({
-            clients: [
-                {
-                    name: 'ACCOUNT_SERVICE',
-                    transport: Transport.GRPC,
-                    options: {
-                        package: 'account',
-                        protoPath: './proto/account.proto',
-                        url: 'localhost:50000',
-                    },
-                },
-            ],
+            clients: [providers.ACCOUNT_SERVICE],
         }),
         DbModule,
         MongooseModule.forFeature([

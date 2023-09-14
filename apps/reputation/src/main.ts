@@ -1,20 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { ReputationModule } from './reputation.module';
-import { Transport } from '@nestjs/microservices';
 import {
     createValidationPipe,
     MicroServiceExceptionFilter,
 } from '@app/common/microservice-exception.filter';
+import providers from '@app/clients-provider';
 
 async function bootstrap() {
-    const app = await NestFactory.createMicroservice(ReputationModule, {
-        transport: Transport.GRPC,
-        options: {
-            package: 'reputation',
-            protoPath: './proto/repulation.proto',
-            url: 'localhost:6000',
-        },
-    });
+    const app = await NestFactory.createMicroservice(
+        ReputationModule,
+        providers.REPUTATION_SERVICE,
+    );
     app.useGlobalPipes(createValidationPipe());
     app.useGlobalFilters(new MicroServiceExceptionFilter());
     await app.listen();

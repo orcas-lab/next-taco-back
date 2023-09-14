@@ -156,6 +156,51 @@
       "compilerOptions": {
         "tsConfigPath": "apps/black-list/tsconfig.app.json"
       }
-    }
+    },
+    "request": {
+      "type": "application",
+      "root": "apps/request",
+      "entryFile": "main",
+      "sourceRoot": "apps/request/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/request/tsconfig.app.json"
+      }
+    },
+    "friends": {
+      "type": "application",
+      "root": "apps/friends",
+      "entryFile": "main",
+      "sourceRoot": "apps/friends/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/friends/tsconfig.app.json"
+      }
+    },
+    "notice": {
+      "type": "application",
+      "root": "apps/notice",
+      "entryFile": "main",
+      "sourceRoot": "apps/notice/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notice/tsconfig.app.json"
+      }
+    },
+    "clients-provider": {
+      "type": "library",
+      "root": "libs/clients-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/clients-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/clients-provider/tsconfig.lib.json"
+      }
+    },
+    "cmd-process": {
+        "type": "library",
+        "root": "libs/cmd-process",
+        "entryFile": "index",
+        "sourceRoot": "libs/cmd-process/src",
+        "compilerOptions": {
+          "tsConfigPath": "libs/cmd-process/tsconfig.lib.json"
+        }
+      }
   }
 }
