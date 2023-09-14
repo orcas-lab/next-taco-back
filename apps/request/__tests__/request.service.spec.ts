@@ -88,6 +88,14 @@ describe('RequestService', () => {
         expect(service).toBeDefined();
     });
     it('add request', async () => {
+        expect(
+            await service.add({
+                sender: 'test-1',
+                reciver: 'test-2',
+                cmd: 'FRIEND.TEST.SENDER',
+                meta: {},
+            }),
+        );
         return expect(
             await service.add({
                 sender: 'test-1',
@@ -100,12 +108,16 @@ describe('RequestService', () => {
     it('list requests', async () => {
         rids.push(
             (await service.listReuqests({ tid: 'test-1', page: 1 }))[0].rid,
+            (await service.listReuqests({ tid: 'test-1', page: 1 }))[1].rid,
         );
         return expect(
             await service.listReuqests({ tid: 'test-1', page: 1 }),
         ).not.toStrictEqual([]);
     });
+    it('refuse', async () => {
+        return expect(service.refuse({ rid: rids[0] })).resolves.toBeTruthy();
+    });
     it('accept', async () => {
-        return expect(service.accept({ rid: rids[0] })).resolves.toBeTruthy();
+        return expect(service.accept({ rid: rids[1] })).resolves.toBeTruthy();
     });
 });
