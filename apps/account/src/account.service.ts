@@ -48,16 +48,14 @@ export class AccountService {
     }
     async accountExists(data: AccountExists): Promise<boolean> {
         const { tid, password } = data;
+        const findCondition = password
+            ? {
+                  tid,
+                  password: createHash('sha256').update(password).digest('hex'),
+              }
+            : { tid };
         const info = await this.accountModel
-            .findOne(
-                {
-                    tid,
-                    password: createHash('sha256')
-                        .update(password)
-                        .digest('hex'),
-                },
-                { _id: 1 },
-            )
+            .findOne(findCondition, { _id: 1 })
             .exec();
         return !isEmpty(info ?? {});
     }
