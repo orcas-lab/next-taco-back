@@ -1,5 +1,5 @@
 import { ConfigService } from '@app/config';
-import { TokenPair } from '@app/dto';
+import { EstablishToken, TokenPair } from '@app/dto';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { JwtService } from '@app/jwt';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
@@ -51,9 +51,8 @@ export class TokenService {
                     return this.jwt.decode(oldAccess, {
                         complete: true,
                     });
-                } else {
-                    throw MicroserviceErrorTable.TOKEN_INVALIDATE;
                 }
+                throw MicroserviceErrorTable.TOKEN_INVALIDATE;
             })
             .then((v) =>
                 this.jwt.sign(v, {
@@ -63,7 +62,7 @@ export class TokenService {
                 }),
             );
         const refresh_token = this.jwt
-            .sign(access_token, {
+            .sign(await access_token, {
                 expiresIn: this.config.get<'key.refresh_token.expire'>(
                     'key.refresh_token.expire',
                 ),
@@ -79,6 +78,11 @@ export class TokenService {
     }
     async revoke(tid: string) {
         await this.redis.del(NameSpace.TOKEN(tid));
+        return true;
+    }
+    async establish(data: EstablishToken) {
+        const { access_token, tid } = data;
+        await this.redis.set(NameSpace.TOKEN(tid), access_token);
         return true;
     }
 }
