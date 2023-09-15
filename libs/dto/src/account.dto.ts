@@ -46,9 +46,8 @@ export class AccountExists {
     @IsNotEmpty()
     @IsString()
     tid: string;
-    @IsNotEmpty()
     @IsString()
-    password: string;
+    password?: string;
 }
 
 export class AccountOnline {
