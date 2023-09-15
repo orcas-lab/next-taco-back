@@ -5,10 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Account, AccountSchema } from '@app/schema/account.schema';
 import { ConfigModule } from '@app/config';
 import providers from '@app/clients-provider';
+import { getRedisToken } from '@liaoliaots/nestjs-redis';
 
 describe('AccountController', () => {
     let accountService: AccountService;
-
+    let exists = 1;
     beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
             imports: [
@@ -33,6 +34,16 @@ describe('AccountController', () => {
                                 refresh_token: '',
                             }),
                         }),
+                    },
+                },
+                {
+                    provide: getRedisToken('default'),
+                    useValue: {
+                        exists: () => exists,
+                        del: () => {
+                            exists = 0;
+                            return true;
+                        },
                     },
                 },
             ],
@@ -117,5 +128,16 @@ describe('AccountController', () => {
                     }),
                 ).resolves.toBeFalsy();
             });
+    });
+    it('online', () => {
+        return expect(
+            accountService.online({ tid: 'test' }),
+        ).resolves.toBeTruthy();
+    });
+    it('kick', () => {
+        expect(accountService.kick({ tid: 'test' })).resolves.toBeTruthy();
+        return expect(
+            accountService.online({ tid: 'test' }),
+        ).resolves.toBeFalsy();
     });
 });

@@ -50,3 +50,15 @@ export class AccountExists {
     @IsString()
     password: string;
 }
+
+export class AccountOnline {
+    @IsString()
+    @IsNotEmpty()
+    tid: string;
+}
+
+export class KickAccount {
+    @IsString()
+    @IsNotEmpty()
+    tid: string;
+}

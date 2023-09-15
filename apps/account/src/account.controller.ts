@@ -3,8 +3,10 @@ import { AccountService } from './account.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import {
     AccountExists,
+    AccountOnline,
     ChnagePassword,
     DeleteAccount,
+    KickAccount,
     Register,
 } from '@app/dto';
 
@@ -31,5 +33,13 @@ export class AccountController {
     @GrpcMethod('AccountService', 'accountExists')
     accountExists(data: AccountExists) {
         return this.accountService.accountExists(data);
+    }
+    @GrpcMethod('AccountService', 'accountOnline')
+    async online(data: AccountOnline) {
+        return this.accountService.online(data);
+    }
+    @GrpcMethod('AccountService', 'kickAccount')
+    async kick(data: KickAccount) {
+        return this.accountService.kick(data);
     }
 }
