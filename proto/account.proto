@@ -39,11 +39,20 @@ message AccountExists {
     string password=2;
 }
 
+message AccountOnlineRequest {
+    string tid=1;
+}
+message KickAccount {
+    string tid=1;
+}
+
 service AccountService {
     rpc register(RegisterRequest) returns (google.protobuf.BoolValue);
     rpc checkQuestion(CheckQuestionRequest) returns (google.protobuf.BoolValue);
     rpc changePassword(ChangePasswordRequest) returns (google.protobuf.BoolValue);
     rpc deleteAccount(DeleteAccount) returns (google.protobuf.BoolValue);
     rpc accountExists(AccountExists) returns (google.protobuf.BoolValue);
+    rpc accountOnline(AccountOnline) returns (google.protobuf.BoolValue);
+    rpc kickAccount(KickAccount) returns (google.protobuf.BoolValue);
 }
 

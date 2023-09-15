@@ -3,18 +3,21 @@ import {
     ChnagePassword,
     DeleteAccount,
     AccountExists,
+    AccountOnline,
+    KickAccount,
 } from '@app/dto';
 import { AccountRegisterServiceResponse } from '@app/dto/response/micro-service/account.response';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
 import { Account, AccountDocument } from '@app/schema/account.schema';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { createHash } from 'crypto';
 import { Model } from 'mongoose';
 import { isEmpty } from 'ramda';
 import { ConfigService } from '@app/config';
-import { ClientGrpc } from '@nestjs/microservices';
-import providers from '@app/clients-provider';
+import { NameSpace } from '@app/utils';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class AccountService {
@@ -22,6 +25,7 @@ export class AccountService {
         @InjectModel(Account.name)
         private readonly accountModel: Model<AccountDocument>,
         private readonly config: ConfigService,
+        @InjectRedis() private redis: Redis,
     ) {}
     async addUser(dto: Register): Promise<AccountRegisterServiceResponse> {
         const { tid } = dto;
@@ -68,6 +72,15 @@ export class AccountService {
     }
     async deleteAccount(dto: DeleteAccount) {
         await this.accountModel.findOneAndRemove({ tid: dto.tid }).exec();
+        return true;
+    }
+    async online(data: AccountOnline) {
+        const ns = NameSpace.TOKEN(data.tid);
+        return Boolean(await this.redis.exists(ns));
+    }
+    async kick(data: KickAccount) {
+        const ns = NameSpace.TOKEN(data.tid);
+        await this.redis.del(ns);
         return true;
     }
 }
