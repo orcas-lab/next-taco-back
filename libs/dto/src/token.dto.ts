@@ -8,3 +8,12 @@ export class TokenPair {
     @IsString()
     refresh_token: string;
 }
+
+export class EstablishToken {
+    @IsNotEmpty()
+    @IsString()
+    access_token: string;
+    @IsString()
+    @IsNotEmpty()
+    tid: string;
+}
