@@ -28,14 +28,6 @@ export class Register {
     @IsDateString({ strict: true })
     birthday: string;
 }
-export class Login {
-    @IsNotEmpty()
-    @IsString()
-    tid: string;
-    @IsNotEmpty()
-    @IsString()
-    password: string;
-}
 
 export class ChnagePassword {
     @IsNotEmpty()
@@ -54,4 +46,7 @@ export class AccountExists {
     @IsNotEmpty()
     @IsString()
     tid: string;
+    @IsNotEmpty()
+    @IsString()
+    password: string;
 }
