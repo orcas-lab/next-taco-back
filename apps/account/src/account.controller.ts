@@ -7,7 +7,6 @@ import {
     DeleteAccount,
     Register,
 } from '@app/dto';
-import { Login } from '@app/dto';
 
 @Controller()
 export class AccountController {
@@ -17,9 +16,9 @@ export class AccountController {
     addUser(data: Register) {
         return this.accountService.addUser(data);
     }
-    @GrpcMethod('AccountService', 'login')
-    login(data: Login) {
-        return this.accountService.login(data);
+    @GrpcMethod('AccountService', 'accountExists')
+    login(data: AccountExists) {
+        return this.accountService.accountExists(data);
     }
     @GrpcMethod('AccountService', 'change_password')
     changePassword(data: ChnagePassword) {

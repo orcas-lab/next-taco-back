@@ -36,11 +36,11 @@ message DeleteAccount {
 }
 message AccountExists {
     string tid=1;
+    string password=2;
 }
 
 service AccountService {
     rpc register(RegisterRequest) returns (google.protobuf.BoolValue);
-    rpc login(LoginRequest) returns (google.protobuf.BoolValue);
     rpc checkQuestion(CheckQuestionRequest) returns (google.protobuf.BoolValue);
     rpc changePassword(ChangePasswordRequest) returns (google.protobuf.BoolValue);
     rpc deleteAccount(DeleteAccount) returns (google.protobuf.BoolValue);

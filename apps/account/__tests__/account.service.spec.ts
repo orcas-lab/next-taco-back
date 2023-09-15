@@ -4,6 +4,7 @@ import { DbModule } from '@app/db';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Account, AccountSchema } from '@app/schema/account.schema';
 import { ConfigModule } from '@app/config';
+import providers from '@app/clients-provider';
 
 describe('AccountController', () => {
     let accountService: AccountService;
@@ -21,7 +22,20 @@ describe('AccountController', () => {
                 ]),
                 ConfigModule.forRoot('config.toml'),
             ],
-            providers: [AccountService],
+            providers: [
+                AccountService,
+                {
+                    provide: providers['TOKEN_SERVICE']['name'],
+                    useValue: {
+                        getService: () => ({
+                            sign: jest.fn().mockResolvedValue({
+                                access_token: '',
+                                refresh_token: '',
+                            }),
+                        }),
+                    },
+                },
+            ],
         }).compile();
 
         accountService = app.get<AccountService>(AccountService);
@@ -66,13 +80,13 @@ describe('AccountController', () => {
     });
     it('account_exists', () => {
         expect(
-            accountService.login({
+            accountService.accountExists({
                 tid: 'test',
                 password: '123456789',
             }),
         ).resolves.toBeTruthy();
         return expect(
-            accountService.login({
+            accountService.accountExists({
                 tid: 'sadisaod',
                 password: '123456789',
             }),
@@ -86,7 +100,7 @@ describe('AccountController', () => {
             }),
         ).toBeTruthy();
         return expect(
-            accountService.login({
+            accountService.accountExists({
                 tid: 'test',
                 password: '123456789',
             }),
@@ -97,11 +111,11 @@ describe('AccountController', () => {
             .resolves.toBeDefined()
             .then(() => {
                 return expect(
-                    accountService.login({
+                    accountService.accountExists({
                         tid: 'test',
                         password: '123456789',
                     }),
-                ).resolves.toBeDefined();
+                ).resolves.toBeFalsy();
             });
     });
 });

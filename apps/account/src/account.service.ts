@@ -1,23 +1,20 @@
 import {
     Register,
-    Login,
     ChnagePassword,
     DeleteAccount,
     AccountExists,
 } from '@app/dto';
-import {
-    AccountExistsServiceResponse,
-    AccountRegisterServiceResponse,
-} from '@app/dto/response/micro-service/account.response';
+import { AccountRegisterServiceResponse } from '@app/dto/response/micro-service/account.response';
 import { MicroserviceErrorTable } from '@app/errors/microservice.error';
-import { Profile } from '@app/interface/profile.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { createHash } from 'crypto';
 import { Model } from 'mongoose';
 import { isEmpty } from 'ramda';
 import { ConfigService } from '@app/config';
+import { ClientGrpc } from '@nestjs/microservices';
+import providers from '@app/clients-provider';
 
 @Injectable()
 export class AccountService {
@@ -46,25 +43,17 @@ export class AccountService {
         return true;
     }
     async accountExists(data: AccountExists): Promise<boolean> {
-        const { tid } = data;
-        const info = await this.accountModel.findOne({ tid }).exec();
-        return !isEmpty(info ?? {});
-    }
-    async login(dto: Login): Promise<AccountExistsServiceResponse> {
-        const accountLoginData = {
-            ...dto,
-            password: createHash('sha256').update(dto.password).digest('hex'),
-        };
+        const { tid, password } = data;
         const info = await this.accountModel
-            .findOne(accountLoginData, {
-                tid: 1,
-                nick: 1,
-                description: 1,
-                email: 1,
-                sex: 1,
-                location: 1,
-            })
-            .lean<Profile>()
+            .findOne(
+                {
+                    tid,
+                    password: createHash('sha256')
+                        .update(password)
+                        .digest('hex'),
+                },
+                { _id: 1 },
+            )
             .exec();
         return !isEmpty(info ?? {});
     }
