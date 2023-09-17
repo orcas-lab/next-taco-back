@@ -7,10 +7,12 @@ import { Account, AccountSchema } from '@app/schema/account.schema';
 import { ConfigModule } from '@app/config';
 import { ClientsModule } from '@nestjs/microservices';
 import providers from '@app/clients-provider';
+import { RedisModule } from '@app/redis';
 
 @Module({
     imports: [
         DbModule,
+        RedisModule,
         MongooseModule.forFeature([
             {
                 name: Account.name,
