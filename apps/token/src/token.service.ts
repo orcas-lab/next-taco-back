@@ -6,6 +6,7 @@ import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
 import { Injectable } from '@nestjs/common';
 import { NameSpace } from '@app/utils';
+import { omit } from 'ramda';
 
 @Injectable()
 export class TokenService {
@@ -15,7 +16,7 @@ export class TokenService {
         @InjectRedis()
         private readonly redis: Redis,
     ) {}
-    async sign(data: Record<string, any>) {
+    async sign(data: Record<string, any>): Promise<TokenPair> {
         const access_token = await this.jwt.sign(data, {
             expiresIn:
                 this.config.get<'key.access_token.expire'>(
@@ -54,20 +55,30 @@ export class TokenService {
                 }
                 throw MicroserviceErrorTable.TOKEN_INVALIDATE;
             })
-            .then((v) =>
-                this.jwt.sign(v, {
-                    expiresIn: this.config.get<'key.access_token.expire'>(
-                        'key.access_token.expire',
-                    ),
-                }),
-            );
+            .then((v) => {
+                return this.jwt.sign(omit(['exp', 'iat'])(v), {
+                    expiresIn:
+                        this.config.get<'key.access_token.expire'>(
+                            'key.access_token.expire',
+                        ) ?? '7d',
+                    algorithm: 'ES512',
+                });
+            });
         const refresh_token = this.jwt
-            .sign(await access_token, {
-                expiresIn: this.config.get<'key.refresh_token.expire'>(
-                    'key.refresh_token.expire',
-                ),
-            })
-            .then((token) => token);
+            .sign(
+                { access_token: await access_token },
+                {
+                    expiresIn:
+                        this.config.get<'key.refresh_token.expire'>(
+                            'key.refresh_token.expire',
+                        ) ?? '30d',
+                    algorithm: 'ES512',
+                },
+            )
+            .then((token) => token)
+            .catch((reason) => {
+                console.log(reason);
+            });
         return {
             access_token: await access_token,
             refresh_token: await refresh_token,
