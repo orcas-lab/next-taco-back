@@ -26,6 +26,9 @@ const providers = {
             package: 'token',
             protoPath: './proto/token.proto',
             url: process.env.TOKEN_SERVICE_URL ?? 'localhost:7000',
+            loader: {
+                keepCase: true,
+            },
         },
     },
     BLACKLIST_SERVICE: {
