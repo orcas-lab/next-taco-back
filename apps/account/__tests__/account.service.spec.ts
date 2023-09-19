@@ -63,7 +63,7 @@ describe('AccountController', () => {
                 password: '123456789',
                 email: 'test@no-reply.com',
                 sex: 'other',
-                question: {},
+                question: { k1: 'v1', k2: 'v2' },
             }),
         ).resolves.not.toThrow();
         expect(
@@ -105,11 +105,26 @@ describe('AccountController', () => {
     });
     it('change password', async () => {
         expect(
-            await accountService.changePassword({
+            accountService.changePassword({
                 tid: 'test',
                 new_pass: '123456789Sd!',
+                question: { k1: 'v1', k2: 'v2' },
             }),
-        ).toBeTruthy();
+        ).resolves.toBeTruthy();
+        expect(
+            accountService.changePassword({
+                tid: 'test',
+                new_pass: '123456789Sd!',
+                question: { k2: 'v2', k1: 'v1' },
+            }),
+        ).resolves.toBeTruthy();
+        expect(
+            accountService.changePassword({
+                tid: 'test',
+                new_pass: '123456789Sd!',
+                question: { k2: 'v3', k1: 'v1' },
+            }),
+        ).resolves.toBeFalsy();
         return expect(
             accountService.accountExists({
                 tid: 'test',

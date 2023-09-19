@@ -4,7 +4,7 @@ import { GrpcMethod } from '@nestjs/microservices';
 import {
     AccountExists,
     AccountOnline,
-    ChnagePassword,
+    ChangePasswordMicroService,
     DeleteAccount,
     KickAccount,
     Register,
@@ -23,7 +23,7 @@ export class AccountController {
         return this.accountService.accountExists(data);
     }
     @GrpcMethod('AccountService', 'change_password')
-    changePassword(data: ChnagePassword) {
+    changePassword(data: ChangePasswordMicroService) {
         return this.accountService.changePassword(data);
     }
     @GrpcMethod('AccountService', 'deleteAccount')
