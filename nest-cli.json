@@ -194,13 +194,22 @@
       }
     },
     "cmd-process": {
-        "type": "library",
-        "root": "libs/cmd-process",
-        "entryFile": "index",
-        "sourceRoot": "libs/cmd-process/src",
-        "compilerOptions": {
-          "tsConfigPath": "libs/cmd-process/tsconfig.lib.json"
-        }
+      "type": "library",
+      "root": "libs/cmd-process",
+      "entryFile": "index",
+      "sourceRoot": "libs/cmd-process/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/cmd-process/tsconfig.lib.json"
       }
+    },
+    "gateway": {
+      "type": "application",
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+      }
+    }
   }
 }
