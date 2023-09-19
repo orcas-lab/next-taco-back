@@ -1,6 +1,6 @@
 import {
     Register,
-    ChnagePassword,
+    ChangePasswordMicroService,
     DeleteAccount,
     AccountExists,
     AccountOnline,
@@ -13,7 +13,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { createHash } from 'crypto';
 import { Model } from 'mongoose';
-import { isEmpty } from 'ramda';
+import { equals, isEmpty } from 'ramda';
 import { ConfigService } from '@app/config';
 import { NameSpace } from '@app/utils';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
@@ -32,6 +32,7 @@ export class AccountService {
         if (!isEmpty((await this.accountModel.findOne({ tid }).exec()) ?? [])) {
             throw MicroserviceErrorTable.TID_EXISTS;
         }
+
         await this.accountModel.insertMany([
             {
                 ...dto,
@@ -59,14 +60,15 @@ export class AccountService {
             .exec();
         return !isEmpty(info ?? {});
     }
-    async changePassword(dto: ChnagePassword) {
-        await this.accountModel
+    async changePassword(dto: ChangePasswordMicroService) {
+        const info = await this.accountModel
             .findOneAndUpdate(
                 { tid: dto.tid },
                 { $set: { password: dto.new_pass } },
             )
+            .lean()
             .exec();
-        return true;
+        return equals(dto.question, info.question);
     }
     async deleteAccount(dto: DeleteAccount) {
         await this.accountModel.findOneAndRemove({ tid: dto.tid }).exec();
