@@ -5,8 +5,8 @@ import { AccountModule } from './account/account.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [AccountModule, UserModule],
-  controllers: [GatewayController],
-  providers: [GatewayService],
+    imports: [AccountModule, UserModule],
+    controllers: [GatewayController],
+    providers: [GatewayService],
 })
 export class GatewayModule {}
