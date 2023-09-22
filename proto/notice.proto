@@ -1,6 +1,7 @@
 package notice;
 syntax = "proto3";
 import "./common.proto";
+import "google/protobuf/empty.proto";
 
 
 // Generated according to https://cloud.google.com/apis/design/standard_methods
