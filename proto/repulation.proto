@@ -1,5 +1,6 @@
 syntax = "proto3";
 package repulation;
+import "google/protobuf/wrappers.proto";
 
 message ChangeReputationRequest {
     string tid=1;
@@ -7,5 +8,5 @@ message ChangeReputationRequest {
 }
 
 service ReputationService {
-    rpc change(ChangeReputationRequest) returns (bool);
+    rpc change(ChangeReputationRequest) returns (google.protobuf.BoolValue);
 }
