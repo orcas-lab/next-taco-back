@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GatewayController } from './gateway.controller';
-import { GatewayService } from './gateway.service';
 import { AccountModule } from './account/account.module';
 import { UserModule } from './user/user.module';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
-    imports: [AccountModule, UserModule],
-    controllers: [GatewayController],
-    providers: [GatewayService],
+    imports: [AccountModule, UserModule, FriendsModule],
 })
 export class GatewayModule {}

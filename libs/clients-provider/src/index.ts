@@ -53,8 +53,8 @@ const providers = {
         name: 'FRIEND_SERVICE',
         transport: Transport.GRPC,
         options: {
-            package: 'friend',
-            protoPath: './proto/friend.proto',
+            package: 'friends',
+            protoPath: './proto/friends.proto',
             url: process.env.FRIEND_SERVICE_URL ?? 'localhost:10000',
         },
     },

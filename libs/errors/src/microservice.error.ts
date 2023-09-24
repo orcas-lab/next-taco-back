@@ -78,4 +78,11 @@ export const MicroserviceErrorTable = {
         'FRIEND',
         'ACCEPT',
     ),
+    NOT_FRIEND: new MicroserviceError(
+        2020003,
+        'NOT_FRIEND',
+        [],
+        'FRIEND',
+        'DELETE',
+    ),
 };
