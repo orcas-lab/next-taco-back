@@ -5,4 +5,5 @@ export class Profile {
     email: string;
     sex: string;
     locaion: string;
+    reputation: number;
 }

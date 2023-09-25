@@ -1,5 +1,5 @@
 import { Profile } from '@app/interface/profile.interface';
-import { IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class GetProfile {
     @IsNotEmpty()
@@ -12,6 +12,5 @@ export class UpdateProfile {
     @IsString()
     tid: string;
     @IsNotEmpty()
-    @ValidateIf((obj) => obj.tid === undefined)
-    profile: Omit<Profile, 'tid'>;
+    profile: Profile;
 }

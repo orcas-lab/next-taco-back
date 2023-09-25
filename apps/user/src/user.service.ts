@@ -4,6 +4,7 @@ import { Profile } from '@app/interface/profile.interface';
 import { Account, AccountDocument } from '@app/schema/account.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { omit } from 'ramda';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -25,6 +26,7 @@ export class UserService {
                     email: 1,
                     sex: 1,
                     location: 1,
+                    reputation: 1,
                 },
             )
             .lean<Profile>()
@@ -37,8 +39,9 @@ export class UserService {
 
     async updateProfile(data: UpdateProfile) {
         const { tid, profile } = data;
+        const newProfile = omit(['reputation', 'tid'], profile);
         await this.accountDocument
-            .findOneAndUpdate({ tid }, { $set: { profile } })
+            .findOneAndUpdate({ tid }, { $set: { profile: newProfile } })
             .lean()
             .exec();
         return true;
