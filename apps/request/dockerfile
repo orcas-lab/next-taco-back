@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/request
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build request
+
+ENV REQUEST_SERVICE_URL=localhost:12000
+EXPOSE 12000
+
+CMD [ "node", "dist/apps/request/main.js" ]

@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { DbService } from './db.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { isDev } from '@app/utils';
 import { ConfigModule, ConfigService } from '@app/config';
-import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
-let mongod: MongoMemoryReplSet;
 @Module({
     providers: [DbService],
     exports: [DbService],
@@ -15,8 +12,11 @@ let mongod: MongoMemoryReplSet;
             inject: [ConfigService],
             useFactory: async (service: ConfigService) => {
                 let uri = service.get<'db.uri'>('db.uri');
-                if (isDev()) {
-                    mongod = await MongoMemoryReplSet.create({
+                if (__DEV__) {
+                    const { MongoMemoryReplSet } = await import(
+                        'mongodb-memory-server'
+                    );
+                    const mongod = await MongoMemoryReplSet.create({
                         replSet: {
                             count: 2,
                         },

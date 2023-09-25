@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/black-list
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build black-list
+
+ENV BLACKLIST_SERVICE_URL=localhost:8000
+EXPOSE 8000
+
+CMD [ "node", "dist/apps/black-list/main.js" ]

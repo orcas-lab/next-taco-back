@@ -8,7 +8,8 @@
     "assets": [
       "./proto/**/*.proto"
     ],
-    "watchAssets": true
+    "watchAssets": true,
+    "webpackConfigPath": "./webpack.config.js"
   },
   "monorepo": true,
   "root": "apps/account",
