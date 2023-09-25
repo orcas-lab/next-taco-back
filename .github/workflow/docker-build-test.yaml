@@ -2,6 +2,7 @@ name: Build test
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build_test:
@@ -19,7 +20,7 @@ jobs:
           file: apps/user/dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          
+
       - name: Build Account
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
