@@ -1,0 +1,85 @@
+name: Build test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_test:
+    name: Build docker image but not publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build User
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/user/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Account
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/account/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build black-lsit
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/black-list/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build friends
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/friends/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build notice
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/notice/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build reputation
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/reputation/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Build request
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/request/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Build token
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          push: false
+          context: .
+          file: apps/token/dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
