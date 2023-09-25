@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/reputation
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build reputation
+
+ENV REPUTATION_SERVICE_URL=localhost:6000
+EXPOSE 6000
+
+CMD [ "node", "dist/apps/reputation/main.js" ]

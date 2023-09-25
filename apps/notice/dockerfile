@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/notice
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build notice
+
+ENV NOTICE_SERVICE_URL=localhost:11000
+EXPOSE 11000
+
+CMD [ "node", "dist/apps/notice/main.js" ]

@@ -5,18 +5,19 @@ import {
     RedisModuleOptions,
 } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@app/config';
-import { RedisMemoryServer } from 'redis-memory-server';
-import { isDev } from '@app/utils';
 
 export const memoryRedis = async () => {
-    const server = new RedisMemoryServer({
-        instance: {
-            ip: '127.0.0.1',
-            port: 6379,
-        },
-    });
-    await server.start();
-    return server;
+    if (__DEV__) {
+        const { RedisMemoryServer } = await import('redis-memory-server');
+        const server = new RedisMemoryServer({
+            instance: {
+                ip: '127.0.0.1',
+                port: 6379,
+            },
+        });
+        await server.start();
+        return server;
+    }
 };
 
 @Module({
@@ -29,7 +30,7 @@ export const memoryRedis = async () => {
             useFactory: async (
                 config: ConfigService,
             ): Promise<RedisModuleOptions> => {
-                if (isDev()) {
+                if (__DEV__) {
                     const server = await memoryRedis();
                     return {
                         config: {
