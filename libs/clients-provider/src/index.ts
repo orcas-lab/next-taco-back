@@ -15,7 +15,7 @@ const providers = {
         transport: Transport.GRPC,
         options: {
             package: 'reputation',
-            protoPath: './proto/repulation.proto',
+            protoPath: './proto/reputation.proto',
             url: process.env.REPUTATION_SERVICE_URL ?? 'localhost:6000',
         },
     },
