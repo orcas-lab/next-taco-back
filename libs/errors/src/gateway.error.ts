@@ -48,4 +48,12 @@ export const API_ERROR = {
         'UPDATE_REPUTATION',
         HttpStatus.BAD_REQUEST,
     ),
+    CAN_NOT_TO_SEND_REQUEST_TO_YOURSELF: new ApiError(
+        2030001,
+        'CAN_NOT_TO_SEND_REQUEST_TO_YOURSELF',
+        [],
+        'REQUEST',
+        'SEND',
+        HttpStatus.BAD_REQUEST,
+    ),
 };
