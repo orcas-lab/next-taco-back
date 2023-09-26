@@ -40,4 +40,12 @@ export const API_ERROR = {
         'LOGIN',
         HttpStatus.BAD_REQUEST,
     ),
+    CAN_NOT_UPDATE_SELF_REPUTATION: new ApiError(
+        2020001,
+        'CAN_NOT_UPDATE_SELF_REPUTATION',
+        [],
+        'REPUTATION',
+        'UPDATE_REPUTATION',
+        HttpStatus.BAD_REQUEST,
+    ),
 };
