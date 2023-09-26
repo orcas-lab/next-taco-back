@@ -1,21 +1,9 @@
-import {
-    Controller,
-    Delete,
-    Get,
-    Inject,
-    Patch,
-    Post,
-    Query,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Inject, Patch, Query } from '@nestjs/common';
 import { FriendsService } from '../../../friends/src/friends.service';
 import providers from '@app/clients-provider';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Tid } from '@app/common/tid.decorator';
-import {
-    UpdateFriendInfo,
-    AcceptFriendRequestData,
-    DeleteFriendData,
-} from '@app/dto/friends.dto';
+import { UpdateFriendInfo, DeleteFriendData } from '@app/dto/friends.dto';
 
 @Controller('friends')
 export class FriendsController {
@@ -38,9 +26,5 @@ export class FriendsController {
     @Get('')
     async getFrindsList(@Tid() tid: string, @Query('page') page: number) {
         return this.friendsService.getFriendList({ tid, page });
-    }
-    @Post('accept')
-    async acceptRequest(data: AcceptFriendRequestData) {
-        return this.friendsService.accept(data);
     }
 }
