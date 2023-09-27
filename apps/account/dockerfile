@@ -7,6 +7,7 @@ RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build account
 
+VOLUME [ "/usr/taco/account" ]
 ENV ACCOUNT_SERVICE_URL=localhost:5000
 EXPOSE 5000
 

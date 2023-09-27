@@ -6,7 +6,7 @@ ADD . .
 RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build reputation
-
+VOLUME [ "/usr/taco/reputation" ]
 ENV REPUTATION_SERVICE_URL=localhost:6000
 EXPOSE 6000
 
