@@ -6,7 +6,7 @@ ADD . .
 RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build friends
-
+VOLUME [ "/usr/taco/friends" ]
 ENV FRIEND_SERVICE_URL=localhost:10000
 EXPOSE 10000
 
