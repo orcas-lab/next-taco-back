@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/account
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build account
+
+ENV ACCOUNT_SERVICE_URL=localhost:5000
+EXPOSE 5000
+
+CMD [ "node", "dist/apps/account/main.js" ]

@@ -3,6 +3,7 @@ import {
     IsString,
     IsNotEmptyObject,
     IsDateString,
+    IsObject,
 } from 'class-validator';
 export class Register {
     @IsNotEmpty()
@@ -29,14 +30,38 @@ export class Register {
     birthday: string;
 }
 
-export class ChnagePassword {
+export class Login {
+    @IsNotEmpty()
+    @IsString()
+    tid: string;
+    @IsNotEmpty()
+    @IsString()
+    password: string;
+}
+
+export class ChangePasswordMicroService {
     @IsNotEmpty()
     @IsString()
     tid: string;
     @IsNotEmpty()
     @IsString()
     new_pass: string;
+    @IsObject()
+    question: {
+        [x: string]: string;
+    };
 }
+
+export class ChangePassword {
+    @IsNotEmpty()
+    @IsString()
+    new_pass: string;
+    @IsObject()
+    question: {
+        [x: string]: string;
+    };
+}
+
 export class DeleteAccount {
     @IsNotEmpty()
     @IsString()
@@ -46,9 +71,8 @@ export class AccountExists {
     @IsNotEmpty()
     @IsString()
     tid: string;
-    @IsNotEmpty()
     @IsString()
-    password: string;
+    password?: string;
 }
 
 export class AccountOnline {

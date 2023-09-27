@@ -1,13 +1,21 @@
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
+
 syntax = "proto3";
 package token;
 message TokenPair {
     string access_token = 1;
     string refresh_token = 2;
 }
+message WrapperStruct {
+    map<string,string> value = 1;
+}
+
+
 service TokenService {
-    rpc sign(map<string,string>) returns (TokenPair);
-    rpc verify(TokenPair) returns (bool);
+    rpc sign(WrapperStruct) returns (TokenPair) {};
+    rpc verify(TokenPair) returns (google.protobuf.BoolValue);
     rpc refresh(TokenPair) returns (TokenPair);
-    rpc decode(string) returns (map<string,string>);
-    rpc revoke(string) returns (bool);
+    rpc decode(google.protobuf.StringValue) returns (WrapperStruct);
+    rpc revoke(google.protobuf.StringValue) returns (google.protobuf.BoolValue);
 }

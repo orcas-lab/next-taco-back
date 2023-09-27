@@ -10,7 +10,7 @@ message PublicRequest {
     string rid=1;
     string sender=2;
     string reciver=3;
-    map meta=4;
+    map<string,string> meta=4;
     string sign=5;
     int64 create_at=6;
     int64 update_at=7;
@@ -20,7 +20,7 @@ message InnerRequest {
     string rid=1;
     string sender=2;
     string reciver=3;
-    map meta=4;
+    map<string,string> meta=4;
     string sign=5;
     int64 create_at=6;
     int64 update_at=7;
@@ -37,7 +37,7 @@ message GetRequestData {
 message AddRequestData {
     string sender=1;
     string reciver=2;
-    map meta=3;
+    map<string,string> meta=3;
     string cmd=4;
 }
 
@@ -50,19 +50,24 @@ message UpdateRequestData{
     PublicRequest req=2;
 }
 
-message AcceptReuqestData {
+message AcceptRequestData {
     string tid=1;
     string rid=2;
 }
 
-message RefuseRequest {
+message RefuseRequestData {
     string tid=1;
     string rid=2;
+}
+
+message ListReuqestsResponse {
+    repeated PublicRequest requests =1;
+    int64 page=2;
 }
 
 
 service RequestService {
-    rpc ListRequests(ListRequestsData) returns (repeacted PublicRequest);
+    rpc ListRequests(ListRequestData) returns (ListReuqestsResponse);
     // TODO: Do i need it ?
     // rpc GetRequest(GetRequestData) returns (PublicRequest);
     rpc AddRequest(AddRequestData) returns (google.protobuf.BoolValue);

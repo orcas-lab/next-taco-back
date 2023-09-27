@@ -37,9 +37,9 @@ message UpdateFriendInfo {
 }
 
 service FriendsService {
-    rpc getFriendList(GetFriendListData) returns (Friend[]);
-    rpc accept(AcceptFriendAddRequestData) retruns (google.protobuf.BoolValue);
-    rpc refuse(RefuseFriendAddRequestData) retruns (google.protobuf.BoolValue);
+    rpc getFriendList(GetFriendListData) returns (GetFriendListResponse);
+    rpc accept(AcceptFriendAddRequestData) returns (google.protobuf.BoolValue);
+    rpc refuse(RefuseFriendAddRequestData) returns (google.protobuf.BoolValue);
     rpc delete(DeleteFriend) returns (google.protobuf.BoolValue);
-    rpc update(UpdateFriendInfo) returns (google.protobuf.BoolValue)
+    rpc update(UpdateFriendInfo) returns (google.protobuf.BoolValue);
 }

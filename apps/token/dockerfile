@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/token
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build token
+
+ENV TOKEN_SERVICE_URL=localhost:7000
+EXPOSE 7000
+
+CMD [ "node", "dist/apps/token/main.js" ]

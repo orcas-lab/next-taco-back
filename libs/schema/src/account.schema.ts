@@ -16,8 +16,8 @@ export class Account {
     email: string;
     @Prop()
     sex: string;
-    @Prop({ type: () => Object })
-    quesion: { [x: string]: string };
+    @Prop({ default: {}, required: true, type: Object })
+    question: { [x: string]: string };
     @Prop({ default: '' })
     location: string;
     @Prop({ default: 5 })

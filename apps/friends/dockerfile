@@ -1,0 +1,13 @@
+FROM node as dev
+
+WORKDIR /usr/taco/friends
+ADD . .
+
+RUN npm install pnpm -g && \
+    pnpm install --production && \
+    pnpm build friends
+
+ENV FRIEND_SERVICE_URL=localhost:10000
+EXPOSE 10000
+
+CMD [ "node", "dist/apps/friend/main.js" ]

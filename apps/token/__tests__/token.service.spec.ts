@@ -16,6 +16,7 @@ describe('TokenSerivce', () => {
                     provide: getRedisToken('default'),
                     useValue: {
                         del: jest.fn(),
+                        set: jest.fn(),
                     },
                 },
             ],
@@ -41,5 +42,13 @@ describe('TokenSerivce', () => {
     });
     it('revoke', () => {
         return expect(tokenService.revoke('test')).resolves.toBeTruthy();
+    });
+    it('establish', () => {
+        return expect(
+            tokenService.establish({
+                tid: '',
+                access_token: '',
+            }),
+        ).resolves.toBeTruthy();
     });
 });

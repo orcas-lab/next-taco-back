@@ -25,6 +25,7 @@ message CheckQuestionRequest {
 message ChangePasswordRequest {
     string tid=1;
     string new_pass=2;
+    map<string,string> question=3;
 }
 
 message LoginResponse {
@@ -52,7 +53,7 @@ service AccountService {
     rpc changePassword(ChangePasswordRequest) returns (google.protobuf.BoolValue);
     rpc deleteAccount(DeleteAccount) returns (google.protobuf.BoolValue);
     rpc accountExists(AccountExists) returns (google.protobuf.BoolValue);
-    rpc accountOnline(AccountOnline) returns (google.protobuf.BoolValue);
+    rpc accountOnline(AccountOnlineRequest) returns (google.protobuf.BoolValue);
     rpc kickAccount(KickAccount) returns (google.protobuf.BoolValue);
 }
 
