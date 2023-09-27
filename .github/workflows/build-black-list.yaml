@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            taco/black-list
+            gaoneng-www/black-list
           tags: |
             type=schedule
             type=ref,event=branch

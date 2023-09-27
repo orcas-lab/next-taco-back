@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            taco/request
+            gaoneng-www/request
           tags: |
             type=schedule
             type=ref,event=branch
