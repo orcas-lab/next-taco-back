@@ -1,4 +1,4 @@
-name: Build User
+name: Build Request
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            taco/user
+            taco/request
           tags: |
             type=schedule
             type=ref,event=branch
