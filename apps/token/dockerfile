@@ -6,7 +6,7 @@ ADD . .
 RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build token
-
+VOLUME [ "/usr/taco/reputation" ]
 ENV TOKEN_SERVICE_URL=localhost:7000
 EXPOSE 7000
 

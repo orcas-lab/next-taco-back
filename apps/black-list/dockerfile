@@ -6,7 +6,7 @@ ADD . .
 RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build black-list
-
+VOLUME [ "/usr/taco/black-list/" ]
 ENV BLACKLIST_SERVICE_URL=localhost:8000
 EXPOSE 8000
 
