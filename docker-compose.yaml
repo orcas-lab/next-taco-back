@@ -1,0 +1,44 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456789Sd!
+  redis:
+    image: 'redis'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  account:
+    image: gaonengwww/taco-account
+    volumes:
+      - ./config.toml:/usr/taco/account/config.toml
+  black-list:
+    image: gaonengwww/taco-black-list
+    volumes:
+      - ./config.toml:/usr/taco/black-list/config.toml
+  friends:
+    image: gaonengwww/taco-friends
+    volumes:
+      - ./config.toml:/usr/taco/friends/config.toml
+#   notice:
+#     image: gaonengwww/taco-notice
+#     volumes:
+#       - ./config.toml:/usr/taco/config.toml
+  reputation:
+    image: gaonengwww/taco-reputation
+    volumes:
+      - ./config.toml:/usr/taco/reputation/config.toml
+  request:
+    image: gaonengwww/taco-request
+    volumes:
+      - ./config.toml:/usr/taco/request/config.toml
+#   token:
+#     image: gaonengwww/taco-token
+#     volumes:
+#       - ./config.toml:/usr/taco/config.toml
+  user:
+    image: gaonengwww/taco-user
+    volumes:
+      - ./config.toml:/usr/taco/user/config.toml

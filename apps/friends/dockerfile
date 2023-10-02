@@ -10,4 +10,4 @@ VOLUME [ "/usr/taco/friends" ]
 ENV FRIEND_SERVICE_URL=localhost:10000
 EXPOSE 10000
 
-CMD [ "node", "dist/apps/friend/main.js" ]
+CMD [ "node", "dist/apps/friends/main.js" ]
