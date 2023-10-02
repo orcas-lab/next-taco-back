@@ -1,5 +1,5 @@
 syntax = "proto3";
-package repulation;
+package reputation;
 import "google/protobuf/wrappers.proto";
 
 message ChangeReputationRequest {
