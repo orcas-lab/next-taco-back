@@ -18,6 +18,8 @@ export class ApiError extends BaseError {
         code: number,
         message: string,
         detail: any[],
+        module: string,
+        service: string,
         status: HttpStatus = HttpStatus.BAD_REQUEST,
     ) {
         super(code, message, detail);

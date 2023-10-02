@@ -62,6 +62,19 @@ export class ChangePassword {
     };
 }
 
+export class forgetPassword {
+    @IsNotEmpty()
+    @IsString()
+    tid: string;
+    @IsNotEmpty()
+    @IsString()
+    new_pass: string;
+    @IsObject()
+    question: {
+        [x: string]: string;
+    };
+}
+
 export class DeleteAccount {
     @IsNotEmpty()
     @IsString()
