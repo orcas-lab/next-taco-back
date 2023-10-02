@@ -34,10 +34,10 @@ services:
     image: gaonengwww/taco-request
     volumes:
       - ./config.toml:/usr/taco/request/config.toml
-#   token:
-#     image: gaonengwww/taco-token
-#     volumes:
-#       - ./config.toml:/usr/taco/config.toml
+  token:
+    image: gaonengwww/taco-token
+    volumes:
+      - ./config.toml:/usr/taco/config.toml
   user:
     image: gaonengwww/taco-user
     volumes:
