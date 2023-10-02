@@ -1,4 +1,4 @@
-FROM node as dev
+FROM node:20.8.0-alpine
 
 WORKDIR /usr/taco/account
 ADD . .
