@@ -22,10 +22,10 @@ services:
     image: gaonengwww/taco-friends
     volumes:
       - ./config.toml:/usr/taco/friends/config.toml
-#   notice:
-#     image: gaonengwww/taco-notice
-#     volumes:
-#       - ./config.toml:/usr/taco/config.toml
+  notice:
+    image: gaonengwww/taco-notice
+    volumes:
+      - ./config.toml:/usr/taco/notice/config.toml
   reputation:
     image: gaonengwww/taco-reputation
     volumes:
