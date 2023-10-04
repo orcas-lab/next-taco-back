@@ -14,31 +14,47 @@ services:
     image: gaonengwww/taco-account
     volumes:
       - ./config.toml:/usr/taco/account/config.toml
+    ports:
+      - 5000:5000
   black-list:
     image: gaonengwww/taco-black-list
     volumes:
       - ./config.toml:/usr/taco/black-list/config.toml
+    ports:
+      - 8000:8000
   friends:
     image: gaonengwww/taco-friends
     volumes:
       - ./config.toml:/usr/taco/friends/config.toml
+    ports:
+      - 10000:10000
   notice:
     image: gaonengwww/taco-notice
     volumes:
       - ./config.toml:/usr/taco/notice/config.toml
+    ports:
+      - 11000:11000
   reputation:
     image: gaonengwww/taco-reputation
     volumes:
       - ./config.toml:/usr/taco/reputation/config.toml
+    ports:
+      - 6000:6000
   request:
     image: gaonengwww/taco-request
     volumes:
       - ./config.toml:/usr/taco/request/config.toml
+    ports:
+      - 12000:12000
   token:
     image: gaonengwww/taco-token
     volumes:
       - ./config.toml:/usr/taco/config.toml
+    ports:
+      - 7000:7000
   user:
     image: gaonengwww/taco-user
     volumes:
       - ./config.toml:/usr/taco/user/config.toml
+    ports:
+      - 9000:9000
