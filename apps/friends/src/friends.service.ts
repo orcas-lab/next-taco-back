@@ -129,7 +129,7 @@ export class FriendsService {
         return true;
     }
     async deleteFriend(data: DeleteFriendData) {
-        if (this._isFriend(data.source, data.target)) {
+        if (!(await this._isFriend(data.source, data.target))) {
             throw MicroserviceErrorTable.NOT_FRIEND;
         }
         const session = await this.Account.db.startSession();

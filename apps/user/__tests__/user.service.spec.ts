@@ -58,6 +58,8 @@ describe('UserService', () => {
                     locaion: '',
                     nick: '',
                     sex: '',
+                    reputation: 5,
+                    tid: '',
                 },
             }),
         ).resolves.toBeTruthy();
