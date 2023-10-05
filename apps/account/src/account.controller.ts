@@ -22,7 +22,7 @@ export class AccountController {
     login(data: AccountExists) {
         return this.accountService.accountExists(data);
     }
-    @GrpcMethod('AccountService', 'change_password')
+    @GrpcMethod('AccountService', 'changePassword')
     changePassword(data: ChangePasswordMicroService) {
         return this.accountService.changePassword(data);
     }
