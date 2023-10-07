@@ -99,14 +99,14 @@ describe('Friends Service', () => {
                 .length,
         ).not.toBe(0);
     });
-    it('delete', () => {
+    it('delete', async () => {
         expect(
             service.deleteFriend({ source: 'tester', target: 'test-1' }),
         ).resolves.toBeTruthy();
         return expect(
             service.deleteFriend({
                 source: 'tester',
-                target: 'test-2',
+                target: 'test-1145141919810',
                 black_list: true,
             }),
         ).resolves.toBeTruthy();
@@ -134,7 +134,7 @@ describe('Friends Service', () => {
                 pet_name: 'test_',
             }),
         ).resolves.toBeTruthy();
-        expect(
+        return expect(
             (
                 await service.getFriendList({ tid: 'tester', page: 1 })
             ).friends.filter((v) => v.profile.tid === 'test-2')[0],
