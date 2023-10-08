@@ -17,8 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --clearCache && cross-env NODE_ENV=DEV jest --coverage --force-exit --detectOpenHandles",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --clearCache && cross-env NODE_ENV=DEV jest --config ./__tests__/jest-e2e.json --force-exit --detectOpenHandles",
-    "test:e2e_": "esno ./e2e/app.ts",
+    "test:e2e": "jest --clearCache && cross-env NODE_ENV=DEV jest --config ./__tests__/jest-e2e.json --force-exit --detectOpenHandles"
     "cli": "esno ./scripts/cli.ts"
   },
   "dependencies": {
@@ -135,8 +134,8 @@
       "^@app/clients-provider(|/.*)$": "<rootDir>/libs/clients-provider/src/$1",
       "^@app/cmd-process(|/.*)$": "<rootDir>/libs/cmd-process/src/$1"
     },
-    "globals": {
-      "__DEV__": true
+    "globals":{
+        "__DEV__": true
     }
   }
 }

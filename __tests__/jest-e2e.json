@@ -1,0 +1,58 @@
+{
+    "moduleFileExtensions": [
+        "js",
+        "json",
+        "ts"
+    ],
+    "rootDir": "..",
+    "testRegex": ".*\\.e2e\\.spec\\.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "modulePathIgnorePatterns": [
+        "libs/interface/",
+        "<rootDir>/.*\\.dto.ts",
+        "<rootDir>/.*\\.module.ts",
+        "<rootDir>/.*\\.middleware.ts",
+        "<rootDir>/.*\\.schema.ts",
+        "node_modules"
+    ],
+    "collectCoverageFrom": [
+        "!**/tsconfig.*.json",
+        "!libs/common/src/*.decorator.ts",
+        "!libs/{middleware/**,schemas/**}/*.ts",
+        "!libs/mock/src/*.ts",
+        "!libs/**/index.ts",
+        "!libs/**/{db,jwt,cache}.module.ts",
+        "!src/**/*.module.ts",
+        "!**/*/main.ts",
+        "!**/*/*.controller.ts"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+        "<rootDir>",
+        "<rootDir>/apps/",
+        "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+        "^@app/proto(|/.*)$": "<rootDir>/libs/proto/src/$1",
+        "^@app/db(|/.*)$": "<rootDir>/libs/db/src/$1",
+        "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+        "^@app/interface(|/.*)$": "<rootDir>/libs/interface/src/$1",
+        "^@app/utils(|/.*)$": "<rootDir>/libs/utils/$1",
+        "^@app/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
+        "^@app/schema(|/.*)$": "<rootDir>/libs/schema/src/$1",
+        "^@app/dto(|/.*)$": "<rootDir>/libs/dto/src/$1",
+        "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+        "^@app/errors(|/.*)$": "<rootDir>/libs/errors/src/$1",
+        "^@app/keypair(|/.*)$": "<rootDir>/libs/keypair/src/$1",
+        "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
+        "^@app/factory(|/.*)$": "<rootDir>/libs/factory/src/$1",
+        "^@app/clients-provider(|/.*)$": "<rootDir>/libs/clients-provider/src/$1",
+        "^@app/cmd-process(|/.*)$": "<rootDir>/libs/cmd-process/src/$1"
+    },
+    "globals": {
+        "__DEV__": true
+    }
+}
