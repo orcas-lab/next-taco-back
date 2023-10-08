@@ -56,7 +56,7 @@ describe('AccountController', () => {
     });
     it('addUser', async () => {
         expect(
-            accountService.addUser({
+            accountService.register({
                 tid: 'test',
                 nick: 'test',
                 birthday: '1234-2-7',
@@ -67,7 +67,7 @@ describe('AccountController', () => {
             }),
         ).resolves.not.toThrow();
         expect(
-            accountService.addUser({
+            accountService.register({
                 tid: 'test-2',
                 nick: 'test',
                 birthday: '1234-2-7',
@@ -78,7 +78,7 @@ describe('AccountController', () => {
             }),
         ).resolves.not.toThrow();
         return expect(
-            accountService.addUser({
+            accountService.register({
                 tid: 'test',
                 nick: 'test',
                 birthday: '1234-2-7',

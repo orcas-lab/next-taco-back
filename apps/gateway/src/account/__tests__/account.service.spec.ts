@@ -20,6 +20,7 @@ describe('AccountService', () => {
                                     .fn()
                                     .mockResolvedValue(true),
                                 deleteAccount: jest.fn(),
+                                register: jest.fn(),
                             };
                         },
                     },

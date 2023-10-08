@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { FriendsModule } from './friends.module';
-import providers from 'libs/clients-provider/src';
+import providers from '@app/clients-provider';
 import {
     MicroServiceExceptionFilter,
     createValidationPipe,
