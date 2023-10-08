@@ -14,9 +14,9 @@ import {
 export class AccountController {
     constructor(private readonly accountService: AccountService) {}
 
-    @GrpcMethod('AccountService', 'addUser')
+    @GrpcMethod('AccountService', 'register')
     addUser(data: Register) {
-        return this.accountService.addUser(data);
+        return this.accountService.register(data);
     }
     @GrpcMethod('AccountService', 'accountExists')
     login(data: AccountExists) {

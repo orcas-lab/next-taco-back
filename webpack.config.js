@@ -9,7 +9,7 @@ module.exports = (option) => {
         ...option,
         plugins: [
             new DefinePlugin({
-                __DEV__: process.env.DEV ?? false,
+                __DEV__: process.env.NODE_ENV === 'DEV' ?? false,
             }),
         ],
     };

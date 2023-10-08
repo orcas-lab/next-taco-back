@@ -27,7 +27,7 @@ export class AccountService {
         private readonly config: ConfigService,
         @InjectRedis() private redis: Redis,
     ) {}
-    async addUser(dto: Register): Promise<AccountRegisterServiceResponse> {
+    async register(dto: Register): Promise<AccountRegisterServiceResponse> {
         const { tid } = dto;
         if (!isEmpty((await this.accountModel.findOne({ tid }).exec()) ?? [])) {
             throw MicroserviceErrorTable.TID_EXISTS;

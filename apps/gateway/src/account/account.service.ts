@@ -36,7 +36,7 @@ export class AccountService {
         throw API_ERROR.USER_OR_PASSWORD_ERROR;
     }
     async register(data: Register) {
-        return this.accountService.addUser(data);
+        return this.accountService.register(data);
     }
     async changePassword(tid: string, data: ChangePassword) {
         return this.accountService.changePassword({ tid, ...data });
