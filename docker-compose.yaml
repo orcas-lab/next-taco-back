@@ -2,58 +2,78 @@ version: '3'
 services:
   mongo:
     image: mongo
+    ports:
+      - 27017:27017
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: 123456789Sd!
   redis:
     image: 'redis'
+    ports:
+      - 6379:6379
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
   account:
-    image: gaonengwww/taco-account
+    build:
+      context: .
+      dockerfile: apps/account/dockerfile
     volumes:
       - ./config.toml:/usr/taco/account/config.toml
     ports:
       - 5000:5000
   black-list:
-    image: gaonengwww/taco-black-list
+    build:
+      context: .
+      dockerfile: apps/black-list/dockerfile
     volumes:
       - ./config.toml:/usr/taco/black-list/config.toml
     ports:
       - 8000:8000
   friends:
-    image: gaonengwww/taco-friends
+    build:
+      context: .
+      dockerfile: apps/friends/dockerfile
     volumes:
       - ./config.toml:/usr/taco/friends/config.toml
     ports:
       - 10000:10000
   notice:
-    image: gaonengwww/taco-notice
+    build:
+      context: .
+      dockerfile: apps/notice/dockerfile
     volumes:
       - ./config.toml:/usr/taco/notice/config.toml
     ports:
       - 11000:11000
   reputation:
-    image: gaonengwww/taco-reputation
+    build:
+      context: .
+      dockerfile: apps/reputation/dockerfile
     volumes:
       - ./config.toml:/usr/taco/reputation/config.toml
     ports:
       - 6000:6000
   request:
-    image: gaonengwww/taco-request
+    build:
+      context: .
+      dockerfile: apps/request/dockerfile
     volumes:
       - ./config.toml:/usr/taco/request/config.toml
     ports:
       - 12000:12000
   token:
-    image: gaonengwww/taco-token
+    build:
+      context: .
+      dockerfile: apps/token/dockerfile
     volumes:
       - ./config.toml:/usr/taco/config.toml
     ports:
       - 7000:7000
   user:
-    image: gaonengwww/taco-user
+    build:
+      context: .
+      dockerfile: apps/user/dockerfile
     volumes:
       - ./config.toml:/usr/taco/user/config.toml
     ports:
