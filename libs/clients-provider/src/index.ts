@@ -7,7 +7,7 @@ const providers = {
         options: {
             package: 'account',
             protoPath: './proto/account.proto',
-            url: process.env.ACCOUNT_SERVICE_URL ?? 'localhost:5000',
+            url: process.env.ACCOUNT_SERVICE_URL ?? '0.0.0.0:5000',
         },
     },
     REPUTATION_SERVICE: {
@@ -16,7 +16,7 @@ const providers = {
         options: {
             package: 'reputation',
             protoPath: './proto/reputation.proto',
-            url: process.env.REPUTATION_SERVICE_URL ?? 'localhost:6000',
+            url: process.env.REPUTATION_SERVICE_URL ?? '0.0.0.0:6000',
         },
     },
     TOKEN_SERVICE: {
@@ -25,7 +25,7 @@ const providers = {
         options: {
             package: 'token',
             protoPath: './proto/token.proto',
-            url: process.env.TOKEN_SERVICE_URL ?? 'localhost:7000',
+            url: process.env.TOKEN_SERVICE_URL ?? '0.0.0.0:7000',
             loader: {
                 keepCase: true,
             },
@@ -37,7 +37,7 @@ const providers = {
         options: {
             package: 'blackList',
             protoPath: './proto/black-list.proto',
-            url: process.env.BLACKLIST_SERVICE_URL ?? 'localhost:8000',
+            url: process.env.BLACKLIST_SERVICE_URL ?? '0.0.0.0:8000',
         },
     },
     USER_SERVICE: {
@@ -46,7 +46,7 @@ const providers = {
         options: {
             package: 'user',
             protoPath: './proto/user.proto',
-            url: process.env.USER_SERVICE_URL ?? 'localhost:9000',
+            url: process.env.USER_SERVICE_URL ?? '0.0.0.0:9000',
         },
     },
     FRIEND_SERVICE: {
@@ -55,7 +55,7 @@ const providers = {
         options: {
             package: 'friends',
             protoPath: './proto/friends.proto',
-            url: process.env.FRIEND_SERVICE_URL ?? 'localhost:10000',
+            url: process.env.FRIEND_SERVICE_URL ?? '0.0.0.0:10000',
         },
     },
     NOTICE_SERVICE: {
@@ -64,7 +64,7 @@ const providers = {
         options: {
             package: 'notice',
             protoPath: './proto/notice.proto',
-            url: process.env.NOTICE_SERVICE_URL ?? 'localhost:11000',
+            url: process.env.NOTICE_SERVICE_URL ?? '0.0.0.0:11000',
         },
     },
     REQUEST_SERVICE: {
@@ -73,7 +73,7 @@ const providers = {
         options: {
             package: 'request',
             protoPath: './proto/request.proto',
-            url: process.env.REQUEST_SERVICE_URL ?? 'localhost:12000',
+            url: process.env.REQUEST_SERVICE_URL ?? '0.0.0.0:12000',
         },
     },
 };
