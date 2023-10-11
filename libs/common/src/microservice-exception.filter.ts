@@ -10,7 +10,7 @@ export class MicroServiceExceptionFilter<T> implements ExceptionFilter {
         if (!(exception instanceof MicroserviceError)) {
             return throwError(() => MicroserviceErrorTable.UNKNOWN_ERROR);
         }
-        this.logger.error(exception.code);
+        this.logger.error(exception.status_code);
         this.logger.error(exception.message);
         exception.detail.forEach((d) => this.logger.error(d));
         return throwError(() => exception);
@@ -25,6 +25,7 @@ export const createValidationPipe = () =>
                 const err = errors[i];
                 details.push(...Object.values(err.constraints));
             }
-            throw MicroserviceErrorTable.PARAM_INVALIDATE(details);
+            console.log(details);
+            return MicroserviceErrorTable.PARAM_INVALIDATE(details);
         },
     });
