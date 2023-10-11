@@ -7,7 +7,7 @@ RUN npm install pnpm -g && \
     pnpm install --production && \
     pnpm build request
 VOLUME [ "/usr/taco/reputation" ]
-ENV REQUEST_SERVICE_URL=localhost:12000
+ENV REQUEST_SERVICE_URL=0.0.0.0:12000
 EXPOSE 12000
 
 CMD [ "node", "dist/apps/request/main.js" ]

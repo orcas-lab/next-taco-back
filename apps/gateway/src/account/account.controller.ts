@@ -1,17 +1,17 @@
 import { ChangePassword, Login, Register, forgetPassword } from '@app/dto';
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { Tid } from '@app/common/tid.decorator';
 
 @Controller('account')
 export class AccountController {
     constructor(private service: AccountService) {}
-    @Get('login')
-    async login(data: Login) {
+    @Post('login')
+    async login(@Body() data: Login) {
         return this.service.login(data);
     }
     @Post('register')
-    async register(data: Register) {
+    async register(@Body() data: Register) {
         return this.service.register(data);
     }
     @Put('change-password')

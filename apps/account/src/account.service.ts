@@ -28,6 +28,7 @@ export class AccountService {
         @InjectRedis() private redis: Redis,
     ) {}
     async register(dto: Register): Promise<AccountRegisterServiceResponse> {
+        console.log(dto);
         const { tid } = dto;
         if (!isEmpty((await this.accountModel.findOne({ tid }).exec()) ?? [])) {
             throw MicroserviceErrorTable.TID_EXISTS;
