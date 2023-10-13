@@ -7,6 +7,7 @@ import { Redis } from 'ioredis';
 import { Injectable } from '@nestjs/common';
 import { NameSpace } from '@app/utils';
 import { omit } from 'ramda';
+import { WrapperStruct } from '@app/dto/wrapper';
 
 @Injectable()
 export class TokenService {
@@ -16,8 +17,8 @@ export class TokenService {
         @InjectRedis()
         private readonly redis: Redis,
     ) {}
-    async sign(data: Record<string, any>): Promise<TokenPair> {
-        const access_token = await this.jwt.sign(data, {
+    async sign(data: WrapperStruct): Promise<TokenPair> {
+        const access_token = await this.jwt.sign(data.value, {
             expiresIn:
                 this.config.get<'key.access_token.expire'>(
                     'key.access_token.expire',

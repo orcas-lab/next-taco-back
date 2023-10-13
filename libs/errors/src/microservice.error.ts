@@ -1,3 +1,4 @@
+import { status } from '@grpc/grpc-js';
 import { MicroserviceError } from './errors.service';
 /**
  * - <等级>  1位 1为系统错误2为用户错误
@@ -12,6 +13,7 @@ export const MicroserviceErrorTable = {
         [],
         'GLOBAL',
         '',
+        status.UNKNOWN,
     ),
     SIGN_FAIL: new MicroserviceError(
         1000002,
@@ -19,6 +21,7 @@ export const MicroserviceErrorTable = {
         [],
         'GLOBAL',
         '',
+        status.INVALID_ARGUMENT,
     ),
     TOKEN_EXPIRED: new MicroserviceError(
         1000003,
@@ -26,6 +29,7 @@ export const MicroserviceErrorTable = {
         [],
         'GLOBAL',
         '',
+        status.UNAUTHENTICATED,
     ),
     TOKEN_INVALIDATE: new MicroserviceError(
         10000004,
@@ -33,6 +37,7 @@ export const MicroserviceErrorTable = {
         [],
         'GLOBAL',
         '',
+        status.UNAUTHENTICATED,
     ),
     PARAM_INVALIDATE: (details: string[]) =>
         new MicroserviceError(
@@ -41,6 +46,7 @@ export const MicroserviceErrorTable = {
             details,
             'GLOBAL',
             '',
+            status.INVALID_ARGUMENT,
         ),
     // 账号服务
     TID_EXISTS: new MicroserviceError(

@@ -18,10 +18,6 @@ export class AccountController {
     addUser(data: Register) {
         return this.accountService.register(data);
     }
-    @GrpcMethod('AccountService', 'accountExists')
-    login(data: AccountExists) {
-        return this.accountService.accountExists(data);
-    }
     @GrpcMethod('AccountService', 'changePassword')
     changePassword(data: ChangePasswordMicroService) {
         return this.accountService.changePassword(data);

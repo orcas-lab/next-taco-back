@@ -47,7 +47,7 @@ export class AccountService {
         ]);
         return true;
     }
-    async accountExists(data: AccountExists): Promise<boolean> {
+    async accountExists(data: AccountExists): Promise<{ value: boolean }> {
         const { tid, password } = data;
         const findCondition = password
             ? {
@@ -58,7 +58,7 @@ export class AccountService {
         const info = await this.accountModel
             .findOne(findCondition, { _id: 1 })
             .exec();
-        return !isEmpty(info ?? {});
+        return { value: !isEmpty(info ?? {}) };
     }
     async changePassword(dto: ChangePasswordMicroService) {
         const info = await this.accountModel
