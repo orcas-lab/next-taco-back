@@ -4,6 +4,7 @@ import {
     DeleteAccount,
     Login,
     Register,
+    TokenPair,
     forgetPassword,
 } from '@app/dto';
 import { Inject, Injectable } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { AccountService as MicroserviceAccountSerivce } from '../../../account/src/account.service';
 import { TokenService } from '../../../token/src/token.service';
 import { API_ERROR } from '@app/errors/gateway.error';
+import { Observable, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AccountService {
@@ -28,10 +30,16 @@ export class AccountService {
         this.tokenService = this.tokenClient.getService(TokenService.name);
     }
     async login(data: Login) {
-        const isExist = await this.accountService.accountExists(data);
-        if (isExist) {
-            const tokenPair = await this.tokenService.sign({ tid: data.tid });
-            return tokenPair;
+        const isExist = (await this.accountService.accountExists(
+            data,
+        )) as unknown as Observable<{ value: boolean }>;
+        const { value: exists } = await lastValueFrom(isExist);
+        console.log(exists);
+        if (exists) {
+            const tokenPair = (await this.tokenService.sign({
+                value: { tid: data.tid },
+            })) as unknown as Observable<TokenPair>;
+            return lastValueFrom(tokenPair);
         }
         throw API_ERROR.USER_OR_PASSWORD_ERROR;
     }
