@@ -1,66 +1,22 @@
 export interface ConfigOption {
-    cluster: {
-        enable: boolean;
-    };
-    redis: {
-        host: string;
-        port: number;
-        db: number;
-        password: string;
+    api: {
+        prefix: string;
     };
     db: {
-        uri: string;
+        host: string;
+        port: number;
+        username: string;
+        password: string;
+        synchronize: boolean | string;
     };
-    account: {
-        reputation: {
-            default: number;
-        };
+    bcrypt: {
+        cost: number;
+        salt: string;
     };
-    reputation: {
-        // 最小信誉分
-        min: number;
-        // 减少的步数 0.1则是每接收一个举报则 -0.1
-        step: number;
-        // 一个范围 [start,end?]
-        limit: {
-            // 禁止登陆
-            ban: [number, number?];
-            // 禁止发言(全局)
-            muted: [number, number?];
-            // 禁止发送申请(任何)
-            request: [number, number?];
-        };
-    };
-    key: {
-        path: {
-            pub: string;
-            pri: string;
-        };
-        type: string;
-        passphrase: string;
-        userIDs?: {
-            name: string;
-            comment: string;
-            email: string;
-        };
-        access_token: {
-            expire: string;
-        };
-        refresh_token: {
-            expire: string;
-        };
-    };
-    blackList: {
-        size: number;
-    };
-    requests: {
-        size: number;
-    };
-    friends: {
-        size: number;
-    };
-    notices: {
-        size: number;
+    jwt: {
+        expire: string;
+        privateKeyPath: string;
+        publicKeyPath: string;
     };
 }
 

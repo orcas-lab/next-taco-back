@@ -18,25 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/db": [
-        "libs/db/src"
+      "@app/configure": [
+        "libs/configure/src"
       ],
-      "@app/db/*": [
-        "libs/db/src/*"
-      ],
-      "@app/utils": [
-        "libs/utils",
-        "libs/utils/src"
-      ],
-      "@app/utils/*": [
-        "libs/utils/*",
-        "libs/utils/src/*"
-      ],
-      "@app/config": [
-        "libs/config/src"
-      ],
-      "@app/config/*": [
-        "libs/config/src/*"
+      "@app/configure/*": [
+        "libs/configure/src/*"
       ],
       "@app/interface": [
         "libs/interface/src"
@@ -44,71 +30,35 @@
       "@app/interface/*": [
         "libs/interface/src/*"
       ],
+      "@app/entity": [
+        "libs/entity/src"
+      ],
+      "@app/entity/*": [
+        "libs/entity/src/*"
+      ],
+      "@app/bcrypto": [
+        "libs/bcrypto/src"
+      ],
+      "@app/bcrypto/*": [
+        "libs/bcrypto/src/*"
+      ],
+      "@app/error": [
+        "libs/error/src"
+      ],
+      "@app/error/*": [
+        "libs/error/src/*"
+      ],
       "@app/mock": [
-        "libs/mock"
+        "libs/mock/src"
       ],
       "@app/mock/*": [
-        "libs/mock/*"
-      ],
-      "@app/redis": [
-        "libs/redis/src"
-      ],
-      "@app/redis/*": [
-        "libs/redis/src/*"
-      ],
-      "@app/schema": [
-        "libs/schema/src"
-      ],
-      "@app/schema/*": [
-        "libs/schema/src/*"
-      ],
-      "@app/dto": [
-        "libs/dto/src"
-      ],
-      "@app/dto/*": [
-        "libs/dto/src/*"
-      ],
-      "@app/common": [
-        "libs/common/src"
-      ],
-      "@app/common/*": [
-        "libs/common/src/*"
-      ],
-      "@app/errors": [
-        "libs/errors/src"
-      ],
-      "@app/errors/*": [
-        "libs/errors/src/*"
-      ],
-      "@app/keypair": [
-        "libs/keypair/src"
-      ],
-      "@app/keypair/*": [
-        "libs/keypair/src/*"
+        "libs/mock/src/*"
       ],
       "@app/jwt": [
         "libs/jwt/src"
       ],
       "@app/jwt/*": [
         "libs/jwt/src/*"
-      ],
-      "@app/factory": [
-        "libs/factory/src"
-      ],
-      "@app/factory/*": [
-        "libs/factory/src/*"
-      ],
-      "@app/clients-provider": [
-        "libs/clients-provider/src"
-      ],
-      "@app/clients-provider/*": [
-        "libs/clients-provider/src/*"
-      ],
-      "@app/cmd-process": [
-        "libs/cmd-process/src"
-      ],
-      "@app/cmd-process/*": [
-        "libs/cmd-process/src/*"
       ]
     }
   }

@@ -1,22 +1,27 @@
-import { KeypairService } from '@app/keypair';
-import { Injectable } from '@nestjs/common';
-import { SignOptions, VerifyOptions, decode, verify, sign } from 'jsonwebtoken';
+import { ConfigureService } from '@app/configure';
+import { Injectable, Logger } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { SignOptions, VerifyOptions, sign, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class JwtService {
-    constructor(private keypair: KeypairService) {}
-    async sign(data: string | object | Buffer, options?: SignOptions) {
-        const { pri } = this.keypair.keyPair;
-        return sign(data, pri, options);
+    private privateKey: string;
+    private publicKey: string;
+    private Logger: Logger = new Logger('JWTService');
+    constructor(private readonly config: ConfigureService) {
+        this.privateKey = readFileSync(
+            this.config.get('jwt.privateKeyPath'),
+        ).toString();
+        this.Logger.log('Load private key success');
+        this.publicKey = readFileSync(
+            this.config.get('jwt.privateKeyPath'),
+        ).toString();
+        this.Logger.log('Load public key success');
     }
-    async verify(token: string, options?: VerifyOptions) {
-        const { pub } = this.keypair.keyPair;
-        return verify(token, pub, options);
+    sign(data: string | Buffer | object, option: SignOptions) {
+        return sign(data, this.privateKey, option);
     }
-    async decode(
-        token: string,
-        options?: { json?: boolean; complete?: boolean },
-    ) {
-        return decode(token, options);
+    verify(token: string, option: VerifyOptions) {
+        return verify(token, this.publicKey, option);
     }
 }

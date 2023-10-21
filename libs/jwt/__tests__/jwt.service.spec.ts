@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '../src/jwt.service';
-import { KeypairModule } from '@app/keypair';
+import { ConfigureModule } from '@app/configure';
 
 describe('JwtService', () => {
     let service: JwtService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [KeypairModule.forRoot()],
+            imports: [ConfigureModule.forRoot('config.toml')],
             providers: [JwtService],
         }).compile();
 
@@ -17,21 +17,26 @@ describe('JwtService', () => {
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
-    it('sign', () => {
+    it('sign success', () => {
         expect(
-            service.sign('123', { algorithm: 'ES512' }),
-        ).resolves.toBeDefined();
+            service.sign({ a: '1' }, { algorithm: 'RS256', expiresIn: '1day' }),
+        ).toBeDefined();
+        expect(
+            service.sign(
+                { a: '1' },
+                { algorithm: 'RS256', expiresIn: '1days' },
+            ),
+        ).toBeDefined();
     });
-    it('verify', async () => {
-        return expect(
-            service.verify(await service.sign('123', { algorithm: 'ES512' }), {
-                algorithms: ['ES512'],
-            }),
-        ).resolves.toBeDefined();
-    });
-    it('decode', async () => {
-        return expect(
-            service.decode(await service.sign('123', { algorithm: 'ES512' })),
-        ).resolves.toBeDefined();
+    it('verify success', () => {
+        expect(
+            service.verify(
+                service.sign(
+                    { a: '1' },
+                    { algorithm: 'RS256', expiresIn: '1days' },
+                ),
+                { algorithms: ['RS256'] },
+            ),
+        ).toMatchObject({ a: '1' });
     });
 });

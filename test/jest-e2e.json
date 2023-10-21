@@ -1,0 +1,29 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@app/configure/(.*)": "<rootDir>/../libs/configure/src/$1",
+    "@app/configure": "<rootDir>/../libs/configure/src",
+    "@app/interface/(.*)": "<rootDir>/../libs/interface/src/$1",
+    "@app/interface": "<rootDir>/../libs/interface/src",
+    "@app/entity/(.*)": "<rootDir>/../libs/entity/src/$1",
+    "@app/entity": "<rootDir>/../libs/entity/src",
+    "@app/bcrypto/(.*)": "<rootDir>/../libs/bcrypto/src/$1",
+    "@app/bcrypto": "<rootDir>/../libs/bcrypto/src",
+    "@app/error/(.*)": "<rootDir>/../libs/error/src/$1",
+    "@app/error": "<rootDir>/../libs/error/src",
+    "@app/mock/(.*)": "<rootDir>/../libs/mock/src/$1",
+    "@app/mock": "<rootDir>/../libs/mock/src",
+    "@app/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
+    "@app/jwt": "<rootDir>/../libs/jwt/src"
+  }
+}

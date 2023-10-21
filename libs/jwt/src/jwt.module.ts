@@ -1,14 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { JwtService } from './jwt.service';
-import { KeypairModule } from '@app/keypair';
+import { ConfigureModule } from '@app/configure';
 
-@Module({
-    imports: [KeypairModule.forRoot()],
-})
+@Module({})
 export class JwtModule {
     static use(): DynamicModule {
         return {
             module: JwtModule,
+            imports: [ConfigureModule.forRoot('config.toml')],
             providers: [JwtService],
             exports: [JwtService],
         };
