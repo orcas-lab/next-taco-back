@@ -8,4 +8,5 @@ export const mockRepository: <T>() => MockRepositoryType<Repository<T>> =
         findOne: jest.fn(),
         save: jest.fn(),
         delete: jest.fn(),
+        update: jest.fn(),
     }));

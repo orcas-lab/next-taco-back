@@ -6,10 +6,10 @@ import { Account } from '@app/entity';
 import { MockRepositoryType, mockRepository } from '@app/mock';
 import { Repository } from 'typeorm';
 import { mock } from 'mockjs';
-import exp from 'constants';
 import { AccountError } from '@app/error';
 import { JwtModule } from '@app/jwt';
 import { getClusterToken } from '@liaoliaots/nestjs-redis';
+import { useBCrypt } from '@app/bcrypto';
 
 describe('AccountService', () => {
     let service: AccountService;
@@ -40,31 +40,31 @@ describe('AccountService', () => {
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
+    const registerData = mock({
+        tid: '@guid',
+        email: '@email',
+        password: '@string',
+        question: {
+            q1: 'a1',
+        },
+        active: '@boolean',
+        create_at: '@integer(1546300800000, 1893436800000)',
+    });
     describe('register', () => {
-        const data = mock({
-            tid: '@guid',
-            email: '@email',
-            password: '@string',
-            question: {
-                q1: 'a1',
-            },
-            active: '@boolean',
-            create_at: '@integer(1546300800000, 1893436800000)',
-        });
         it('success', () => {
             repositoryMock.findOne.mockResolvedValue(null);
-            repositoryMock.save.mockResolvedValue(data);
+            repositoryMock.save.mockResolvedValue(registerData);
             return expect(
                 service.register({
-                    tid: '',
-                    password: '',
+                    tid: registerData.tid,
+                    password: useBCrypt(registerData.password, 'salt', 12),
                     email: '',
                     question: { q1: 'a1' },
                 }),
-            ).resolves.toStrictEqual(data);
+            ).resolves.toStrictEqual(registerData);
         });
         it('fail', () => {
-            repositoryMock.findOne.mockResolvedValue(data);
+            repositoryMock.findOne.mockResolvedValue(registerData);
             return expect(
                 service.register({
                     tid: '',
@@ -76,29 +76,38 @@ describe('AccountService', () => {
         });
     });
     describe('login', () => {
-        const data = mock({
-            tid: '@guid',
-            email: '@email',
-            password: '@string',
-            question: {
-                q1: 'a1',
-            },
-            active: '@boolean',
-            create_at: '@integer(1546300800000, 1893436800000)',
-        });
         it('success', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
             repositoryMock.findOne.mockResolvedValue(data);
             return expect(
-                service.login({ tid: data.tid, password: data.password }),
+                service.login({
+                    tid: data.tid,
+                    password: registerData.password,
+                }),
             ).resolves.not.toMatchObject({
                 access_token: '',
                 refresh_token: '',
             });
         });
+        it('tid not exists', () => {
+            repositoryMock.findOne.mockResolvedValue(null);
+            return expect(
+                service.login({ tid: 'not-exists', password: '0000' }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
     });
     describe('delete account', () => {
         it('account not exists', () => {
-            expect(
+            return expect(
                 service.delete({
                     question: {},
                     tid: 'no-exists-account',
@@ -117,7 +126,7 @@ describe('AccountService', () => {
                 create_at: '@integer(1546300800000, 1893436800000)',
             });
             repositoryMock.findOne.mockResolvedValue(data);
-            expect(
+            return expect(
                 service.delete({
                     question: { q1: 'a1' },
                     tid: data.tid,
@@ -136,10 +145,61 @@ describe('AccountService', () => {
                 create_at: '@integer(1546300800000, 1893436800000)',
             });
             repositoryMock.findOne.mockResolvedValue(data);
-            expect(
+            return expect(
                 service.delete({
                     question: { q1: 'a1' },
                     tid: data.tid,
+                }),
+            ).resolves.toBeUndefined();
+        });
+    });
+    describe('update password', () => {
+        it('user not exists', () => {
+            return expect(
+                service.updatePassword({
+                    question: {},
+                    tid: 'no-exists-account',
+                    password: '',
+                }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
+        it('question invalide', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.updatePassword({
+                    question: {},
+                    tid: data.tid,
+                    password: '',
+                }),
+            ).rejects.toThrow(AccountError.QUESTION_INVALIDE);
+        });
+        it('success', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.updatePassword({
+                    question: data.question,
+                    tid: data.tid,
+                    password: '',
                 }),
             ).resolves.toBeUndefined();
         });

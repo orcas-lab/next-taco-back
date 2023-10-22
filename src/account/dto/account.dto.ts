@@ -33,3 +33,14 @@ export class DeleteAccountRequest {
     @IsNotEmptyObject()
     question: { [x: string]: string | number | boolean };
 }
+
+export class UpdatePasswordRequest {
+    @IsString()
+    tid: string;
+    @IsNotEmpty()
+    @IsString()
+    password: string;
+    @IsNotEmpty()
+    @IsNotEmptyObject()
+    question: { [x: string]: string | number | boolean };
+}

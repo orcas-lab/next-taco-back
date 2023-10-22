@@ -6,6 +6,7 @@ import {
     DeleteAccountRequest,
     LoginRequest,
     RegisterReuqest,
+    UpdatePasswordRequest,
 } from './dto/account.dto';
 import { useBCrypt } from '@app/bcrypto';
 import { ConfigureService } from '@app/configure';
@@ -27,17 +28,6 @@ export class AccountService {
         private readonly config: ConfigureService,
         private readonly jwt: JwtService,
     ) {}
-    private async userExists(tid: string) {
-        const account = await this.account.findOne({
-            where: {
-                tid,
-            },
-            select: {
-                tid: true,
-            },
-        });
-        return !isNil(account);
-    }
     async register(data: RegisterReuqest) {
         const userExists = await this.userExists(data.tid);
         if (userExists) {
@@ -58,23 +48,40 @@ export class AccountService {
         if (!(await accountExists)) {
             throw AccountError.ACCOUNT_NOT_EXISTS;
         }
-        const accountInfo = this.account.findOne({
-            where: {
-                tid: data.tid,
-            },
-        });
-        if (equals((await accountInfo).question, data.question)) {
+        const questionValide = this.checkQuestion(data);
+        if (await questionValide) {
             await this.account.delete({
                 tid: data.tid,
             });
-            const ns = {
-                access_token: namespace.TOKEN('access', data.tid),
-                refresh_token: namespace.TOKEN('refresh', data.tid),
-            };
-            await this.cluster.del(ns.access_token, ns.refresh_token);
+            await this.revokeToken(data);
             return;
         }
         throw AccountError.QUESTION_INVALIDE;
+    }
+
+    async updatePassword(data: UpdatePasswordRequest) {
+        const userExists = this.userExists(data.tid);
+        if (!(await userExists)) {
+            throw AccountError.ACCOUNT_NOT_EXISTS;
+        }
+        const questionValide = this.checkQuestion(data);
+        if (!(await questionValide)) {
+            throw AccountError.QUESTION_INVALIDE;
+        }
+        const password = useBCrypt(
+            data.password,
+            this.config.get('bcrypt.salt'),
+            this.config.get('bcrypt.cost'),
+        );
+        await this.account.update(
+            {
+                tid: data.tid,
+            },
+            {
+                password,
+            },
+        );
+        await this.revokeToken(data);
     }
     async login(data: LoginRequest) {
         const isExists = await this.userExists(data.tid);
@@ -84,19 +91,23 @@ export class AccountService {
         const account = await this.account.findOne({
             where: {
                 tid: data.tid,
-                password: useBCrypt(
-                    data.password,
-                    this.config.get('bcrypt.salt'),
-                    this.config.get('bcrypt.cost'),
-                ),
                 active: true,
             },
             select: {
                 tid: true,
             },
         });
-        if (isEmpty(account)) {
+        if (
+            account.password ===
+            useBCrypt(
+                data.password,
+                this.config.get('bcrypt.salt'),
+                this.config.get('bcrypt.cost'),
+            )
+        ) {
             throw AccountError.TID_OR_PASSWORD_ERROR;
+        }
+        if (isEmpty(account)) {
         }
         const access_token = this.jwt.sign(account, {
             algorithm: 'RS256',
@@ -121,5 +132,34 @@ export class AccountService {
             parseInt(String(ms('2 days') / 1000)),
         );
         return { access_token, refresh_token };
+    }
+    private async checkQuestion(data: {
+        tid: string;
+        question: { [x: string]: any };
+    }) {
+        const accountInfo = this.account.findOne({
+            where: {
+                tid: data.tid,
+            },
+        });
+        return equals((await accountInfo).question, data.question);
+    }
+    private async userExists(tid: string) {
+        const account = await this.account.findOne({
+            where: {
+                tid,
+            },
+            select: {
+                tid: true,
+            },
+        });
+        return !isNil(account);
+    }
+    private async revokeToken(data: { tid: string }) {
+        const ns = {
+            access_token: namespace.TOKEN('access', data.tid),
+            refresh_token: namespace.TOKEN('refresh', data.tid),
+        };
+        await this.cluster.del(ns.access_token, ns.refresh_token);
     }
 }
