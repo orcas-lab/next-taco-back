@@ -23,6 +23,7 @@ describe('AccountService', () => {
                     useValue: {
                         set: jest.fn().mockResolvedValue(1),
                         expire: jest.fn().mockResolvedValue(1),
+                        del: jest.fn().mockResolvedValue(1),
                     },
                 },
                 AccountService,
@@ -93,6 +94,54 @@ describe('AccountService', () => {
                 access_token: '',
                 refresh_token: '',
             });
+        });
+    });
+    describe('delete account', () => {
+        it('account not exists', () => {
+            expect(
+                service.delete({
+                    question: {},
+                    tid: 'no-exists-account',
+                }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
+        it('account exists but question is invalide', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a2',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            expect(
+                service.delete({
+                    question: { q1: 'a1' },
+                    tid: data.tid,
+                }),
+            ).rejects.toThrow(AccountError.QUESTION_INVALIDE);
+        });
+        it('success', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            expect(
+                service.delete({
+                    question: { q1: 'a1' },
+                    tid: data.tid,
+                }),
+            ).resolves.toBeUndefined();
         });
     });
 });

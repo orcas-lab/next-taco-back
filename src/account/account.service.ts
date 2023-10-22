@@ -2,10 +2,14 @@ import { Account, createAccount } from '@app/entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LoginRequest, RegisterReuqest } from './dto/account.dto';
+import {
+    DeleteAccountRequest,
+    LoginRequest,
+    RegisterReuqest,
+} from './dto/account.dto';
 import { useBCrypt } from '@app/bcrypto';
 import { ConfigureService } from '@app/configure';
-import { isEmpty, isNil } from 'ramda';
+import { equals, isEmpty, isNil } from 'ramda';
 import { AccountError } from '@app/error';
 import { JwtService } from '@app/jwt';
 import { Cluster } from 'ioredis';
@@ -48,6 +52,29 @@ export class AccountService {
             ),
         });
         return this.account.save(account);
+    }
+    async delete(data: DeleteAccountRequest & { tid: string }) {
+        const accountExists = this.userExists(data.tid);
+        if (!(await accountExists)) {
+            throw AccountError.ACCOUNT_NOT_EXISTS;
+        }
+        const accountInfo = this.account.findOne({
+            where: {
+                tid: data.tid,
+            },
+        });
+        if (equals((await accountInfo).question, data.question)) {
+            await this.account.delete({
+                tid: data.tid,
+            });
+            const ns = {
+                access_token: namespace.TOKEN('access', data.tid),
+                refresh_token: namespace.TOKEN('refresh', data.tid),
+            };
+            await this.cluster.del(ns.access_token, ns.refresh_token);
+            return;
+        }
+        throw AccountError.QUESTION_INVALIDE;
     }
     async login(data: LoginRequest) {
         const isExists = await this.userExists(data.tid);

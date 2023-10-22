@@ -27,3 +27,9 @@ export class LoginRequest {
     @IsString()
     password: string;
 }
+
+export class DeleteAccountRequest {
+    @IsNotEmpty()
+    @IsNotEmptyObject()
+    question: { [x: string]: string | number | boolean };
+}
