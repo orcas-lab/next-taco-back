@@ -1,3 +1,5 @@
+import { ClusterNode, ClusterOptions } from 'ioredis';
+
 export interface ConfigOption {
     api: {
         prefix: string;
@@ -8,6 +10,10 @@ export interface ConfigOption {
         username: string;
         password: string;
         synchronize: boolean | string;
+    };
+    redis: {
+        nodes: ClusterNode[];
+        options: ClusterOptions;
     };
     bcrypt: {
         cost: number;

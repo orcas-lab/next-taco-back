@@ -8,10 +8,16 @@ import { ConfigureService } from '@app/configure';
 import { isEmpty, isNil } from 'ramda';
 import { AccountError } from '@app/error';
 import { JwtService } from '@app/jwt';
+import { Cluster } from 'ioredis';
+import { InjectCluster } from '@liaoliaots/nestjs-redis';
+import { namespace } from '@app/shared';
+import ms from 'ms';
 
 @Injectable()
 export class AccountService {
     constructor(
+        @InjectCluster()
+        private cluster: Cluster,
         @InjectRepository(Account)
         private readonly account: Repository<Account>,
         private readonly config: ConfigureService,
@@ -65,7 +71,6 @@ export class AccountService {
         if (isEmpty(account)) {
             throw AccountError.TID_OR_PASSWORD_ERROR;
         }
-        console.log(account);
         const access_token = this.jwt.sign(account, {
             algorithm: 'RS256',
             expiresIn: '1d',
@@ -74,6 +79,20 @@ export class AccountService {
             algorithm: 'RS256',
             expiresIn: '2 days',
         });
+        const ns = {
+            access_token: namespace.TOKEN('access', account.tid),
+            refresh_token: namespace.TOKEN('refresh', account.tid),
+        };
+        await this.cluster.set(ns.access_token, access_token);
+        await this.cluster.set(ns.refresh_token, refresh_token);
+        await this.cluster.expire(
+            ns.access_token,
+            parseInt(String(ms('1d') / 1000)),
+        );
+        await this.cluster.expire(
+            ns.refresh_token,
+            parseInt(String(ms('2 days') / 1000)),
+        );
         return { access_token, refresh_token };
     }
 }

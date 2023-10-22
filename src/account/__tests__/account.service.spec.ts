@@ -9,6 +9,7 @@ import { mock } from 'mockjs';
 import exp from 'constants';
 import { AccountError } from '@app/error';
 import { JwtModule } from '@app/jwt';
+import { getClusterToken } from '@liaoliaots/nestjs-redis';
 
 describe('AccountService', () => {
     let service: AccountService;
@@ -17,6 +18,13 @@ describe('AccountService', () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigureModule.forRoot('config.toml'), JwtModule.use()],
             providers: [
+                {
+                    provide: getClusterToken('default'),
+                    useValue: {
+                        set: jest.fn().mockResolvedValue(1),
+                        expire: jest.fn().mockResolvedValue(1),
+                    },
+                },
                 AccountService,
                 {
                     provide: getRepositoryToken(Account),
@@ -30,16 +38,6 @@ describe('AccountService', () => {
 
     it('should be defined', () => {
         expect(service).toBeDefined();
-    });
-    const data = mock({
-        tid: '@guid',
-        email: '@email',
-        password: '@string',
-        question: {
-            q1: 'a1',
-        },
-        active: '@boolean',
-        create_at: '@integer(1546300800000, 1893436800000)',
     });
     describe('register', () => {
         const data = mock({
