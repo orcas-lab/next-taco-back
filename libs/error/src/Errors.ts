@@ -48,11 +48,3 @@ export const AccountError = {
         'QUESTION_INVALIDE',
     ),
 };
-
-export const GlobalError = {
-    UNKNOWN: new ApiError(
-        HttpStatus.BAD_REQUEST,
-        getCodes(Modules.GLOBAL, ErrorFrom.INNER, 1),
-        'ACCOUNT_NOT_EXISTS',
-    ),
-};

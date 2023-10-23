@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Profile } from './profile.entity';
 
-@Entity()
+@Entity({ name: 'Account' })
 export class Account {
     @PrimaryColumn({ select: true })
     tid: string;
@@ -9,7 +9,7 @@ export class Account {
     email: string;
     @Column()
     password: string;
-    @Column()
+    @Column({ type: 'json' })
     question: {
         [x: string]: string | number | boolean;
     };
@@ -18,7 +18,7 @@ export class Account {
     @OneToOne(() => Profile)
     @JoinColumn()
     profile: Profile;
-    @Column({ default: new Date().getTime() })
+    @Column({ default: new Date().getTime(), type: 'bigint' })
     create_at: number;
 }
 

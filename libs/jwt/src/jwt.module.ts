@@ -10,6 +10,7 @@ export class JwtModule {
             imports: [ConfigureModule.forRoot('config.toml')],
             providers: [JwtService],
             exports: [JwtService],
+            global: true,
         };
     }
 }

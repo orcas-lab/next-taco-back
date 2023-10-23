@@ -8,6 +8,7 @@ username="root"
 password="root"
 database="taco"
 synchronize=true
+autoLoadEntities=true
 
 [bcrypt]
 salt="VG!ha(Rwa_xurpzyB4"

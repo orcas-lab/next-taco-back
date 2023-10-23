@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
 import { ClusterModule } from '@liaoliaots/nestjs-redis';
+import { JwtModule } from '@app/jwt';
+import 'reflect-metadata';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
@@ -33,6 +35,7 @@ import { ClusterModule } from '@liaoliaots/nestjs-redis';
                 };
             },
         }),
+        JwtModule.use(),
         AccountModule,
     ],
 })

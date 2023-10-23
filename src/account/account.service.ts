@@ -95,10 +95,11 @@ export class AccountService {
             },
             select: {
                 tid: true,
+                password: true,
             },
         });
         if (
-            account.password ===
+            account.password !==
             useBCrypt(
                 data.password,
                 this.config.get('bcrypt.salt'),
@@ -107,16 +108,20 @@ export class AccountService {
         ) {
             throw AccountError.TID_OR_PASSWORD_ERROR;
         }
-        if (isEmpty(account)) {
-        }
-        const access_token = this.jwt.sign(account, {
-            algorithm: 'RS256',
-            expiresIn: '1d',
-        });
-        const refresh_token = this.jwt.sign(account, {
-            algorithm: 'RS256',
-            expiresIn: '2 days',
-        });
+        const access_token = this.jwt.sign(
+            { ...account },
+            {
+                algorithm: 'RS256',
+                expiresIn: '1d',
+            },
+        );
+        const refresh_token = this.jwt.sign(
+            { ...account },
+            {
+                algorithm: 'RS256',
+                expiresIn: '2 days',
+            },
+        );
         const ns = {
             access_token: namespace.TOKEN('access', account.tid),
             refresh_token: namespace.TOKEN('refresh', account.tid),
