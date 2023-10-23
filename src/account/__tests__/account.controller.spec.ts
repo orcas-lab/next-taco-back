@@ -1,14 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountController } from '../account.controller';
 import { AccountService } from '../account.service';
+import { ConfigureModule } from '@app/configure';
+import { JwtModule } from '@app/jwt';
 
 describe('AccountController', () => {
     let controller: AccountController;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [ConfigureModule.forRoot('config.toml'), JwtModule.use()],
             controllers: [AccountController],
-            providers: [AccountService],
+            providers: [
+                {
+                    provide: AccountService,
+                    useValue: {
+                        login: jest.fn().mockResolvedValue(''),
+                        register: jest.fn().mockResolvedValue(''),
+                        delete: jest.fn().mockResolvedValue(''),
+                        updatePassword: jest.fn().mockResolvedValue(''),
+                    },
+                },
+            ],
         }).compile();
 
         controller = module.get<AccountController>(AccountController);
@@ -16,5 +29,28 @@ describe('AccountController', () => {
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
+    });
+    it('login', () => {
+        expect(
+            controller.login({ tid: '', password: '' }),
+        ).resolves.toBeDefined();
+    });
+    it('register', () => {
+        expect(
+            controller.register({
+                email: '',
+                password: '',
+                tid: '',
+                question: {},
+            }),
+        ).resolves.toBeDefined();
+    });
+    it('delete', () => {
+        expect(controller.delete('', { question: {} })).resolves.toBeDefined();
+    });
+    it('update password', () => {
+        expect(
+            controller.changePassword({ tid: '', question: {}, password: '' }),
+        ).resolves.toBeDefined();
     });
 });
