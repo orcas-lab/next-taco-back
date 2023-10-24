@@ -3,9 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
-import { ClusterModule } from '@liaoliaots/nestjs-redis';
 import { JwtModule } from '@app/jwt';
 import 'reflect-metadata';
+import { ClusterModule } from '@liaoliaots/nestjs-redis';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
@@ -28,6 +28,7 @@ import 'reflect-metadata';
             inject: [ConfigureService],
             async useFactory(configure: ConfigureService) {
                 return {
+                    readyLog: true,
                     config: {
                         nodes: configure.get('redis.nodes'),
                         ...configure.get('redis.options'),

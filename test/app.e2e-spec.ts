@@ -19,13 +19,13 @@ const drop = async () => {
 };
 describe('AppController (e2e)', () => {
     let app: INestApplication;
+    let token = '';
     beforeAll(async () => {
         await drop();
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
         app = moduleFixture.createNestApplication();
-        // app.useLogger(true);
         app.useGlobalFilters(new HttpExceptionFilter());
         await app.init();
     }, 60 * 1000);
@@ -41,30 +41,38 @@ describe('AppController (e2e)', () => {
             password: 'test',
             question: {},
         };
-        it('success', () => {
-            request(app.getHttpServer())
+        it('success', async () => {
+            const { statusCode } = await request(app.getHttpServer())
                 .post('/account/register')
-                .send(registerData)
-                .expect(HttpStatus.CREATED);
+                .send(registerData);
+            expect(statusCode).toBe(HttpStatus.CREATED);
+            return Promise.resolve();
         });
-        it('repeat', () => {
-            request(app.getHttpServer())
+        it('repeat', async () => {
+            const { statusCode } = await request(app.getHttpServer())
                 .post('/account/register')
-                .send(registerData)
-                .expect(HttpStatus.BAD_REQUEST);
+                .send(registerData);
+            expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
+            return Promise.resolve();
         });
     });
     describe('login', () => {
-        it('success', () => {
-            const loginData: LoginRequest = {
-                tid: 'tester',
-                password: 'test',
-            };
-            request(app.getHttpServer())
-                .post('/account/login')
-                .send(loginData)
-                .expect(HttpStatus.CREATED);
-        });
+        const loginData: LoginRequest = {
+            tid: 'tester',
+            password: 'test',
+        };
+        it(
+            'success',
+            async () => {
+                const { statusCode, body } = await request(app.getHttpServer())
+                    .post('/account/login')
+                    .send(loginData);
+                expect(statusCode).toBe(HttpStatus.CREATED);
+                token = body.access_token;
+                return Promise.resolve();
+            },
+            60 * 1000,
+        );
         it('password error', () => {
             const loginData: LoginRequest = {
                 tid: 'tester',
