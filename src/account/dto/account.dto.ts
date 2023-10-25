@@ -35,8 +35,6 @@ export class DeleteAccountRequest {
 }
 
 export class UpdatePasswordRequest {
-    @IsString()
-    tid: string;
     @IsNotEmpty()
     @IsString()
     password: string;

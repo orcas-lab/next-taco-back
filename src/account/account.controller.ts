@@ -35,7 +35,10 @@ export class AccountController {
     }
     @UseGuards(AuthGuard)
     @Patch('/change-password')
-    async changePassword(data: UpdatePasswordRequest) {
-        return this.accountService.updatePassword(data);
+    async changePassword(
+        @User('tid') tid: string,
+        data: UpdatePasswordRequest,
+    ) {
+        return this.accountService.updatePassword({ ...data, tid });
     }
 }

@@ -3,7 +3,12 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
-import { LoginRequest, RegisterReuqest } from 'src/account/dto/account.dto';
+import {
+    DeleteAccountRequest,
+    LoginRequest,
+    RegisterReuqest,
+    UpdatePasswordRequest,
+} from 'src/account/dto/account.dto';
 import { DataSource } from 'typeorm';
 let db: DataSource;
 const drop = async () => {
@@ -86,6 +91,101 @@ describe('AppController (e2e)', () => {
         it('tid not exists', () => {
             const loginData: LoginRequest = {
                 tid: 'tester-1',
+                password: 'test',
+            };
+            request(app.getHttpServer())
+                .post('/account/login')
+                .send(loginData)
+                .expect(HttpStatus.BAD_REQUEST);
+        });
+    });
+    describe('change-password', () => {
+        it('fail', () => {
+            const updatePasswordData = {
+                password: 'new-password',
+                question: {},
+            };
+            request(app.getHttpServer())
+                .patch('/account/change-password')
+                .send(updatePasswordData)
+                .expect(HttpStatus.UNAUTHORIZED);
+            request(app.getHttpServer())
+                .patch('/account/change-password')
+                .send({
+                    ...updatePasswordData,
+                    question: {
+                        a1: 'v1',
+                    },
+                })
+                .set('authorization', `Bearer ${token}`)
+                .expect(HttpStatus.BAD_REQUEST);
+            const loginData: LoginRequest = {
+                tid: 'tester',
+                password: 'test',
+            };
+            request(app.getHttpServer())
+                .post('/account/login')
+                .send(loginData)
+                .expect(HttpStatus.OK);
+        });
+        it('success', () => {
+            const updatePasswordData = {
+                password: 'new-password',
+                question: {},
+            };
+            const loginData: LoginRequest = {
+                tid: 'tester',
+                password: 'test',
+            };
+            request(app.getHttpServer())
+                .patch('/account/change-password')
+                .send(updatePasswordData)
+                .set('authorization', `Bearer ${token}`)
+                .expect(HttpStatus.OK);
+            request(app.getHttpServer())
+                .post('/account/login')
+                .send(loginData)
+                .expect(HttpStatus.BAD_REQUEST);
+        });
+    });
+    describe('delete account', () => {
+        it('fail', () => {
+            const dto: DeleteAccountRequest = {
+                question: {
+                    k: 'v',
+                },
+            };
+            request(app.getHttpServer())
+                .del('/account')
+                .send(dto)
+                .set('authorization', `Bearer ${token}`)
+                .expect(HttpStatus.BAD_REQUEST);
+            request(app.getHttpServer())
+                .del('/account')
+                .send(dto)
+                .expect(HttpStatus.UNAUTHORIZED);
+            const loginData: LoginRequest = {
+                tid: 'tester',
+                password: 'test',
+            };
+            request(app.getHttpServer())
+                .post('/account/login')
+                .send(loginData)
+                .expect(HttpStatus.OK);
+        });
+        it('success', () => {
+            const dto: DeleteAccountRequest = {
+                question: {
+                    k: 'v',
+                },
+            };
+            request(app.getHttpServer())
+                .del('/account')
+                .send(dto)
+                .set('authorization', `Bearer ${token}`)
+                .expect(HttpStatus.OK);
+            const loginData: LoginRequest = {
+                tid: 'tester',
                 password: 'test',
             };
             request(app.getHttpServer())

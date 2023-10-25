@@ -59,7 +59,7 @@ export class AccountService {
         throw AccountError.QUESTION_INVALIDE;
     }
 
-    async updatePassword(data: UpdatePasswordRequest) {
+    async updatePassword(data: UpdatePasswordRequest & { tid: string }) {
         const userExists = this.userExists(data.tid);
         if (!(await userExists)) {
             throw AccountError.ACCOUNT_NOT_EXISTS;
