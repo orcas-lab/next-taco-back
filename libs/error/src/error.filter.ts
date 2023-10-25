@@ -1,6 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+    ArgumentsHost,
+    Catch,
+    ExceptionFilter,
+    HttpStatus,
+} from '@nestjs/common';
 import { Response } from 'express';
-import { ApiError, GlobalError } from './Errors';
+import { ApiError } from './Errors';
 
 @Catch()
 export class ErrorFilter<T extends Error | ApiError>
@@ -11,7 +16,11 @@ export class ErrorFilter<T extends Error | ApiError>
         const response: Response = context.getResponse();
         let err: ApiError;
         if (!(exception instanceof ApiError)) {
-            err = GlobalError.UNKNOWN;
+            err = new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                -1,
+                'UNKNOW_ERROR',
+            );
         } else {
             err = exception;
         }

@@ -21,7 +21,7 @@ export class JwtService {
     sign(data: string | Buffer | object, option: SignOptions) {
         return sign(data, this.privateKey, option);
     }
-    verify(token: string, option: VerifyOptions) {
-        return verify(token, this.publicKey, option);
+    verify<T>(token: string, option: VerifyOptions): T {
+        return verify(token, this.publicKey, option) as T;
     }
 }

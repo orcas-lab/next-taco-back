@@ -3,8 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
-import { JwtModule } from '@nestjs/jwt';
-import { readFileSync } from 'fs';
+import { JwtModule } from '@app/jwt';
+import 'reflect-metadata';
+import { ClusterModule } from '@liaoliaots/nestjs-redis';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
@@ -22,22 +23,20 @@ import { readFileSync } from 'fs';
                 };
             },
         }),
-        JwtModule.registerAsync({
+        ClusterModule.forRootAsync({
             imports: [ConfigureModule.forRoot('config.toml')],
             inject: [ConfigureService],
             async useFactory(configure: ConfigureService) {
-                const { expire, publicKeyPath, privateKeyPath } =
-                    configure.get('jwt');
                 return {
-                    signOptions: {
-                        expiresIn: expire,
-                        algorithm: 'RS256',
+                    readyLog: true,
+                    config: {
+                        nodes: configure.get('redis.nodes'),
+                        ...configure.get('redis.options'),
                     },
-                    publicKey: readFileSync(publicKeyPath),
-                    privateKey: readFileSync(privateKeyPath),
                 };
             },
         }),
+        JwtModule.use(),
         AccountModule,
     ],
 })

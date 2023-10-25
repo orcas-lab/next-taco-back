@@ -42,12 +42,9 @@ export const AccountError = {
         getCodes(Modules.ACCOUNT, ErrorFrom.USER, 3),
         'TID_OR_PASSWORD_ERROR',
     ),
-};
-
-export const GlobalError = {
-    UNKNOWN: new ApiError(
+    QUESTION_INVALIDE: new ApiError(
         HttpStatus.BAD_REQUEST,
-        getCodes(Modules.GLOBAL, ErrorFrom.INNER, 1),
-        'ACCOUNT_NOT_EXISTS',
+        getCodes(Modules.ACCOUNT, ErrorFrom.USER, 4),
+        'QUESTION_INVALIDE',
     ),
 };
