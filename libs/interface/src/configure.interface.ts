@@ -24,6 +24,9 @@ export interface ConfigOption {
         privateKeyPath: string;
         publicKeyPath: string;
     };
+    user: {
+        default_reputation: number;
+    };
 }
 
 type Keys<T> = keyof T;

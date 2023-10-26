@@ -37,7 +37,7 @@ export class AccountController {
     @Patch('/change-password')
     async changePassword(
         @User('tid') tid: string,
-        data: UpdatePasswordRequest,
+        @Body() data: UpdatePasswordRequest,
     ) {
         return this.accountService.updatePassword({ ...data, tid });
     }

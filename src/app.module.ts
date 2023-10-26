@@ -6,6 +6,7 @@ import { AccountModule } from './account/account.module';
 import { JwtModule } from '@app/jwt';
 import 'reflect-metadata';
 import { ClusterModule } from '@liaoliaots/nestjs-redis';
+import { UserModule } from './user/user.module';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
@@ -38,6 +39,7 @@ import { ClusterModule } from '@liaoliaots/nestjs-redis';
         }),
         JwtModule.use(),
         AccountModule,
+        UserModule,
     ],
 })
 export class AppModule {}
