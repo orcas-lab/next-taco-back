@@ -20,6 +20,4 @@ publicKeyPath="./keys/key.pub"
 privateKeyPath="./keys/key.pri"
 
 [redis]
-nodes=[{host="127.0.0.1",port=6379}]
-host="localhost"
-port=6379
+nodes=[{host="127.0.0.1",port=6384}]

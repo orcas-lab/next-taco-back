@@ -3,6 +3,7 @@ import {
     IsNotEmpty,
     IsEmail,
     IsNotEmptyObject,
+    IsObject,
 } from 'class-validator';
 export class RegisterReuqest {
     @IsNotEmpty()
@@ -38,7 +39,6 @@ export class UpdatePasswordRequest {
     @IsNotEmpty()
     @IsString()
     password: string;
-    @IsNotEmpty()
-    @IsNotEmptyObject()
+    @IsObject()
     question: { [x: string]: string | number | boolean };
 }

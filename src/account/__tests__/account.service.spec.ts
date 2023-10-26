@@ -10,10 +10,12 @@ import { AccountError } from '@app/error';
 import { JwtModule } from '@app/jwt';
 import { getClusterToken } from '@liaoliaots/nestjs-redis';
 import { useBCrypt } from '@app/bcrypto';
+import { Profile } from '@app/entity/profile.entity';
 
 describe('AccountService', () => {
     let service: AccountService;
     let repositoryMock: MockRepositoryType<Repository<Account>>;
+    let profileMock: MockRepositoryType<Repository<Profile>>;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigureModule.forRoot('config.toml'), JwtModule.use()],
@@ -31,10 +33,15 @@ describe('AccountService', () => {
                     provide: getRepositoryToken(Account),
                     useValue: mockRepository<typeof Account>(),
                 },
+                {
+                    provide: getRepositoryToken(Profile),
+                    useValue: mockRepository<typeof Profile>(),
+                },
             ],
         }).compile();
         service = module.get<AccountService>(AccountService);
         repositoryMock = module.get(getRepositoryToken(Account));
+        profileMock = module.get(getRepositoryToken(Profile));
     });
 
     it('should be defined', () => {
@@ -77,21 +84,13 @@ describe('AccountService', () => {
     });
     describe('login', () => {
         it('success', () => {
-            const data = mock({
-                tid: '@guid',
-                email: '@email',
-                password: '@string',
-                question: {
-                    q1: 'a1',
-                },
-                active: '@boolean',
-                create_at: '@integer(1546300800000, 1893436800000)',
+            repositoryMock.findOne.mockResolvedValue({
+                password: useBCrypt('123456', 'VG!ha(Rwa_xurpzyB4', 12),
             });
-            repositoryMock.findOne.mockResolvedValue(data);
             return expect(
                 service.login({
-                    tid: data.tid,
-                    password: registerData.password,
+                    tid: registerData.tid,
+                    password: '123456',
                 }),
             ).resolves.not.toMatchObject({
                 access_token: '',

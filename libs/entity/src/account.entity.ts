@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    OneToOne,
+    PrimaryColumn,
+} from 'typeorm';
 import { Profile } from './profile.entity';
 
 @Entity({ name: 'Account' })

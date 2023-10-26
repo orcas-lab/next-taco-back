@@ -17,6 +17,7 @@ import { Cluster } from 'ioredis';
 import { InjectCluster } from '@liaoliaots/nestjs-redis';
 import { namespace } from '@app/shared';
 import ms from 'ms';
+import { Profile, createProfile } from '@app/entity/profile.entity';
 
 @Injectable()
 export class AccountService {
@@ -25,11 +26,14 @@ export class AccountService {
         private cluster: Cluster,
         @InjectRepository(Account)
         private readonly account: Repository<Account>,
+        @InjectRepository(Profile)
+        private readonly Profile: Repository<Profile>,
         private readonly config: ConfigureService,
         private readonly jwt: JwtService,
     ) {}
     async register(data: RegisterReuqest) {
         const userExists = await this.userExists(data.tid);
+        const defaultReputation = this.config.get('user.default_reputation');
         if (userExists) {
             throw AccountError.ACCOUNT_EXISTS;
         }
@@ -41,9 +45,15 @@ export class AccountService {
                 this.config.get('bcrypt.cost'),
             ),
         });
+        const profile = createProfile({
+            ...data,
+            reputation: defaultReputation ?? 5,
+        });
+        await this.Profile.save(profile);
         return this.account.save(account);
     }
     async delete(data: DeleteAccountRequest & { tid: string }) {
+        console.log(data);
         const accountExists = this.userExists(data.tid);
         if (!(await accountExists)) {
             throw AccountError.ACCOUNT_NOT_EXISTS;
@@ -165,6 +175,7 @@ export class AccountService {
             access_token: namespace.TOKEN('access', data.tid),
             refresh_token: namespace.TOKEN('refresh', data.tid),
         };
-        await this.cluster.del(ns.access_token, ns.refresh_token);
+        await this.cluster.del(ns.access_token);
+        await this.cluster.del(ns.refresh_token);
     }
 }

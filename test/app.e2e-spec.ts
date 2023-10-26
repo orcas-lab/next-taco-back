@@ -7,9 +7,11 @@ import {
     DeleteAccountRequest,
     LoginRequest,
     RegisterReuqest,
-    UpdatePasswordRequest,
 } from 'src/account/dto/account.dto';
 import { DataSource } from 'typeorm';
+import { Profile } from '@app/entity/profile.entity';
+import { BanUser } from 'src/user/dto/user.dto';
+import { NestFactory } from '@nestjs/core';
 let db: DataSource;
 const drop = async () => {
     db = await new DataSource({
@@ -25,12 +27,14 @@ const drop = async () => {
 describe('AppController (e2e)', () => {
     let app: INestApplication;
     let token = '';
+    let profile: Profile;
     beforeAll(async () => {
         await drop();
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        app = moduleFixture.createNestApplication();
+        // const moduleFixture: TestingModule = await Test.createTestingModule({
+        //     imports: [AppModule],
+        // }).compile();
+        // app = moduleFixture.createNestApplication();
+        app = await NestFactory.create(AppModule);
         app.useGlobalFilters(new HttpExceptionFilter());
         await app.init();
     }, 60 * 1000);
@@ -38,7 +42,6 @@ describe('AppController (e2e)', () => {
         await db.destroy();
         await app.close();
     });
-
     describe('register', () => {
         const registerData: RegisterReuqest = {
             tid: 'tester',
@@ -51,6 +54,12 @@ describe('AppController (e2e)', () => {
                 .post('/account/register')
                 .send(registerData);
             expect(statusCode).toBe(HttpStatus.CREATED);
+            await request(app.getHttpServer()).post('/account/register').send({
+                tid: 'tester-2',
+                email: 'test2@no-reply.com',
+                password: 'test-2',
+                question: {},
+            });
             return Promise.resolve();
         });
         it('repeat', async () => {
@@ -83,7 +92,7 @@ describe('AppController (e2e)', () => {
                 tid: 'tester',
                 password: 'wrong-password',
             };
-            request(app.getHttpServer())
+            return request(app.getHttpServer())
                 .post('/account/login')
                 .send(loginData)
                 .expect(HttpStatus.BAD_REQUEST);
@@ -93,7 +102,7 @@ describe('AppController (e2e)', () => {
                 tid: 'tester-1',
                 password: 'test',
             };
-            request(app.getHttpServer())
+            return request(app.getHttpServer())
                 .post('/account/login')
                 .send(loginData)
                 .expect(HttpStatus.BAD_REQUEST);
@@ -123,12 +132,12 @@ describe('AppController (e2e)', () => {
                 tid: 'tester',
                 password: 'test',
             };
-            request(app.getHttpServer())
+            return request(app.getHttpServer())
                 .post('/account/login')
                 .send(loginData)
-                .expect(HttpStatus.OK);
+                .expect(HttpStatus.CREATED);
         });
-        it('success', () => {
+        it('success', async () => {
             const updatePasswordData = {
                 password: 'new-password',
                 question: {},
@@ -137,15 +146,14 @@ describe('AppController (e2e)', () => {
                 tid: 'tester',
                 password: 'test',
             };
-            request(app.getHttpServer())
+            await request(app.getHttpServer())
                 .patch('/account/change-password')
-                .send(updatePasswordData)
                 .set('authorization', `Bearer ${token}`)
-                .expect(HttpStatus.OK);
-            request(app.getHttpServer())
+                .send(updatePasswordData);
+            const { statusCode } = await request(app.getHttpServer())
                 .post('/account/login')
-                .send(loginData)
-                .expect(HttpStatus.BAD_REQUEST);
+                .send(loginData);
+            expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
         });
     });
     describe('delete account', () => {
@@ -166,12 +174,12 @@ describe('AppController (e2e)', () => {
                 .expect(HttpStatus.UNAUTHORIZED);
             const loginData: LoginRequest = {
                 tid: 'tester',
-                password: 'test',
+                password: 'new-password',
             };
-            request(app.getHttpServer())
+            return request(app.getHttpServer())
                 .post('/account/login')
                 .send(loginData)
-                .expect(HttpStatus.OK);
+                .expect(HttpStatus.CREATED);
         });
         it('success', () => {
             const dto: DeleteAccountRequest = {
@@ -188,10 +196,56 @@ describe('AppController (e2e)', () => {
                 tid: 'tester',
                 password: 'test',
             };
-            request(app.getHttpServer())
+            return request(app.getHttpServer())
                 .post('/account/login')
                 .send(loginData)
                 .expect(HttpStatus.BAD_REQUEST);
+        });
+    });
+    describe('user', () => {
+        it('get profile', async () => {
+            const { body } = await request(app.getHttpServer())
+                .get('/user/profile')
+                .query({
+                    tid: 'tester',
+                })
+                .send()
+                .expect(HttpStatus.OK);
+            profile = body;
+            return Promise.resolve();
+        });
+        it('update profile', () => {
+            const updateProfile = {
+                profile: {
+                    nick: 'tester-2',
+                    description: 'description-1',
+                },
+            };
+            return request(app.getHttpServer())
+                .patch('/user/profile')
+                .set('authorization', `Bearer ${token}`)
+                .send(updateProfile)
+                .expect(HttpStatus.NO_CONTENT);
+        });
+        it('ban user', async () => {
+            const banUser: BanUser = {
+                target: 'tester-2',
+            };
+            const { statusCode } = await request(app.getHttpServer())
+                .post('/user/ban')
+                .set('authorization', `Bearer ${token}`)
+                .send(banUser);
+            return expect(statusCode).toBe(HttpStatus.CREATED);
+        });
+        it('ban user but target not exists', async () => {
+            const banUser: BanUser = {
+                target: 'tester-3',
+            };
+            const { statusCode } = await request(app.getHttpServer())
+                .post('/user/ban')
+                .set('authorization', `Bearer ${token}`)
+                .send(banUser);
+            expect(statusCode).toBe(HttpStatus.FORBIDDEN);
         });
     });
 });

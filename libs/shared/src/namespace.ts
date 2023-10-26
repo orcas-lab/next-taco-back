@@ -3,4 +3,5 @@ export const namespace = {
         type === null
             ? `TOKEN:${args.join(':')}`
             : `TOKEN:${type}:${args.join(':')}`,
+    ACCOUNT: () => `ACCOUNT`,
 };
