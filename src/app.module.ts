@@ -7,7 +7,6 @@ import { JwtModule } from '@app/jwt';
 import 'reflect-metadata';
 import { ClusterModule } from '@liaoliaots/nestjs-redis';
 import { UserModule } from './user/user.module';
-import { RoutesMapper } from '@nestjs/core/middleware/routes-mapper';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({

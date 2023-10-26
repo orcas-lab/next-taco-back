@@ -202,5 +202,110 @@ describe('AccountService', () => {
                 }),
             ).resolves.toBeUndefined();
         });
+        it('tid not exists', () => {
+            repositoryMock.findOne.mockResolvedValue(null);
+            return expect(
+                service.login({ tid: 'not-exists', password: '0000' }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
+    });
+    describe('delete account', () => {
+        it('account not exists', () => {
+            return expect(
+                service.delete({
+                    question: {},
+                    tid: 'no-exists-account',
+                }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
+        it('account exists but question is invalide', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a2',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.delete({
+                    question: { q1: 'a1' },
+                    tid: data.tid,
+                }),
+            ).rejects.toThrow(AccountError.QUESTION_INVALIDE);
+        });
+        it('success', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.delete({
+                    question: { q1: 'a1' },
+                    tid: data.tid,
+                }),
+            ).resolves.toBeUndefined();
+        });
+    });
+    describe('update password', () => {
+        it('user not exists', () => {
+            return expect(
+                service.updatePassword({
+                    question: {},
+                    tid: 'no-exists-account',
+                    password: '',
+                }),
+            ).rejects.toThrow(AccountError.ACCOUNT_NOT_EXISTS);
+        });
+        it('question invalide', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.updatePassword({
+                    question: {},
+                    tid: data.tid,
+                    password: '',
+                }),
+            ).rejects.toThrow(AccountError.QUESTION_INVALIDE);
+        });
+        it('success', () => {
+            const data = mock({
+                tid: '@guid',
+                email: '@email',
+                password: '@string',
+                question: {
+                    q1: 'a1',
+                },
+                active: '@boolean',
+                create_at: '@integer(1546300800000, 1893436800000)',
+            });
+            repositoryMock.findOne.mockResolvedValue(data);
+            return expect(
+                service.updatePassword({
+                    question: data.question,
+                    tid: data.tid,
+                    password: '',
+                }),
+            ).resolves.toBeUndefined();
+        });
     });
 });
