@@ -27,6 +27,10 @@ export interface ConfigOption {
     user: {
         default_reputation: number;
     };
+    request: {
+        expire?: number;
+    };
+    worker_id?: number;
 }
 
 type Keys<T> = keyof T;

@@ -13,6 +13,8 @@ export class Profile {
     @Column()
     reputation: number;
     @Column({ type: 'bigint' })
+    friends_total: number;
+    @Column({ type: 'bigint' })
     create_at: number;
     @Column({ type: 'bigint' })
     update_at: number;
