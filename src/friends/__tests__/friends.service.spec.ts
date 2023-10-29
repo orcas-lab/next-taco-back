@@ -56,10 +56,12 @@ describe('FriendsService', () => {
         expect(service).toBeDefined();
     });
     it('send add friend request', async () => {
-        rid = await service.sendAddFriendRequest({
-            source: 'test-1',
-            target: 'test-2',
-        });
+        rid = (
+            await service.sendAddFriendRequest({
+                source: 'test-1',
+                target: 'test-2',
+            })
+        ).rid;
         for (let i = 0; i < 10; i++) {
             expect(
                 service.sendAddFriendRequest({

@@ -41,7 +41,7 @@ export class FriendsService {
         req.worker_id = worker_id;
         req.uuid = randomUUID();
         await this.Request.save(req);
-        return req.uuid;
+        return { rid: req.uuid };
     }
     async deleteFriend(data: DeleteFriend & { source: string }) {
         if (data.type === 'single') {
