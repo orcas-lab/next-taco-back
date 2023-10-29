@@ -9,4 +9,6 @@ export const mockRepository: <T>() => MockRepositoryType<Repository<T>> =
         save: jest.fn(),
         delete: jest.fn(),
         update: jest.fn(),
+        decrement: jest.fn(),
+        find: jest.fn(),
     }));

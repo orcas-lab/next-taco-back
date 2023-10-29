@@ -65,9 +65,14 @@ export const FriendError = {
         getCodes(Modules.Friend, ErrorFrom.USER, 3),
         'OFFSET_IS_NOT_VALIDE',
     ),
-    ADD_REQUEST_INVALIDE: new ApiError(
+    CAN_NOT_FIND_REQ: new ApiError(
         HttpStatus.BAD_REQUEST,
         getCodes(Modules.Friend, ErrorFrom.USER, 4),
-        'REQUEST_INVALIDE',
+        'CAN_NOT_FIND_REQ',
+    ),
+    REQUEST_EXPIRED: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 5),
+        'REQUEST_EXPIRED',
     ),
 };

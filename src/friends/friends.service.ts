@@ -39,6 +39,7 @@ export class FriendsService {
         req.update_at = timestamp;
         const worker_id = this.configure.get('worker_id') ?? 0;
         req.worker_id = worker_id;
+        req.uuid = randomUUID();
         await this.Request.save(req);
         return req.uuid;
     }
@@ -53,14 +54,15 @@ export class FriendsService {
                 'friends_total',
                 1,
             );
-            return;
         }
-        await this.deleteFriend({ ...data, type: 'single' });
-        await this.deleteFriend({
-            source: data.target,
-            target: data.source,
-            type: 'single',
-        });
+        if (data.type === 'both') {
+            await this.deleteFriend({ ...data, type: 'single' });
+            await this.deleteFriend({
+                source: data.target,
+                target: data.source,
+                type: 'single',
+            });
+        }
         if (data.ban) {
             const blackList = new BlackList();
             blackList.source = data.source;
@@ -107,9 +109,12 @@ export class FriendsService {
     }
     async accept(data: Accept) {
         const { rid } = data;
-        const requestValide = this.isRequestValide(rid);
-        if (!requestValide) {
-            throw FriendError.ADD_REQUEST_INVALIDE;
+        const requestCheckStatus = await this.isRequestValide(rid);
+        if (requestCheckStatus === 'IS_EXPIRED') {
+            throw FriendError.REQUEST_EXPIRED;
+        }
+        if (requestCheckStatus === 'IS_NIL') {
+            throw FriendError.CAN_NOT_FIND_REQ;
         }
         const { source, target } = await this.Request.findOne({
             where: {
@@ -130,9 +135,12 @@ export class FriendsService {
     }
     async reject(data: Reject) {
         const { rid } = data;
-        const requestValide = this.isRequestValide(rid);
-        if (!requestValide) {
-            throw FriendError.ADD_REQUEST_INVALIDE;
+        const requestCheckStatus = await this.isRequestValide(rid);
+        if (requestCheckStatus === 'IS_EXPIRED') {
+            throw FriendError.REQUEST_EXPIRED;
+        }
+        if (requestCheckStatus === 'IS_NIL') {
+            throw FriendError.CAN_NOT_FIND_REQ;
         }
         const { source, target } = await this.Request.findOne({
             where: {
@@ -160,12 +168,16 @@ export class FriendsService {
         this.Friend.save(friend, { transaction: true });
         return;
     }
-    private async isRequestValide(rid: string, expiredCheck = true) {
+    private async isRequestValide(rid: string) {
         const req = this.Request.findOne({ where: { uuid: rid } });
-        if (!expiredCheck) {
-            return isNil(await req);
-        }
         const time = new Date().getTime();
-        return time > (await req).expire_at;
+        if (isNil(await req)) {
+            return 'IS_NIL';
+        }
+        const isExpired = time > (await req).expire_at;
+        if (isExpired) {
+            return 'IS_EXPIRED';
+        }
+        return '';
     }
 }
