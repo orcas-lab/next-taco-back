@@ -12,7 +12,7 @@ export class Profile {
     description: string;
     @Column()
     reputation: number;
-    @Column({ type: 'bigint' })
+    @Column({ type: 'bigint', default: 0 })
     friends_total: number;
     @Column({ type: 'bigint' })
     create_at: number;

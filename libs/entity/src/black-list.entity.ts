@@ -4,11 +4,11 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 export class BlackList {
     @PrimaryColumn({ type: 'uuid' })
     id: string;
-    @Index()
     @Column()
+    @Index()
     source: string;
-    @Index()
     @Column()
+    @Index()
     target: string;
     @Column({ type: 'bigint', default: new Date().getTime() })
     create_at: number;

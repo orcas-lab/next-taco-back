@@ -12,6 +12,12 @@ import { DataSource } from 'typeorm';
 import { Profile } from '@app/entity/profile.entity';
 import { BanUser } from 'src/user/dto/user.dto';
 import { NestFactory } from '@nestjs/core';
+import {
+    Accept,
+    AddFriend,
+    DeleteFriend,
+    UpdateFriend,
+} from 'src/friends/dto/friend.rquest.dto';
 let db: DataSource;
 const drop = async () => {
     db = await new DataSource({
@@ -246,6 +252,135 @@ describe('AppController (e2e)', () => {
                 .set('authorization', `Bearer ${token}`)
                 .send(banUser);
             expect(statusCode).toBe(HttpStatus.FORBIDDEN);
+        });
+    });
+    describe('friends', () => {
+        let rid = '';
+        it('add friends', async () => {
+            const { statusCode, body } = await request(app.getHttpServer())
+                .post('/friends')
+                .set('authorization', `Bearer ${token}`)
+                .send({
+                    target: 'tester-2',
+                } as AddFriend);
+            rid = body.rid;
+            return expect(statusCode).toBe(HttpStatus.CREATED);
+        });
+        it('accept', async () => {
+            const { statusCode } = await request(app.getHttpServer())
+                .post('/friends/accept')
+                .set('authorization', `Bearer ${token}`)
+                .send({
+                    rid,
+                } as Accept);
+            const { body } = await request(app.getHttpServer())
+                .get('/friends')
+                .query({
+                    limit: 0,
+                    offset: 0,
+                })
+                .set('authorization', `Bearer ${token}`);
+            expect(body.friends).not.toStrictEqual([]);
+            return expect(statusCode).toBe(HttpStatus.CREATED);
+        });
+        it('update', async () => {
+            const { statusCode } = await request(app.getHttpServer())
+                .patch('/friends')
+                .send({
+                    target: 'tester-2',
+                    nick: 'nick-2',
+                } as UpdateFriend)
+                .set('authorization', `Bearer ${token}`);
+            await request(app.getHttpServer())
+                .patch('/friends')
+                .send({
+                    target: 'tester-2',
+                    tag: 'tag-2',
+                } as UpdateFriend)
+                .set('authorization', `Bearer ${token}`);
+            expect(statusCode).toBe(HttpStatus.OK);
+            const { body } = await request(app.getHttpServer())
+                .get('/friends')
+                .query({
+                    limit: 0,
+                    offset: 0,
+                })
+                .set('authorization', `Bearer ${token}`);
+            expect(body.friends[0].nick).toBe('nick-2');
+            return expect(body.friends[0].tag).toBe('tag-2');
+        });
+        it('find', async () => {
+            let { body } = await request(app.getHttpServer())
+                .get('/friends')
+                .query({
+                    limit: 0,
+                    offset: 0,
+                })
+                .set('authorization', `Bearer ${token}`);
+            expect(body.friends[0]).not.toStrictEqual([]);
+            body = (
+                await request(app.getHttpServer())
+                    .get('/friends')
+                    .query({
+                        limit: 0,
+                        offset: 1,
+                    })
+                    .set('authorization', `Bearer ${token}`)
+            ).body;
+            expect(body.friends).toStrictEqual([]);
+        });
+        it('delete', async () => {
+            let { body } = await request(app.getHttpServer())
+                .get('/friends')
+                .query({
+                    limit: 0,
+                    offset: 0,
+                })
+                .set('authorization', `Bearer ${token}`);
+            expect(body.friends).not.toStrictEqual([]);
+            await request(app.getHttpServer())
+                .delete('/friends')
+                .set('authorization', `Bearer ${token}`)
+                .send({
+                    target: 'tester-2',
+                    type: 'both',
+                    ban: true,
+                } as DeleteFriend);
+            body = (
+                await request(app.getHttpServer())
+                    .get('/friends')
+                    .query({
+                        limit: 0,
+                        offset: 0,
+                    })
+                    .set('authorization', `Bearer ${token}`)
+            ).body;
+            return expect(body.friends).toStrictEqual([]);
+        });
+        it('add friends', async () => {
+            const { statusCode, body } = await request(app.getHttpServer())
+                .post('/friends')
+                .set('authorization', `Bearer ${token}`)
+                .send({
+                    target: 'tester-2',
+                } as AddFriend);
+            rid = body.rid;
+            return expect(statusCode).toBe(HttpStatus.CREATED);
+        });
+        it('reject', async () => {
+            const { statusCode } = await request(app.getHttpServer())
+                .post('/friends/reject')
+                .query({ rid })
+                .set('authorization', `Bearer ${token}`);
+            const { body } = await request(app.getHttpServer())
+                .get('/friends')
+                .query({
+                    limit: 0,
+                    offset: 0,
+                })
+                .set('authorization', `Bearer ${token}`);
+            expect(body.friends).toStrictEqual([]);
+            return expect(statusCode).toBe(HttpStatus.CREATED);
         });
     });
 });

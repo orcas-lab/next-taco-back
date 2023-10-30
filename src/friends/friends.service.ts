@@ -91,7 +91,7 @@ export class FriendsService {
                 source: tid,
             },
             skip: offset,
-            take: limit,
+            take: limit || 100,
             relations: ['profile'],
         });
         const profile = await this.Profile.findOne({
@@ -103,7 +103,7 @@ export class FriendsService {
             },
         });
         return {
-            friends,
+            friends: friends ?? [],
             total: profile.friends_total,
         };
     }
@@ -165,7 +165,8 @@ export class FriendsService {
         friend.create_at = time;
         friend.update_at = time;
         friend.nick = '';
-        this.Friend.save(friend, { transaction: true });
+        friend.uuid = randomUUID();
+        await this.Friend.save(friend, { transaction: true });
         return;
     }
     private async isRequestValide(rid: string) {
