@@ -3,6 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 enum Modules {
     GLOBAL = 1,
     ACCOUNT,
+    Friend,
 }
 /**
  * 错误来自于哪
@@ -46,5 +47,32 @@ export const AccountError = {
         HttpStatus.BAD_REQUEST,
         getCodes(Modules.ACCOUNT, ErrorFrom.USER, 4),
         'QUESTION_INVALIDE',
+    ),
+};
+export const FriendError = {
+    IS_FRIEND: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 1),
+        'IS_FRIEND',
+    ),
+    LIMIT_IS_NOT_VALIDE: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 2),
+        'LIMIT_IS_NOT_VALIDE',
+    ),
+    OFFSET_IS_NOT_VALIDE: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 3),
+        'OFFSET_IS_NOT_VALIDE',
+    ),
+    CAN_NOT_FIND_REQ: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 4),
+        'CAN_NOT_FIND_REQ',
+    ),
+    REQUEST_EXPIRED: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 5),
+        'REQUEST_EXPIRED',
     ),
 };

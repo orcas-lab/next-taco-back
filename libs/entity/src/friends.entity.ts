@@ -1,15 +1,25 @@
-import { Column, Entity, Index, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    OneToMany,
+    OneToOne,
+    PrimaryColumn,
+} from 'typeorm';
 import { Profile } from './profile.entity';
 
 @Entity({ name: 'Friend' })
 export class Friend {
     @PrimaryColumn({ type: 'uuid' })
     uuid: string;
-    @Index()
     @Column()
+    @Index()
     source: string;
-    @Index()
     @Column()
+    @Index()
     target: string;
     @Column()
     nick: string;
@@ -20,5 +30,6 @@ export class Friend {
     @Column({ default: new Date().getTime(), type: 'bigint' })
     update_at: number;
     @OneToOne(() => Profile)
+    @JoinColumn({ name: 'target' })
     profile: Profile;
 }
