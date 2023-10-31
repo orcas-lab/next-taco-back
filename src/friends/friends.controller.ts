@@ -9,7 +9,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { FriendsService } from './friends.service';
-import { AuthGuard } from '../auth-guard.guard';
+import { AuthGuard } from '@app/shared/auth-guard.guard';
 import { User } from '../user.decorator';
 import { FriendError } from '@app/error';
 import {

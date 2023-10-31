@@ -16,7 +16,7 @@ import {
     UpdatePasswordRequest,
 } from './dto/account.dto';
 import { User } from '../user.decorator';
-import { AuthGuard } from '../auth-guard.guard';
+import { AuthGuard } from '@app/shared/auth-guard.guard';
 
 @Controller('account')
 export class AccountController {

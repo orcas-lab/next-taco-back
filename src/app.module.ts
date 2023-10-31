@@ -8,6 +8,7 @@ import 'reflect-metadata';
 import { ClusterModule } from '@liaoliaots/nestjs-redis';
 import { UserModule } from './user/user.module';
 import { FriendsModule } from './friends/friends.module';
+import { PusherModule } from './pusher/pusher.module';
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
@@ -42,6 +43,7 @@ import { FriendsModule } from './friends/friends.module';
         AccountModule,
         UserModule,
         FriendsModule,
+        PusherModule,
     ],
 })
 export class AppModule {}

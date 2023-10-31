@@ -13,9 +13,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../user.decorator';
-import { AuthGuard } from '../auth-guard.guard';
+import { AuthGuard } from '@app/shared/auth-guard.guard';
 import { BanUser, UnBan, UpdateUserProfileRequest } from './dto/user.dto';
-import { TargetExistsGuard } from '../target-exists.guard';
+import { TargetExistsGuard } from '@app/shared/target-exists.guard';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
