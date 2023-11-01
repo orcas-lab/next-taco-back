@@ -11,6 +11,7 @@ import { FriendsModule } from './friends/friends.module';
 import { PusherModule } from './pusher/pusher.module';
 @Module({
     imports: [
+        ConfigureModule.forRoot('config.toml'),
         TypeOrmModule.forRootAsync({
             imports: [ConfigureModule.forRoot('config.toml')],
             inject: [ConfigureService],

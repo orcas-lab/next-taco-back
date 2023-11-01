@@ -1,5 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, Logger } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
@@ -18,6 +17,10 @@ import {
     DeleteFriend,
     UpdateFriend,
 } from 'src/friends/dto/friend.rquest.dto';
+import io, { Socket } from 'socket.io-client';
+import { Test } from '@nestjs/testing';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 let db: DataSource;
 const drop = async () => {
     db = await new DataSource({
@@ -34,19 +37,18 @@ describe('AppController (e2e)', () => {
     let app: INestApplication;
     let token = '';
     let profile: Profile;
+    let ws: Socket<DefaultEventsMap, DefaultEventsMap>;
     beforeAll(async () => {
         await drop();
-        // const moduleFixture: TestingModule = await Test.createTestingModule({
-        //     imports: [AppModule],
-        // }).compile();
-        // app = moduleFixture.createNestApplication();
         app = await NestFactory.create(AppModule);
         app.useGlobalFilters(new HttpExceptionFilter());
-        await app.init();
+        app.useWebSocketAdapter(new IoAdapter(app));
+        await app.listen(3000);
     }, 60 * 1000);
     afterAll(async () => {
         await db.destroy();
         await app.close();
+        ws.close();
     });
     describe('register', () => {
         const registerData: RegisterReuqest = {
@@ -381,6 +383,23 @@ describe('AppController (e2e)', () => {
                 .set('authorization', `Bearer ${token}`);
             expect(body.friends).toStrictEqual([]);
             return expect(statusCode).toBe(HttpStatus.CREATED);
+        });
+    });
+    describe('pusher', () => {
+        it('not have token should be disconnect', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+            });
+            ws.connect();
+            await new Promise<void>((resolve) => {
+                ws.on('disconnect', () => {
+                    expect(ws.connected).toBeFalsy();
+                    resolve();
+                });
+                ws.on('error', (err) => {
+                    expect(err).not.toBeUndefined();
+                });
+            });
         });
     });
 });

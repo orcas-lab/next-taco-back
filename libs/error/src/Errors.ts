@@ -13,14 +13,22 @@ enum ErrorFrom {
     USER,
 }
 
-export class ApiError extends Error {
-    public status: HttpStatus;
+export class ApiError<T = HttpStatus> extends Error {
+    public status: T;
     public innerStatus: number;
     public message: string;
-    constructor(httpStatus: HttpStatus, innerStatus: number, message: string) {
+    constructor(httpStatus: T, innerStatus: number, message: string) {
         super(message);
         this.status = httpStatus;
         this.innerStatus = innerStatus;
+        this.message = message;
+    }
+}
+export class PusherError {
+    public code: number;
+    public message: string;
+    constructor(code: number, message: string) {
+        this.code = code;
         this.message = message;
     }
 }
@@ -75,4 +83,7 @@ export const FriendError = {
         getCodes(Modules.Friend, ErrorFrom.USER, 5),
         'REQUEST_EXPIRED',
     ),
+};
+export const GLOBAL = {
+    INVALIDE_TOKEN: new ApiError<number>(-1, -1, 'INVALIDE_TOKEN'),
 };

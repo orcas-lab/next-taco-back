@@ -16,6 +16,7 @@ export class ErrorFilter<T extends Error | ApiError>
         const response: Response = context.getResponse();
         let err: ApiError;
         if (!(exception instanceof ApiError)) {
+            console.log(exception);
             err = new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 -1,

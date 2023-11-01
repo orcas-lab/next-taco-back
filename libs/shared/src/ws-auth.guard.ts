@@ -1,5 +1,11 @@
+import { PusherError } from '@app/error';
 import { JwtService } from '@app/jwt';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+    CanActivate,
+    ExecutionContext,
+    Injectable,
+    Logger,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
 
@@ -11,16 +17,21 @@ export class WsAuthGuard implements CanActivate {
     ): boolean | Promise<boolean> | Observable<boolean> {
         const ws = context.switchToWs();
         const client = ws.getClient<Socket>();
+        Logger.debug(client.handshake.headers.authorization);
+        if (!client.handshake.headers.authorization) {
+            return false;
+        }
         const token = client.handshake.headers.authorization
             .replace('Bearer', '')
             .trim();
+        Logger.debug(token);
         try {
             const verifyObject = this.jwt.verify<{ tid: string }>(token, {
                 algorithms: ['RS256'],
             });
             client.handshake['user'] = verifyObject;
         } catch {
-            return false;
+            throw new PusherError(-1, 'INVALIDE_TOKEN');
         }
         return true;
     }
