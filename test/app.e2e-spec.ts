@@ -1,4 +1,4 @@
-import { HttpStatus, INestApplication, Logger } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
@@ -18,7 +18,6 @@ import {
     UpdateFriend,
 } from 'src/friends/dto/friend.rquest.dto';
 import io, { Socket } from 'socket.io-client';
-import { Test } from '@nestjs/testing';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 let db: DataSource;
@@ -398,6 +397,21 @@ describe('AppController (e2e)', () => {
                 });
                 ws.on('error', (err) => {
                     expect(err).not.toBeUndefined();
+                });
+            });
+        });
+        it('have token', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+                extraHeaders: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            ws.connect();
+            await new Promise<void>((resolve) => {
+                ws.on('connect', () => {
+                    expect(ws.connected).toBeTruthy();
+                    resolve();
                 });
             });
         });
