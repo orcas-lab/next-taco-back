@@ -20,6 +20,8 @@ import {
 import io, { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { IoAdapter } from '@nestjs/platform-socket.io';
+import { WsExceptionFilter } from '@app/shared/ws-exception-filter/ws-exception-filter.filter';
+
 let db: DataSource;
 const drop = async () => {
     db = await new DataSource({
@@ -35,11 +37,13 @@ const drop = async () => {
 describe('AppController (e2e)', () => {
     let app: INestApplication;
     let token = '';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let profile: Profile;
     let ws: Socket<DefaultEventsMap, DefaultEventsMap>;
     beforeAll(async () => {
         await drop();
         app = await NestFactory.create(AppModule);
+        app.useGlobalFilters(new WsExceptionFilter());
         app.useGlobalFilters(new HttpExceptionFilter());
         app.useWebSocketAdapter(new IoAdapter(app));
         await app.listen(3000);
@@ -255,8 +259,8 @@ describe('AppController (e2e)', () => {
             expect(statusCode).toBe(HttpStatus.FORBIDDEN);
         });
     });
+    let rid = '';
     describe('friends', () => {
-        let rid = '';
         it('add friends', async () => {
             const { statusCode, body } = await request(app.getHttpServer())
                 .post('/friends')
@@ -330,6 +334,108 @@ describe('AppController (e2e)', () => {
             ).body;
             expect(body.friends).toStrictEqual([]);
         });
+    });
+    describe('pusher', () => {
+        it(
+            'not have token should be disconnect',
+            async () => {
+                ws = io('http://localhost:3000', {
+                    autoConnect: false,
+                });
+                ws.connect();
+                return new Promise<void>((resolve) => {
+                    ws.on('disconnect', () => {
+                        expect(ws.connected).toBeFalsy();
+                        ws.close();
+                        resolve();
+                    });
+                });
+            },
+            60 * 1000,
+        );
+        it('have token', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+                extraHeaders: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            ws.connect();
+            await new Promise<void>((resolve) => {
+                ws.on('error', (err) => {
+                    expect(err).toStrictEqual({
+                        code: 4203,
+                        msg: 'IS_NOT_FRIEND',
+                    });
+                });
+                ws.on('connect', () => {
+                    expect(ws.connected).toBeTruthy();
+                    ws.close();
+                    resolve();
+                });
+            });
+        });
+        it('ping', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+                extraHeaders: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            await new Promise<void>((resolve) => {
+                ws.connect();
+                ws.on('pong', (msg) => {
+                    expect(msg).toBe('pong');
+                    ws.close();
+                    resolve();
+                });
+                ws.emit('ping');
+            });
+        });
+        it('friend chat', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+                extraHeaders: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            ws.connect();
+            await new Promise<void>((resolve) => {
+                ws.on('message', (message) => {
+                    expect(message).not.toBeUndefined();
+                    ws.close();
+                    resolve();
+                });
+                const msg = {
+                    msg: 'hello',
+                    target: 'tester-2',
+                };
+                ws.emit('message', msg);
+            });
+        });
+        it('not friend', async () => {
+            ws = io('http://localhost:3000', {
+                autoConnect: false,
+                extraHeaders: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            ws.connect();
+            await new Promise<void>((resolve) => {
+                ws.on('error', (data) => {
+                    expect(data).toBeDefined();
+                    ws.close();
+                    resolve();
+                });
+                const msg = {
+                    msg: 'hello',
+                    target: 'tester-100',
+                };
+                ws.emit('message', msg);
+            });
+        });
+    });
+    describe('friend', () => {
         it('delete', async () => {
             let { body } = await request(app.getHttpServer())
                 .get('/friends')
@@ -382,38 +488,6 @@ describe('AppController (e2e)', () => {
                 .set('authorization', `Bearer ${token}`);
             expect(body.friends).toStrictEqual([]);
             return expect(statusCode).toBe(HttpStatus.CREATED);
-        });
-    });
-    describe('pusher', () => {
-        it('not have token should be disconnect', async () => {
-            ws = io('http://localhost:3000', {
-                autoConnect: false,
-            });
-            ws.connect();
-            await new Promise<void>((resolve) => {
-                ws.on('disconnect', () => {
-                    expect(ws.connected).toBeFalsy();
-                    resolve();
-                });
-                ws.on('error', (err) => {
-                    expect(err).not.toBeUndefined();
-                });
-            });
-        });
-        it('have token', async () => {
-            ws = io('http://localhost:3000', {
-                autoConnect: false,
-                extraHeaders: {
-                    authorization: `Bearer ${token}`,
-                },
-            });
-            ws.connect();
-            await new Promise<void>((resolve) => {
-                ws.on('connect', () => {
-                    expect(ws.connected).toBeTruthy();
-                    resolve();
-                });
-            });
         });
     });
 });

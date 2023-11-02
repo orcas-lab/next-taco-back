@@ -1,12 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Message } from '../../../src/pusher/dto/pusher.dto';
 import { Socket } from 'socket.io';
 import { Handshake } from 'socket.io/dist/socket';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Friend } from '@app/entity';
 import { DataSource, Repository } from 'typeorm';
-import { and, isNil, or, pipe, reduceRight } from 'ramda';
+import { isNil, or } from 'ramda';
+import { PUSHER_ERROR } from '@app/error';
 
 @Injectable()
 export class IsFriendGuard implements CanActivate {
@@ -26,8 +26,12 @@ export class IsFriendGuard implements CanActivate {
             this.Friend.findOne({ where: { source, target } }),
             this.Friend.findOne({ where: { source: target, target: source } }),
         ];
-        return Promise.all(stack)
-            .then((datas) => or(isNil(datas[0]), isNil(datas[1])))
+        const status = Promise.all(stack)
+            .then((datas) => or(!isNil(datas[0]), !isNil(datas[1])))
             .catch(() => false);
+        if (!(await status)) {
+            throw PUSHER_ERROR.IS_NOT_FRIEND;
+        }
+        return true;
     }
 }

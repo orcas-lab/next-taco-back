@@ -1,13 +1,12 @@
-import { Column, Index, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
+@Entity()
 export class Message {
     @PrimaryColumn({ type: 'uuid' })
     uuid: string;
-    @Index()
-    @Column({ type: 'string' })
+    @Column({ type: 'text' })
     sender: string;
-    @Index()
-    @Column({ type: 'string' })
+    @Column({ type: 'text' })
     target: string;
     @Column()
     msg: string;

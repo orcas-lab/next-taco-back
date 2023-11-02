@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Message } from '@app/entity';
 import { randomUUID } from 'crypto';
-import { Socket } from 'socket.io';
 @Injectable()
 export class PusherService {
     constructor(

@@ -8,19 +8,21 @@ import {
 import { Server } from 'socket.io';
 import { PusherService } from './pusher.service';
 import { Message } from './dto/pusher.dto';
-import { Logger, UseGuards } from '@nestjs/common';
-import { User } from '../user.decorator';
-import { WsAuthGuard } from '@app/shared/ws-auth.guard';
-import { IsFriendGuard } from '@app/shared/is-friend.guard';
+import { Logger, UseFilters, UseGuards } from '@nestjs/common';
+import { WsUser } from '../user.decorator';
 import { Socket } from 'socket.io';
 import { JwtService } from '@app/jwt';
-import { GLOBAL, PusherError } from '@app/error';
+import { PusherError } from '@app/error';
+import { WsAuthGuard } from '@app/shared/ws-auth.guard';
+import { IsFriendGuard } from '@app/shared/is-friend.guard';
+import { WsExceptionFilter } from '@app/shared/ws-exception-filter/ws-exception-filter.filter';
 
 @WebSocketGateway({
     cors: {
         origin: '*',
     },
 })
+@UseFilters(new WsExceptionFilter())
 export class PusherGateway implements OnGatewayConnection<Socket> {
     @WebSocketServer()
     server: Server;
@@ -28,15 +30,18 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
         private readonly pusherService: PusherService,
         private readonly jwt: JwtService,
     ) {}
-    @UseGuards(IsFriendGuard)
+    @UseGuards(WsAuthGuard, IsFriendGuard)
     @SubscribeMessage('message')
     async sendMessage(
         @MessageBody() data: Message,
-        @User('tid') source: string,
+        @WsUser('tid') source: string,
     ) {
         const msg = await this.pusherService.persistence({ ...data, source });
         this.server.to(`${data.target}:${source}`).emit('msg', msg);
-        return msg;
+        return {
+            event: 'message',
+            data: msg,
+        };
     }
 
     handleConnection(client: Socket) {
