@@ -1,9 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 
 enum Modules {
     GLOBAL = 1,
     ACCOUNT,
     Friend,
+    Pusher,
 }
 /**
  * 错误来自于哪
@@ -13,15 +15,26 @@ enum ErrorFrom {
     USER,
 }
 
-export class ApiError extends Error {
-    public status: HttpStatus;
+export class ApiError<T = HttpStatus> extends Error {
+    public status: T;
     public innerStatus: number;
     public message: string;
-    constructor(httpStatus: HttpStatus, innerStatus: number, message: string) {
+    constructor(httpStatus: T, innerStatus: number, message: string) {
         super(message);
         this.status = httpStatus;
         this.innerStatus = innerStatus;
         this.message = message;
+    }
+}
+export class PusherError extends Error {
+    public code: number;
+    public msg: string;
+    public disconnect: boolean;
+    constructor(code: number, message: string, disconnect = false) {
+        super(message);
+        this.code = code;
+        this.msg = message;
+        this.disconnect = disconnect;
     }
 }
 const getCodes = (module: Modules, ErrorFrom: ErrorFrom, step: number) => {
@@ -74,5 +87,21 @@ export const FriendError = {
         HttpStatus.BAD_REQUEST,
         getCodes(Modules.Friend, ErrorFrom.USER, 5),
         'REQUEST_EXPIRED',
+    ),
+};
+export const PUSHER_ERROR = {
+    UNKNOWN_ERROR: new PusherError(
+        getCodes(Modules.Pusher, ErrorFrom.INNER, 1),
+        'UNKNOWN_ERROR',
+        true,
+    ),
+    INVALIDE_TOKEN: new PusherError(
+        getCodes(Modules.Pusher, ErrorFrom.USER, 2),
+        'INVALIDE_TOKEN',
+        true,
+    ),
+    IS_NOT_FRIEND: new PusherError(
+        getCodes(Modules.Pusher, ErrorFrom.USER, 3),
+        'IS_NOT_FRIEND',
     ),
 };
