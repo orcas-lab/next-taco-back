@@ -1,20 +1,28 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'Profile' })
 export class Profile {
     @PrimaryColumn()
+    @ApiProperty()
     tid: string;
     @Column()
+    @ApiProperty()
     nick: string;
     @Column()
+    @ApiProperty()
     avatar: string;
     @Column()
+    @ApiProperty()
     description: string;
     @Column()
+    @ApiProperty()
     reputation: number;
     @Column({ type: 'bigint', default: 0 })
+    @ApiProperty()
     friends_total: number;
     @Column({ type: 'bigint' })
+    @ApiProperty()
     create_at: number;
     @Column({ type: 'bigint' })
     update_at: number;
