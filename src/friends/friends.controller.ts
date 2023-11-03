@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpStatus,
     Patch,
     Post,
     Query,
@@ -15,16 +16,22 @@ import { FriendError } from '@app/error';
 import {
     Accept,
     AddFriend,
+    AddFriendResponse,
     DeleteFriend,
+    GetFriendListResponse,
     Reject,
     UpdateFriend,
 } from './dto/friend.rquest.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('friends')
 @UseGuards(AuthGuard)
 @Controller('friends')
 export class FriendsController {
     constructor(private readonly friendsService: FriendsService) {}
     @Post('')
+    @ApiResponse({ status: HttpStatus.CREATED, type: AddFriendResponse })
     async sendAddRequest(@Body() data: AddFriend, @User('tid') tid: string) {
         return this.friendsService.sendAddFriendRequest({
             ...data,
@@ -43,6 +50,7 @@ export class FriendsController {
         return this.friendsService.updateFriend({ ...data, source: tid });
     }
     @Get('')
+    @ApiResponse({ status: HttpStatus.OK, type: GetFriendListResponse })
     async getFriendList(
         @User('tid') tid: string,
         @Query('limit') limit: string,

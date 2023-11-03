@@ -7,25 +7,33 @@ import {
     PrimaryColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'Account' })
 export class Account {
     @PrimaryColumn({ select: true })
+    @ApiProperty()
     tid: string;
     @Column()
+    @ApiProperty()
     email: string;
     @Column()
+    @ApiProperty()
     password: string;
     @Column({ type: 'json' })
+    @ApiProperty()
     question: {
         [x: string]: string | number | boolean;
     };
     @Column({ default: true })
+    @ApiProperty()
     active: boolean;
     @OneToOne(() => Profile)
     @JoinColumn()
+    @ApiProperty()
     profile: Profile;
     @Column({ default: new Date().getTime(), type: 'bigint' })
+    @ApiProperty()
     create_at: number;
 }
 
