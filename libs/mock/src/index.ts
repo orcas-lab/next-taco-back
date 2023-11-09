@@ -11,4 +11,5 @@ export const mockRepository: <T>() => MockRepositoryType<Repository<T>> =
         update: jest.fn(),
         decrement: jest.fn(),
         find: jest.fn(),
+        findBy: jest.fn(),
     }));
