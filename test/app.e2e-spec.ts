@@ -274,7 +274,7 @@ describe('AppController (e2e)', () => {
                     .get('/requests')
                     .set('authorization', `Bearer ${token}`)
             ).body;
-            expect(body).not.toStrictEqual([]);
+            expect(body).toStrictEqual([]);
             return expect(statusCode).toBe(HttpStatus.CREATED);
         });
         it('accept', async () => {

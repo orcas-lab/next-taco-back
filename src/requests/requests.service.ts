@@ -1,7 +1,7 @@
 import { Request } from '@app/entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 
 @Injectable()
 export class RequestsService {
@@ -11,7 +11,15 @@ export class RequestsService {
     ) {}
     findAll(tid: string) {
         return this.request.find({
-            where: [{ source: tid }, { target: tid }],
+            where: { target: tid, expire_at: MoreThan(new Date().getTime()) },
+            select: [
+                'create_at',
+                'expire_at',
+                'update_at',
+                'source',
+                'target',
+                'uuid',
+            ],
         });
     }
 }
