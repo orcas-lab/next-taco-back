@@ -79,7 +79,7 @@ export class FriendsController {
         return this.friendsService.accept(data, tid);
     }
     @Post('reject')
-    async reject(@Body() data: Reject) {
-        return this.friendsService.reject(data);
+    async reject(@Body() data: Reject, @User('tid') tid: string) {
+        return this.friendsService.reject(data, tid);
     }
 }

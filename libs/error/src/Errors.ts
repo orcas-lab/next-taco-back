@@ -87,10 +87,10 @@ export const FriendError = {
         getCodes(Modules.Friend, ErrorFrom.USER, 5),
         'REQUEST_EXPIRED',
     ),
-    UNABLE_TO_ACCEPT_OWN_REQUEST: new ApiError(
+    UNABLE_TO_PROCESS_OWNS_REQUEST: new ApiError(
         HttpStatus.BAD_REQUEST,
         getCodes(Modules.Friend, ErrorFrom.USER, 6),
-        'UNABLE_TO_ACCEPT_OWN_REQUEST',
+        'UNABLE_TO_PROCESS_OWNS_REQUEST',
     ),
 };
 export const PUSHER_ERROR = {
