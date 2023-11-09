@@ -1,5 +1,4 @@
 import { HttpStatus } from '@nestjs/common';
-import { WsException } from '@nestjs/websockets';
 
 enum Modules {
     GLOBAL = 1,
@@ -87,6 +86,11 @@ export const FriendError = {
         HttpStatus.BAD_REQUEST,
         getCodes(Modules.Friend, ErrorFrom.USER, 5),
         'REQUEST_EXPIRED',
+    ),
+    UNABLE_TO_ACCEPT_OWN_REQUEST: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.Friend, ErrorFrom.USER, 6),
+        'UNABLE_TO_ACCEPT_OWN_REQUEST',
     ),
 };
 export const PUSHER_ERROR = {

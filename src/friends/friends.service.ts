@@ -107,7 +107,7 @@ export class FriendsService {
             total: profile.friends_total,
         };
     }
-    async accept(data: Accept) {
+    async accept(data: Accept, tid: string) {
         const { rid } = data;
         const requestCheckStatus = await this.isRequestValide(rid);
         if (requestCheckStatus === 'IS_EXPIRED') {
@@ -125,6 +125,9 @@ export class FriendsService {
                 target: true,
             },
         });
+        if (source === tid) {
+            throw FriendError.UNABLE_TO_ACCEPT_OWN_REQUEST;
+        }
         await this.addFriend(source, target);
         await this.addFriend(target, source);
         await this.Request.delete({
