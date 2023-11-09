@@ -262,12 +262,14 @@ describe('AppController (e2e)', () => {
     let rid = '';
     describe('friends', () => {
         it('add friends', async () => {
-            let { statusCode, body } = await request(app.getHttpServer())
+            const rep = await request(app.getHttpServer())
                 .post('/friends')
                 .set('authorization', `Bearer ${token}`)
                 .send({
                     target: 'tester-2',
                 } as AddFriend);
+            let body = rep.body;
+            const statusCode = rep.statusCode;
             rid = body.rid;
             body = (
                 await request(app.getHttpServer())
@@ -278,19 +280,31 @@ describe('AppController (e2e)', () => {
             return expect(statusCode).toBe(HttpStatus.CREATED);
         });
         it('accept', async () => {
+            const loginData = {
+                tid: 'tester-2',
+                password: 'test-2',
+            };
+            let { body } = await request(app.getHttpServer())
+                .post('/account/login')
+                .send(loginData);
+            const token = body.access_token;
+            expect(token).not.toBeUndefined();
+
             const { statusCode } = await request(app.getHttpServer())
                 .post('/friends/accept')
                 .set('authorization', `Bearer ${token}`)
                 .send({
                     rid,
                 } as Accept);
-            let { body } = await request(app.getHttpServer())
-                .get('/friends')
-                .query({
-                    limit: 0,
-                    offset: 0,
-                })
-                .set('authorization', `Bearer ${token}`);
+            body = (
+                await request(app.getHttpServer())
+                    .get('/friends')
+                    .query({
+                        limit: 0,
+                        offset: 0,
+                    })
+                    .set('authorization', `Bearer ${token}`)
+            ).body;
             expect(body.friends).not.toStrictEqual([]);
             body = (
                 await request(app.getHttpServer())
