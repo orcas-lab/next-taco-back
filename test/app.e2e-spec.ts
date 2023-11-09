@@ -262,13 +262,19 @@ describe('AppController (e2e)', () => {
     let rid = '';
     describe('friends', () => {
         it('add friends', async () => {
-            const { statusCode, body } = await request(app.getHttpServer())
+            let { statusCode, body } = await request(app.getHttpServer())
                 .post('/friends')
                 .set('authorization', `Bearer ${token}`)
                 .send({
                     target: 'tester-2',
                 } as AddFriend);
             rid = body.rid;
+            body = (
+                await request(app.getHttpServer())
+                    .get('/requests')
+                    .set('authorization', `Bearer ${token}`)
+            ).body;
+            expect(body).not.toStrictEqual([]);
             return expect(statusCode).toBe(HttpStatus.CREATED);
         });
         it('accept', async () => {
@@ -278,7 +284,7 @@ describe('AppController (e2e)', () => {
                 .send({
                     rid,
                 } as Accept);
-            const { body } = await request(app.getHttpServer())
+            let { body } = await request(app.getHttpServer())
                 .get('/friends')
                 .query({
                     limit: 0,
@@ -286,6 +292,12 @@ describe('AppController (e2e)', () => {
                 })
                 .set('authorization', `Bearer ${token}`);
             expect(body.friends).not.toStrictEqual([]);
+            body = (
+                await request(app.getHttpServer())
+                    .get('/requests')
+                    .set('authorization', `Bearer ${token}`)
+            ).body;
+            expect(body).toStrictEqual([]);
             return expect(statusCode).toBe(HttpStatus.CREATED);
         });
         it('update', async () => {

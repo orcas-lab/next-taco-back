@@ -9,6 +9,7 @@ import { ClusterModule } from '@liaoliaots/nestjs-redis';
 import { UserModule } from './user/user.module';
 import { FriendsModule } from './friends/friends.module';
 import { PusherModule } from './pusher/pusher.module';
+import { RequestsModule } from './requests/requests.module';
 @Module({
     imports: [
         ConfigureModule.forRoot('config.toml'),
@@ -45,6 +46,7 @@ import { PusherModule } from './pusher/pusher.module';
         UserModule,
         FriendsModule,
         PusherModule,
+        RequestsModule,
     ],
 })
 export class AppModule {}
