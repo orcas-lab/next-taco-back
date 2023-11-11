@@ -1,0 +1,8 @@
+node_modules
+test
+__tests__
+.editorconfig
+.eslintrc.js
+.gitignore
+.prettierrc
+*.md
