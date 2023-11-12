@@ -8,3 +8,5 @@ RUN npm install -g pnpm && pnpm install && pnpm build
 VOLUME [ "/usr/taco/keys", "/usr/taco/config.toml" ]
 
 CMD [ "node", "dist/main.js" ] 
+
+EXPOSE 3000
