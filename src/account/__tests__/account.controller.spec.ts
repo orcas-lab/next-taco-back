@@ -42,6 +42,7 @@ describe('AccountController', () => {
                 password: '',
                 tid: '',
                 question: {},
+                avatar: '',
             }),
         ).resolves.toBeDefined();
     });
@@ -50,7 +51,10 @@ describe('AccountController', () => {
     });
     it('update password', () => {
         expect(
-            controller.changePassword({ tid: '', question: {}, password: '' }),
+            controller.changePassword('', {
+                question: {},
+                password: '',
+            }),
         ).resolves.toBeDefined();
     });
 });

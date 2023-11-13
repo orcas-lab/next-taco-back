@@ -6,3 +6,5 @@ __tests__
 .gitignore
 .prettierrc
 *.md
+public
+test-file

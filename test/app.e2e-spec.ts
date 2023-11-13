@@ -55,17 +55,28 @@ describe('AppController (e2e)', () => {
     });
     describe('register', () => {
         const registerData: RegisterReuqest = {
+            avatar: 'https://i.pravatar.cc/',
             tid: 'tester',
             email: 'test@no-reply.com',
             password: 'test',
             question: {},
         };
         it('success', async () => {
-            const { statusCode } = await request(app.getHttpServer())
+            let { statusCode } = await request(app.getHttpServer())
                 .post('/account/register')
                 .send(registerData);
             expect(statusCode).toBe(HttpStatus.CREATED);
+            statusCode = (
+                await request(app.getHttpServer())
+                    .post('/account/register')
+                    .send({
+                        ...registerData,
+                        avatar: undefined,
+                    })
+            ).statusCode;
+            expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
             await request(app.getHttpServer()).post('/account/register').send({
+                avatar: 'https://i.pravatar.cc/',
                 tid: 'tester-2',
                 email: 'test2@no-reply.com',
                 password: 'test-2',
@@ -214,6 +225,18 @@ describe('AppController (e2e)', () => {
         });
     });
     describe('user', () => {
+        it('get avatar', () => {
+            return request(app.getHttpServer())
+                .get('/user/avatar/1')
+                .expect(HttpStatus.OK);
+        });
+        it('upload new avatar', () => {
+            return request(app.getHttpServer())
+                .post('/user/avatar')
+                .set('authorization', `Bearer ${token}`)
+                .attach('avatar', './test-file/img.png')
+                .expect(HttpStatus.CREATED);
+        });
         it('get profile', async () => {
             const { body } = await request(app.getHttpServer())
                 .get('/user/profile')

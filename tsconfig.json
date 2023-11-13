@@ -78,6 +78,12 @@
       ],
       "@app/rabbitmq/*": [
         "libs/rabbitmq/src/*"
+      ],
+      "@app/boring-avatar": [
+        "libs/boring-avatar/src"
+      ],
+      "@app/boring-avatar/*": [
+        "libs/boring-avatar/src/*"
       ]
     }
   }

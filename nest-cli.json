@@ -78,6 +78,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
+    },
+    "boring-avatar": {
+      "type": "library",
+      "root": "libs/boring-avatar",
+      "entryFile": "index",
+      "sourceRoot": "libs/boring-avatar/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/boring-avatar/tsconfig.lib.json"
+      }
     }
   }
 }

@@ -5,10 +5,15 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
+    ParseFilePipeBuilder,
     Patch,
     Post,
     Query,
+    Res,
+    UploadedFile,
     UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../user.decorator';
@@ -17,6 +22,9 @@ import { BanUser, UnBan, UpdateUserProfileRequest } from './dto/user.dto';
 import { TargetExistsGuard } from '@app/shared/target-exists.guard';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlackList, Profile } from '@app/entity';
+import { Response } from 'express';
+import { ReadStream } from 'fs';
+import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -54,5 +62,41 @@ export class UserController {
     @Delete('ban')
     unbanUser(@User('tid') tid: string, @Body() data: UnBan) {
         return this.userService.unban({ ...data, source: tid });
+    }
+
+    @Get('avatar/:id')
+    async getAvatar(@Param('id') id: string, @Res() response: Response) {
+        const data = await this.userService.getAvatar(id);
+        if (data instanceof ReadStream) {
+            data.pipe(response);
+        } else {
+            response.redirect(data.url);
+        }
+    }
+
+    @UseGuards(AuthGuard)
+    @UseInterceptors(FileInterceptor('avatar'))
+    @Post('avatar')
+    async putAvatar(
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'png',
+                })
+                .addMaxSizeValidator({
+                    maxSize: 1048576,
+                    message(maxSize) {
+                        return `File size limit: ${maxSize}`;
+                    },
+                })
+                .build({
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                }),
+        )
+        file: Express.Multer.File,
+        @User('tid') tid: string,
+    ) {
+        this.userService.storageAvatar(file, tid);
+        return file.buffer;
     }
 }

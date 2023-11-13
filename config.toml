@@ -1,8 +1,12 @@
 [api]
 prefix='/api'
+[asset]
+[asset.avatar]
+fs_path="./public"
+ext=".png"
 
 [db]
-host="mysql"
+host="localhost"
 port=3306
 username="root"
 password="root"
@@ -19,4 +23,4 @@ expire='7d'
 publicKeyPath="./keys/key.pub"
 privateKeyPath="./keys/key.pri"
 [redis]
-nodes=[{host="node-6",port=6384}]
+nodes=[{host="127.0.0.1",port=6384}]

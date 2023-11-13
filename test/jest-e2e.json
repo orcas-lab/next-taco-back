@@ -28,6 +28,8 @@
     "@app/shared/(.*)": "<rootDir>/../libs/shared/src/$1",
     "@app/shared": "<rootDir>/../libs/shared/src",
     "@app/redis/(.*)": "<rootDir>/../libs/redis/src/$1",
-    "@app/redis": "<rootDir>/../libs/redis/src"
+    "@app/redis": "<rootDir>/../libs/redis/src",
+    "@app/boring-avatar/(.*)": "<rootDir>/../libs/boring-avatar/src/$1",
+    "@app/boring-avatar": "<rootDir>/../libs/boring-avatar/src"
   }
 }
