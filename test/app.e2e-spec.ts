@@ -230,6 +230,13 @@ describe('AppController (e2e)', () => {
                 .get('/user/avatar/1')
                 .expect(HttpStatus.OK);
         });
+        it('upload new avatar', () => {
+            return request(app.getHttpServer())
+                .post('/user/avatar')
+                .set('authorization', `Bearer ${token}`)
+                .attach('avatar', './test-file/img.png')
+                .expect(HttpStatus.CREATED);
+        });
         it('get profile', async () => {
             const { body } = await request(app.getHttpServer())
                 .get('/user/profile')

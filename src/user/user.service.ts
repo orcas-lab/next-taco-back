@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { BlackList } from '@app/entity/black-list.entity';
 import { randomUUID } from 'crypto';
 import { ConfigureService } from '@app/configure';
-import { ReadStream, createReadStream, existsSync } from 'fs';
+import { ReadStream, createReadStream, existsSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { UserError } from '@app/error';
 
@@ -81,5 +81,14 @@ export class UserService {
             }
             resolve(createReadStream(filePath));
         });
+    }
+    storageAvatar(file: Express.Multer.File, tid: string) {
+        const url = this.config.get('asset.avatar.fs_path');
+        const filePath = resolve(
+            url,
+            `${tid}${this.config.get('asset.avatar.ext')}`,
+        );
+        writeFileSync(filePath, file.buffer);
+        return;
     }
 }
