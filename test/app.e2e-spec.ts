@@ -225,6 +225,11 @@ describe('AppController (e2e)', () => {
         });
     });
     describe('user', () => {
+        it('get avatar', () => {
+            return request(app.getHttpServer())
+                .get('/user/avatar/1')
+                .expect(HttpStatus.OK);
+        });
         it('get profile', async () => {
             const { body } = await request(app.getHttpServer())
                 .get('/user/profile')

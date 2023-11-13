@@ -5,6 +5,7 @@ enum Modules {
     ACCOUNT,
     Friend,
     Pusher,
+    User,
 }
 /**
  * 错误来自于哪
@@ -39,6 +40,15 @@ export class PusherError extends Error {
 const getCodes = (module: Modules, ErrorFrom: ErrorFrom, step: number) => {
     return 1000 * module + 100 * ErrorFrom + step;
 };
+
+export const GlobalError = {
+    INTERNAL_ERR: new ApiError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        getCodes(Modules.GLOBAL, ErrorFrom.USER, 2),
+        'INTERNAL_ERR',
+    ),
+};
+
 export const AccountError = {
     ACCOUNT_NOT_EXISTS: new ApiError(
         HttpStatus.BAD_REQUEST,
@@ -93,6 +103,15 @@ export const FriendError = {
         'UNABLE_TO_PROCESS_OWNS_REQUEST',
     ),
 };
+
+export const UserError = {
+    AVATAR_NOT_FOUND: new ApiError(
+        HttpStatus.BAD_REQUEST,
+        getCodes(Modules.User, ErrorFrom.USER, 1),
+        'AVATAR_NOT_FOUNDED',
+    ),
+};
+
 export const PUSHER_ERROR = {
     UNKNOWN_ERROR: new PusherError(
         getCodes(Modules.Pusher, ErrorFrom.INNER, 1),

@@ -1,5 +1,9 @@
 [api]
 prefix='/api'
+[asset]
+[asset.avatar]
+fs_path="./public"
+ext=".png"
 
 [db]
 host="localhost"

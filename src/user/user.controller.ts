@@ -5,9 +5,11 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Patch,
     Post,
     Query,
+    Res,
     UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -17,6 +19,8 @@ import { BanUser, UnBan, UpdateUserProfileRequest } from './dto/user.dto';
 import { TargetExistsGuard } from '@app/shared/target-exists.guard';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BlackList, Profile } from '@app/entity';
+import { Response } from 'express';
+import { ReadStream } from 'fs';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -54,5 +58,15 @@ export class UserController {
     @Delete('ban')
     unbanUser(@User('tid') tid: string, @Body() data: UnBan) {
         return this.userService.unban({ ...data, source: tid });
+    }
+
+    @Get('avatar/:id')
+    async getAvatar(@Param('id') id: string, @Res() response: Response) {
+        const data = await this.userService.getAvatar(id);
+        if (data instanceof ReadStream) {
+            data.pipe(response);
+        } else {
+            response.redirect(data.url);
+        }
     }
 }

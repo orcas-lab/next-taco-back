@@ -4,6 +4,13 @@ export interface ConfigOption {
     api: {
         prefix: string;
     };
+    asset: {
+        avatar?: {
+            fs_path: string;
+            redirect?: string;
+            ext?: string;
+        };
+    };
     db: {
         host: string;
         port: number;
