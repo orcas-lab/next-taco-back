@@ -56,6 +56,7 @@ export class UserService {
         });
     }
     getAvatar(tid: string) {
+        const ext = '.png';
         if (this.config.get('asset.avatar.redirect')) {
             let url = `${this.config.get('asset.avatar.redirect')}`;
             if (url.at(-1) === '/') {
@@ -63,18 +64,13 @@ export class UserService {
             } else {
                 url += '/' + tid;
             }
-            if (this.config.get('asset.avatar.ext')) {
-                url += '.' + this.config.get('asset.avatar.ext');
-            }
+            url += '.' + ext;
             return {
                 url,
             };
         }
         const url = this.config.get('asset.avatar.fs_path');
-        const filePath = resolve(
-            url,
-            `${tid}${this.config.get('asset.avatar.ext')}`,
-        );
+        const filePath = resolve(url, `${tid}${ext}`);
         return new Promise<ReadStream>((resolve) => {
             if (!existsSync(filePath)) {
                 throw UserError.AVATAR_NOT_FOUND;
@@ -84,10 +80,7 @@ export class UserService {
     }
     storageAvatar(file: Express.Multer.File, tid: string) {
         const url = this.config.get('asset.avatar.fs_path');
-        const filePath = resolve(
-            url,
-            `${tid}${this.config.get('asset.avatar.ext')}`,
-        );
+        const filePath = resolve(url, `${tid}.png`);
         writeFileSync(filePath, file.buffer);
         return;
     }

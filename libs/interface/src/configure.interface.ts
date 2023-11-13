@@ -8,7 +8,6 @@ export interface ConfigOption {
         avatar?: {
             fs_path: string;
             redirect?: string;
-            ext?: string;
         };
     };
     db: {
