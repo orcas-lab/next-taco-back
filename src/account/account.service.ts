@@ -10,7 +10,7 @@ import {
 } from './dto/account.dto';
 import { useBCrypt } from '@app/bcrypto';
 import { ConfigureService } from '@app/configure';
-import { equals, isEmpty, isNil } from 'ramda';
+import { equals, isNil } from 'ramda';
 import { AccountError } from '@app/error';
 import { JwtService } from '@app/jwt';
 import { Cluster } from 'ioredis';
@@ -53,7 +53,6 @@ export class AccountService {
         return this.account.save(account);
     }
     async delete(data: DeleteAccountRequest & { tid: string }) {
-        console.log(data);
         const accountExists = this.userExists(data.tid);
         if (!(await accountExists)) {
             throw AccountError.ACCOUNT_NOT_EXISTS;

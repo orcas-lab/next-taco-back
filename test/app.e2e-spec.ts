@@ -55,17 +55,28 @@ describe('AppController (e2e)', () => {
     });
     describe('register', () => {
         const registerData: RegisterReuqest = {
+            avatar: 'https://i.pravatar.cc/',
             tid: 'tester',
             email: 'test@no-reply.com',
             password: 'test',
             question: {},
         };
         it('success', async () => {
-            const { statusCode } = await request(app.getHttpServer())
+            let { statusCode } = await request(app.getHttpServer())
                 .post('/account/register')
                 .send(registerData);
             expect(statusCode).toBe(HttpStatus.CREATED);
+            statusCode = (
+                await request(app.getHttpServer())
+                    .post('/account/register')
+                    .send({
+                        ...registerData,
+                        avatar: undefined,
+                    })
+            ).statusCode;
+            expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
             await request(app.getHttpServer()).post('/account/register').send({
+                avatar: 'https://i.pravatar.cc/',
                 tid: 'tester-2',
                 email: 'test2@no-reply.com',
                 password: 'test-2',
