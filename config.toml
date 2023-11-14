@@ -6,7 +6,7 @@ fs_path="./public"
 ext=".png"
 
 [db]
-host="localhost"
+host="mysql"
 port=3306
 username="root"
 password="root"
@@ -23,4 +23,4 @@ expire='7d'
 publicKeyPath="./keys/key.pub"
 privateKeyPath="./keys/key.pri"
 [redis]
-nodes=[{host="127.0.0.1",port=6384}]
+nodes=[{host="redis-node-6",port=6384}]

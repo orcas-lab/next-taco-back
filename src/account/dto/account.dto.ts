@@ -5,7 +5,6 @@ import {
     IsEmail,
     IsNotEmptyObject,
     IsObject,
-    IsUrl,
 } from 'class-validator';
 export class RegisterReuqest {
     @IsNotEmpty()
@@ -24,10 +23,6 @@ export class RegisterReuqest {
     @IsNotEmptyObject()
     @ApiProperty()
     question: { [x: string]: string | number | boolean };
-    @IsNotEmpty()
-    @IsUrl({ protocols: ['http', 'https'] })
-    @ApiProperty()
-    avatar: string;
 }
 
 export class LoginRequest {
