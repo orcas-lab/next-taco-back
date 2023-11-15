@@ -1944,3 +1944,13 @@ $3
 DEL
 $17
 TOKEN:access:test
+*2
+$6
+SELECT
+$1
+0
+*2
+$3
+DEL
+$18
+TOKEN:refresh:test
