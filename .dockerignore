@@ -8,3 +8,5 @@ __tests__
 *.md
 public
 test-file
+redis-cluster-data
+mysql

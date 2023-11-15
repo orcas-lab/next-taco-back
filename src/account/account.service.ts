@@ -18,6 +18,8 @@ import { InjectCluster } from '@liaoliaots/nestjs-redis';
 import { namespace } from '@app/shared';
 import ms from 'ms';
 import { Profile, createProfile } from '@app/entity/profile.entity';
+import { AvatarService } from '@app/avatar';
+import { basename } from 'path';
 
 @Injectable()
 export class AccountService {
@@ -30,6 +32,7 @@ export class AccountService {
         private readonly Profile: Repository<Profile>,
         private readonly config: ConfigureService,
         private readonly jwt: JwtService,
+        private readonly avatar: AvatarService,
     ) {}
     async register(data: RegisterReuqest) {
         const userExists = await this.userExists(data.tid);
@@ -45,8 +48,15 @@ export class AccountService {
                 this.config.get('bcrypt.cost'),
             ),
         });
+        const url = await this.avatar.pixel(
+            data.tid,
+            this.config.get('asset.avatar.fs_path'),
+            'png',
+        );
+        const filename = basename(url, '.png');
         const profile = createProfile({
             ...data,
+            avatar: filename,
             reputation: defaultReputation ?? 5,
         });
         await this.Profile.save(profile);

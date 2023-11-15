@@ -67,7 +67,6 @@ describe('AccountService', () => {
                     password: useBCrypt(registerData.password, 'salt', 12),
                     email: '',
                     question: { q1: 'a1' },
-                    avatar: '',
                 }),
             ).resolves.toStrictEqual(registerData);
         });
@@ -79,7 +78,6 @@ describe('AccountService', () => {
                     password: '',
                     email: '',
                     question: { q1: 'a1' },
-                    avatar: '',
                 }),
             ).rejects.toThrow(AccountError.ACCOUNT_EXISTS);
         });

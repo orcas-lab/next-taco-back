@@ -74,6 +74,7 @@ export class UserController {
         }
     }
 
+    @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('avatar'))
     @Post('avatar')

@@ -1,2 +1,2 @@
-file appendonly.aof.26.base.rdb seq 26 type b
-file appendonly.aof.26.incr.aof seq 26 type i
+file appendonly.aof.35.base.rdb seq 35 type b
+file appendonly.aof.35.incr.aof seq 35 type i

@@ -5,7 +5,7 @@ WORKDIR /usr/taco
 ADD . .
 RUN npm install -g pnpm && pnpm install && pnpm build
 
-VOLUME [ "/usr/taco/keys", "/usr/taco/config.toml" ]
+VOLUME [ "/usr/taco/keys", "/usr/taco/config.toml", "/usr/taco/public" ]
 
 CMD [ "node", "dist/main.js" ] 
 
