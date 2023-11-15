@@ -13,18 +13,19 @@ import { ConfigureService } from '@app/configure';
 import { equals, isNil } from 'ramda';
 import { AccountError } from '@app/error';
 import { JwtService } from '@app/jwt';
-import { Cluster } from 'ioredis';
+import { Cluster, Redis } from 'ioredis';
 import { InjectCluster } from '@liaoliaots/nestjs-redis';
 import { namespace } from '@app/shared';
 import ms from 'ms';
 import { Profile, createProfile } from '@app/entity/profile.entity';
 import { AvatarService } from '@app/avatar';
 import { basename } from 'path';
+import { InjectAutoRedis } from '@app/shared/redis/redis.decorator';
 
 @Injectable()
 export class AccountService {
     constructor(
-        @InjectCluster()
+        @InjectAutoRedis(Boolean(process.env.REDIS_CLUSTER))
         private cluster: Cluster,
         @InjectRepository(Account)
         private readonly account: Repository<Account>,
