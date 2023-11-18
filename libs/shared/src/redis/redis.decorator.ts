@@ -1,28 +1,27 @@
-import { Inject } from '@nestjs/common';
 import {
     ClientNamespace,
     DEFAULT_CLUSTER_NAMESPACE,
     DEFAULT_REDIS_NAMESPACE,
     InjectCluster,
     InjectRedis,
-    getClusterToken,
-    getRedisToken,
 } from '@liaoliaots/nestjs-redis';
+import { config } from 'dotenv';
+config({ path: '.env' });
 
-export const InjectAutoRedis = <T extends boolean = false>(
-    cluster?: T,
+export type Mode = 'cluster' | 'single';
+
+export const InjectAutoRedis = <T extends Mode = 'cluster'>(
+    mode: T = process.env.REDIS_MODE as T,
     namespace?: ClientNamespace,
 ) => {
+    const cluster = mode === 'cluster';
     const ns = !namespace
         ? cluster
             ? DEFAULT_CLUSTER_NAMESPACE
             : DEFAULT_REDIS_NAMESPACE
         : namespace;
     if (cluster) {
-        const token = getClusterToken(ns);
         return InjectCluster(ns);
-    } else {
-        const token = getRedisToken(ns);
-        return InjectRedis(ns);
     }
+    return InjectRedis(ns);
 };
