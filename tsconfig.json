@@ -90,6 +90,12 @@
       ],
       "@app/avatar/*": [
         "libs/avatar/src/*"
+      ],
+      "@app/auto-redis": [
+        "libs/auto-redis/src"
+      ],
+      "@app/auto-redis/*": [
+        "libs/auto-redis/src/*"
       ]
     }
   }

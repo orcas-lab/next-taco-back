@@ -32,6 +32,8 @@
     "@app/boring-avatar/(.*)": "<rootDir>/../libs/boring-avatar/src/$1",
     "@app/boring-avatar": "<rootDir>/../libs/boring-avatar/src",
     "@app/avatar/(.*)": "<rootDir>/../libs/avatar/src/$1",
-    "@app/avatar": "<rootDir>/../libs/avatar/src"
+    "@app/avatar": "<rootDir>/../libs/avatar/src",
+    "@app/auto-redis/(.*)": "<rootDir>/../libs/auto-redis/src/$1",
+    "@app/auto-redis": "<rootDir>/../libs/auto-redis/src"
   }
 }

@@ -5,11 +5,11 @@ import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
 import { JwtModule } from '@app/jwt';
 import 'reflect-metadata';
-import { ClusterModule } from '@liaoliaots/nestjs-redis';
 import { UserModule } from './user/user.module';
 import { FriendsModule } from './friends/friends.module';
 import { PusherModule } from './pusher/pusher.module';
 import { RequestsModule } from './requests/requests.module';
+import { AutoRedisModule } from '@app/auto-redis';
 @Module({
     imports: [
         ConfigureModule.forRoot('config.toml'),
@@ -28,19 +28,7 @@ import { RequestsModule } from './requests/requests.module';
                 };
             },
         }),
-        ClusterModule.forRootAsync({
-            imports: [ConfigureModule.forRoot('config.toml')],
-            inject: [ConfigureService],
-            async useFactory(configure: ConfigureService) {
-                return {
-                    readyLog: true,
-                    config: {
-                        nodes: configure.get('redis.nodes'),
-                        ...configure.get('redis.options'),
-                    },
-                };
-            },
-        }),
+        AutoRedisModule.use('config.toml'),
         JwtModule.use(),
         AccountModule,
         UserModule,

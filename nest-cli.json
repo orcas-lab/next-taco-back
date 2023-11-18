@@ -4,7 +4,9 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true
+    "webpack": true,
+    "assets": [".env"],
+    "watchAssets": true
   },
   "projects": {
     "configure": {
@@ -95,6 +97,15 @@
       "sourceRoot": "libs/avatar/src",
       "compilerOptions": {
         "tsConfigPath": "libs/avatar/tsconfig.lib.json"
+      }
+    },
+    "auto-redis": {
+      "type": "library",
+      "root": "libs/auto-redis",
+      "entryFile": "index",
+      "sourceRoot": "libs/auto-redis/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auto-redis/tsconfig.lib.json"
       }
     }
   }
