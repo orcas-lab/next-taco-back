@@ -10,3 +10,4 @@ public
 test-file
 redis-cluster-data
 mysql
+.env
