@@ -3,5 +3,6 @@ dist
 keys
 public
 test-file
-redis-cluster-data
+redis-cluster-data/
 mysql
+.env
