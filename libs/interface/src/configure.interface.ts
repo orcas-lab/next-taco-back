@@ -1,6 +1,7 @@
 import { ClusterNode, ClusterOptions } from 'ioredis';
 
 export interface ConfigOption {
+    domain: string;
     api: {
         prefix: string;
     };

@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    Index,
-    JoinColumn,
-    OneToOne,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Profile } from './profile.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
