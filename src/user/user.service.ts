@@ -34,8 +34,8 @@ export class UserService {
         });
     }
     async updateProfile(data: UpdateUserProfileRequest & { tid: string }) {
-        const { tid, profile: newProfile } = data;
-        await this.Profile.update({ tid }, newProfile);
+        const { tid, nick, description } = data;
+        await this.Profile.update({ tid }, { nick, description });
         return;
     }
     banUser(data: BanUser & { source: string }) {

@@ -1,11 +1,5 @@
-import { Profile } from '@app/entity/profile.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-    IsNotEmpty,
-    IsNotEmptyObject,
-    IsObject,
-    IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class GetUserProfileRequest {
     @IsNotEmpty()
@@ -14,10 +8,14 @@ export class GetUserProfileRequest {
     tid: string;
 }
 export class UpdateUserProfileRequest {
-    @IsObject()
-    @IsNotEmptyObject()
-    @ApiProperty({ type: Profile })
-    profile: Profile;
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty()
+    nick: string;
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty()
+    description: string;
 }
 export class BanUser {
     @IsNotEmpty()
