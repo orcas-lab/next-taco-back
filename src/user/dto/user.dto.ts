@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDefined, IsNotEmpty, IsString } from 'class-validator';
 
 export class GetUserProfileRequest {
     @IsNotEmpty()
@@ -8,11 +8,11 @@ export class GetUserProfileRequest {
     tid: string;
 }
 export class UpdateUserProfileRequest {
-    @IsNotEmpty()
+    @IsDefined()
     @IsString()
     @ApiProperty()
     nick: string;
-    @IsNotEmpty()
+    @IsDefined()
     @IsString()
     @ApiProperty()
     description: string;

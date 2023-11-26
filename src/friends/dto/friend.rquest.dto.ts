@@ -1,6 +1,6 @@
 import { Friend } from '@app/entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AddFriend {
     @IsString()
@@ -41,12 +41,14 @@ export class UpdateFriend {
 }
 
 export class Accept {
+    @IsNotEmpty()
     @IsString()
     @ApiProperty()
     rid: string;
 }
 
 export class Reject {
+    @IsNotEmpty()
     @IsString()
     @ApiProperty()
     rid: string;

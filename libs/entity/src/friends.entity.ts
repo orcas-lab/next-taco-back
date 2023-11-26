@@ -5,12 +5,15 @@ import {
     JoinColumn,
     OneToOne,
     PrimaryColumn,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'Friend' })
 export class Friend {
+    @PrimaryGeneratedColumn()
+    id: number;
     @PrimaryColumn({ type: 'uuid' })
     @ApiProperty()
     uuid: string;

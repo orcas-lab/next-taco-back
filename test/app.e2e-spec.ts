@@ -1,4 +1,4 @@
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
@@ -43,6 +43,11 @@ describe('AppController (e2e)', () => {
     beforeAll(async () => {
         await drop();
         app = await NestFactory.create(AppModule);
+        app.useGlobalPipes(
+            new ValidationPipe({
+                enableDebugMessages: true,
+            }),
+        );
         app.useGlobalFilters(new WsExceptionFilter());
         app.useGlobalFilters(new HttpExceptionFilter());
         app.useWebSocketAdapter(new IoAdapter(app));
@@ -58,28 +63,33 @@ describe('AppController (e2e)', () => {
             tid: 'tester',
             email: 'test@no-reply.com',
             password: 'test',
-            question: {},
+            question: {
+                q1: 'a1',
+            },
         };
         it('success', async () => {
-            let { statusCode } = await request(app.getHttpServer())
+            let req = await request(app.getHttpServer())
                 .post('/account/register')
                 .send(registerData);
-            expect(statusCode).toBe(HttpStatus.CREATED);
-            statusCode = (
-                await request(app.getHttpServer())
-                    .post('/account/register')
-                    .send({
-                        ...registerData,
-                        avatar: undefined,
-                    })
-            ).statusCode;
+            expect(req.statusCode).toBe(HttpStatus.CREATED);
+            req = await request(app.getHttpServer())
+                .post('/account/register')
+                .send({
+                    ...registerData,
+                    avatar: undefined,
+                });
+            const statusCode = req.statusCode;
             expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
-            await request(app.getHttpServer()).post('/account/register').send({
-                tid: 'tester-2',
-                email: 'test2@no-reply.com',
-                password: 'test-2',
-                question: {},
-            });
+            await request(app.getHttpServer())
+                .post('/account/register')
+                .send({
+                    tid: 'tester-2',
+                    email: 'test2@no-reply.com',
+                    password: 'test-2',
+                    question: {
+                        q: 'a',
+                    },
+                });
             return Promise.resolve();
         });
         it('repeat', async () => {
@@ -160,7 +170,9 @@ describe('AppController (e2e)', () => {
         it('success', async () => {
             const updatePasswordData = {
                 password: 'new-password',
-                question: {},
+                question: {
+                    q1: 'a1',
+                },
             };
             const loginData: LoginRequest = {
                 tid: 'tester',
@@ -204,7 +216,7 @@ describe('AppController (e2e)', () => {
         it('success', () => {
             const dto: DeleteAccountRequest = {
                 question: {
-                    k: 'v',
+                    q1: 'a1',
                 },
             };
             request(app.getHttpServer())
@@ -248,10 +260,8 @@ describe('AppController (e2e)', () => {
         });
         it('update profile', () => {
             const updateProfile = {
-                profile: {
-                    nick: 'tester-2',
-                    description: 'description-1',
-                },
+                nick: 'tester-2',
+                description: 'description-1',
             };
             return request(app.getHttpServer())
                 .patch('/user/profile')
@@ -524,7 +534,7 @@ describe('AppController (e2e)', () => {
         it('reject', async () => {
             const { statusCode } = await request(app.getHttpServer())
                 .post('/friends/reject')
-                .query({ rid })
+                .send({ rid })
                 .set('authorization', `Bearer ${token}`);
             const { body } = await request(app.getHttpServer())
                 .get('/friends')

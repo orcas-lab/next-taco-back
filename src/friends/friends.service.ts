@@ -85,13 +85,13 @@ export class FriendsService {
         );
         return;
     }
-    async getFriends(tid: string, limit: number, offset: number) {
+    async getFriends(tid: string, offset: number) {
         const friends = await this.Friend.find({
             where: {
                 source: tid,
             },
             skip: offset,
-            take: limit || 100,
+            take: 100,
             relations: ['profile'],
         });
         const profile = await this.Profile.findOne({
@@ -105,6 +105,7 @@ export class FriendsService {
         return {
             friends: friends ?? [],
             total: profile.friends_total,
+            size: 100,
         };
     }
     async accept(data: Accept, tid: string) {
