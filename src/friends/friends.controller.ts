@@ -53,26 +53,24 @@ export class FriendsController {
     @ApiResponse({ status: HttpStatus.OK, type: GetFriendListResponse })
     async getFriendList(
         @User('tid') tid: string,
-        @Query('limit') limit: string,
-        @Query('offset') offset: string,
+        @Query('limit') limit: number,
+        @Query('offset') offset: number,
     ) {
-        const numberLimit = Number(limit);
-        const numberOffset = Number(offset);
         if (
-            Number.isNaN(numberLimit) ||
-            numberLimit === Number.POSITIVE_INFINITY ||
-            numberLimit < 0
+            Number.isNaN(limit) ||
+            limit === Number.POSITIVE_INFINITY ||
+            limit < 0
         ) {
             throw FriendError.LIMIT_IS_NOT_VALIDE;
         }
         if (
-            Number.isNaN(numberOffset) ||
-            numberOffset === Number.POSITIVE_INFINITY ||
-            numberOffset < 0
+            Number.isNaN(offset) ||
+            offset === Number.POSITIVE_INFINITY ||
+            offset < 0
         ) {
             throw FriendError.OFFSET_IS_NOT_VALIDE;
         }
-        return this.friendsService.getFriends(tid, numberLimit, numberOffset);
+        return this.friendsService.getFriends(tid, offset);
     }
     @Post('accept')
     async accept(@Body() data: Accept, @User('tid') tid: string) {

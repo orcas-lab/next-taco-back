@@ -11,7 +11,15 @@ async function bootstrap() {
         .setVersion('1.0')
         .addBearerAuth()
         .build();
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            skipMissingProperties: true,
+            skipNullProperties: true,
+            skipUndefinedProperties: true,
+            strictGroups: true,
+            transform: true,
+        }),
+    );
     app.useGlobalFilters(new WsExceptionFilter());
     app.useGlobalFilters(new HttpExceptionFilter());
     const document = SwaggerModule.createDocument(app, conf);

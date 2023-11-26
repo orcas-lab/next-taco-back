@@ -2,7 +2,7 @@ import { Account } from '@app/entity';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { isEmpty, isNil } from 'ramda';
+import { isNil } from 'ramda';
 import { Repository } from 'typeorm';
 
 @Injectable()
