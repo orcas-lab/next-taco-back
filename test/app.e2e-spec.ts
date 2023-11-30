@@ -258,16 +258,38 @@ describe('AppController (e2e)', () => {
             profile = body;
             return Promise.resolve();
         });
-        it('update profile', () => {
-            const updateProfile = {
-                nick: 'tester-2',
-                description: 'description-1',
-            };
-            return request(app.getHttpServer())
-                .patch('/user/profile')
-                .set('authorization', `Bearer ${token}`)
-                .send(updateProfile)
-                .expect(HttpStatus.NO_CONTENT);
+        describe('update profile', () => {
+            it('update nick and description', () => {
+                const updateProfile = {
+                    nick: 'tester-2',
+                    description: 'description-1',
+                };
+                return request(app.getHttpServer())
+                    .patch('/user/profile')
+                    .set('authorization', `Bearer ${token}`)
+                    .send(updateProfile)
+                    .expect(HttpStatus.NO_CONTENT);
+            });
+            it('only update nick', () => {
+                const updateProfile = {
+                    nick: 'tester-2',
+                };
+                return request(app.getHttpServer())
+                    .patch('/user/profile')
+                    .set('authorization', `Bearer ${token}`)
+                    .send(updateProfile)
+                    .expect(HttpStatus.NO_CONTENT);
+            });
+            it('only update description', () => {
+                const updateProfile = {
+                    description: 'description-1',
+                };
+                return request(app.getHttpServer())
+                    .patch('/user/profile')
+                    .set('authorization', `Bearer ${token}`)
+                    .send(updateProfile)
+                    .expect(HttpStatus.NO_CONTENT);
+            });
         });
         it('ban user', async () => {
             const banUser: BanUser = {

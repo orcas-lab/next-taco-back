@@ -25,6 +25,7 @@ import { BlackList, Profile } from '@app/entity';
 import { Response } from 'express';
 import { ReadStream } from 'fs';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { isEmpty } from 'ramda';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -43,6 +44,9 @@ export class UserController {
         @User('tid') tid: string,
         @Body() data: UpdateUserProfileRequest,
     ) {
+        if (isEmpty(data)) {
+            return {};
+        }
         return this.userService.updateProfile({ tid, ...data });
     }
 
