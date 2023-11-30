@@ -6,23 +6,23 @@ x-redis: &common
   command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
 
 services:
-#   api:
-#     build:
-#       context: .
-#     volumes:
-#       - ./keys:/usr/taco/keys
-#       - ./config.toml:/usr/taco/config.toml
-#       - ./public:/usr/taco/public
-#     ports:
-#       - 3000:3000
-#     depends_on:
-#       - mysql
-#       - node-1
-#       - node-2
-#       - node-3
-#       - node-4
-#       - node-5
-#       - node-6
+  api:
+    build:
+      context: .
+    volumes:
+      - ./keys:/usr/taco/keys
+      - ./config.toml:/usr/taco/config.toml
+      - ./public:/usr/taco/public
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+      - node-1
+      - node-2
+      - node-3
+      - node-4
+      - node-5
+      - node-6
 
   mysql:
     image: mysql
