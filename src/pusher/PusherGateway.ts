@@ -37,7 +37,9 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
         @WsUser('tid') source: string,
     ) {
         const msg = await this.pusherService.persistence({ ...data, source });
-        this.server.to(`${data.target}`).emit('msg', msg);
+        this.server
+            .to(`${data.target}`)
+            .emit('msg', { message: data.msg, source });
         return {
             event: 'message',
             data: msg,
