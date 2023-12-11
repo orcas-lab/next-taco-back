@@ -1,4 +1,5 @@
 import { ClusterNode, ClusterOptions } from 'ioredis';
+import { IRMQServiceOptions } from 'nestjs-rmq';
 
 export interface ConfigOption {
     domain: string;
@@ -19,8 +20,8 @@ export interface ConfigOption {
         synchronize: boolean | string;
     };
     redis: {
-        nodes: ClusterNode[];
-        options: ClusterOptions;
+        nodes?: ClusterNode[];
+        options?: ClusterOptions;
     };
     bcrypt: {
         cost: number;
@@ -37,6 +38,7 @@ export interface ConfigOption {
     request: {
         expire?: number;
     };
+    mq: Partial<IRMQServiceOptions>;
     worker_id?: number;
 }
 

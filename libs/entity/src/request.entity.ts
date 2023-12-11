@@ -27,4 +27,14 @@ export class Request {
     @Column({ type: 'bigint' })
     @ApiProperty()
     update_at: number;
+    @Column({ type: 'json' })
+    meta: Record<string, string>;
+}
+
+export class PubReq {
+    create_at: number;
+    expire_at: number;
+    source: string;
+    target: string;
+    uuid: string;
 }

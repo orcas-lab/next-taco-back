@@ -5,7 +5,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "assets": [".env"],
+    "assets": [".env", "cnofig.ts"],
     "watchAssets": true
   },
   "projects": {

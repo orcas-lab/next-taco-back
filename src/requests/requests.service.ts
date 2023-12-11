@@ -1,4 +1,4 @@
-import { Request } from '@app/entity';
+import { PubReq, Request } from '@app/entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
@@ -10,7 +10,7 @@ export class RequestsService {
         private readonly request: Repository<Request>,
     ) {}
     findAll(tid: string) {
-        return this.request.find({
+        const pubReq = this.request.find({
             where: { target: tid, expire_at: MoreThan(new Date().getTime()) },
             select: [
                 'create_at',
@@ -21,5 +21,6 @@ export class RequestsService {
                 'uuid',
             ],
         });
+        return pubReq as unknown as PubReq;
     }
 }

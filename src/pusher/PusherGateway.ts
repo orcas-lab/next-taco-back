@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { PusherService } from './pusher.service';
-import { Message } from './dto/pusher.dto';
+import { Message, RequestNotice } from './dto/pusher.dto';
 import { Logger, UseFilters, UseGuards } from '@nestjs/common';
 import { WsUser } from '../user.decorator';
 import { Socket } from 'socket.io';
@@ -16,6 +16,7 @@ import { PusherError } from '@app/error';
 import { WsAuthGuard } from '@app/shared/ws-auth.guard';
 import { IsFriendGuard } from '@app/shared/is-friend.guard';
 import { WsExceptionFilter } from '@app/shared/ws-exception-filter/ws-exception-filter.filter';
+import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 
 @WebSocketGateway({
     cors: {
@@ -44,6 +45,12 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
             event: 'message',
             data: msg,
         };
+    }
+
+    @RMQValidate()
+    @RMQRoute('notify:request')
+    async notifyReuqest(data: RequestNotice) {
+        this.server.to(`${data.target}`).emit('notify:request', data);
     }
 
     handleConnection(client: Socket) {
