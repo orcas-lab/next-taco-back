@@ -10,9 +10,20 @@ import { FriendsModule } from './friends/friends.module';
 import { PusherModule } from './pusher/pusher.module';
 import { RequestsModule } from './requests/requests.module';
 import { AutoRedisModule } from '@app/auto-redis';
+import { IRMQServiceOptions, RMQModule } from 'nestjs-rmq';
+
 @Module({
     imports: [
         ConfigureModule.forRoot('config.toml'),
+        RMQModule.forRootAsync({
+            imports: [ConfigureModule.forRoot('config.toml')],
+            inject: [ConfigureService],
+            useFactory(service: ConfigureService) {
+                return {
+                    ...service.get('mq'),
+                } as IRMQServiceOptions;
+            },
+        }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigureModule.forRoot('config.toml')],
             inject: [ConfigureService],

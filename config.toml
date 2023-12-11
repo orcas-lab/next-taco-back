@@ -25,3 +25,5 @@ privateKeyPath="./keys/key.pri"
 [redis]
 # nodes=[{host="redis-node-6",port=6384}]
 nodes=[{host="127.0.0.1",port=6384}]
+[mq]
+exchangeName="taco-exchange"

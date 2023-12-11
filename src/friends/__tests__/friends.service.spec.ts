@@ -6,6 +6,7 @@ import { BlackList, Friend, Profile, Request } from '@app/entity';
 import { MockRepositoryType, mockRepository } from '@app/mock';
 import { Repository } from 'typeorm';
 import { FriendError } from '@app/error';
+import { RMQModule } from 'nestjs-rmq';
 
 describe('FriendsService', () => {
     let service: FriendsService;
@@ -24,7 +25,10 @@ describe('FriendsService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigureModule.forRoot('config.toml')],
+            imports: [
+                ConfigureModule.forRoot('config.toml'),
+                RMQModule.forTest({}),
+            ],
             providers: [
                 FriendsService,
                 {
@@ -82,11 +86,11 @@ describe('FriendsService', () => {
             target: 'test-2',
             expire_at: new Date().getTime() + 1000 * 60 * 60,
         } as Request);
-        return expect(service.accept({ rid })).resolves.not.toThrow();
+        return expect(service.accept({ rid }, '')).resolves.not.toThrow();
     });
     it('accept but is null', () => {
         repositorys.request.findOne.mockResolvedValue(null);
-        expect(service.accept({ rid })).rejects.toThrow(
+        expect(service.accept({ rid }, '')).rejects.toThrow(
             FriendError.CAN_NOT_FIND_REQ,
         );
     });
@@ -96,7 +100,7 @@ describe('FriendsService', () => {
             target: 'test-2',
             expire_at: new Date().getTime() - 1000 * 60 * 60,
         } as Request);
-        expect(service.accept({ rid })).rejects.toThrow(
+        expect(service.accept({ rid }, '')).rejects.toThrow(
             FriendError.REQUEST_EXPIRED,
         );
     });
@@ -110,11 +114,11 @@ describe('FriendsService', () => {
             target: 'test-2',
             expire_at: new Date().getTime() + 1000 * 60 * 60,
         } as Request);
-        return expect(service.reject({ rid })).resolves.not.toThrow();
+        return expect(service.reject({ rid }, '')).resolves.not.toThrow();
     });
     it('reject but is null', () => {
         repositorys.request.findOne.mockResolvedValue(null);
-        expect(service.reject({ rid })).rejects.toThrow(
+        expect(service.reject({ rid }, '')).rejects.toThrow(
             FriendError.CAN_NOT_FIND_REQ,
         );
     });
@@ -124,7 +128,7 @@ describe('FriendsService', () => {
             target: 'test-2',
             expire_at: new Date().getTime() - 1000 * 60 * 60,
         } as Request);
-        expect(service.reject({ rid })).rejects.toThrow(
+        expect(service.reject({ rid }, '')).rejects.toThrow(
             FriendError.REQUEST_EXPIRED,
         );
     });
@@ -174,6 +178,6 @@ describe('FriendsService', () => {
     });
     it('get friends', () => {
         repositorys.profile.findOne.mockResolvedValue({ friends_total: 0 });
-        expect(service.getFriends('', 1, 10)).resolves.not.toBeUndefined();
+        expect(service.getFriends('', 1)).resolves.not.toBeUndefined();
     });
 });

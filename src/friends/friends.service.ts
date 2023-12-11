@@ -14,6 +14,7 @@ import ms from 'ms';
 import { randomUUID } from 'crypto';
 import { isNil } from 'ramda';
 import { FriendError } from '@app/error';
+import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
 export class FriendsService {
@@ -27,6 +28,7 @@ export class FriendsService {
         @InjectRepository(BlackList)
         private readonly BlackList: Repository<BlackList>,
         private readonly configure: ConfigureService,
+        private readonly mq: RMQService,
     ) {}
     async sendAddFriendRequest(data: AddFriend & { source: string }) {
         const req = new Request();
@@ -41,6 +43,7 @@ export class FriendsService {
         req.worker_id = worker_id;
         req.uuid = randomUUID();
         await this.Request.save(req);
+        await this.mq.notify('notify:request', req);
         return { rid: req.uuid };
     }
     async deleteFriend(data: DeleteFriend & { source: string }) {
