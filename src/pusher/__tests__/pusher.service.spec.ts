@@ -13,11 +13,7 @@ describe('PusherService', () => {
     let repoMock: MockRepositoryType<Repository<Message>>;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [
-                JwtModule.use(),
-                ConfigureModule.forRoot('config.toml'),
-                AutoDatabaseModule,
-            ],
+            imports: [JwtModule.use(), ConfigureModule.forRoot('config.toml')],
             providers: [
                 PusherService,
                 {
