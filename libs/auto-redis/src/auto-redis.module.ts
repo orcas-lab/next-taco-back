@@ -1,7 +1,7 @@
-import { DynamicModule, Logger, Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { AutoRedisService } from './auto-redis.service';
 import { ClusterModule, RedisModule } from '@liaoliaots/nestjs-redis';
-import { ConfigureModule, ConfigureService } from '@app/configure';
+import { ConfigureService } from '@app/configure';
 import { config } from 'dotenv';
 config({ path: '.env' });
 
@@ -10,13 +10,7 @@ config({ path: '.env' });
     exports: [AutoRedisService],
 })
 export class AutoRedisModule {
-    private static logger = new Logger(AutoRedisModule.name);
-    static use(
-        path: string,
-        cluster = process.env.REDIS_MODE === 'cluster',
-        global = true,
-    ): DynamicModule {
-        this.logger.log(`Redis Mode: ${process.env.REDIS_MODE}`);
+    static use(path: string, cluster = true, global = true): DynamicModule {
         return {
             module: AutoRedisModule,
             providers: [AutoRedisService],
@@ -24,7 +18,6 @@ export class AutoRedisModule {
                 cluster
                     ? ClusterModule.forRootAsync(
                           {
-                              imports: [ConfigureModule.forRoot(path)],
                               inject: [ConfigureService],
                               useFactory(service: ConfigureService) {
                                   return {
@@ -38,7 +31,6 @@ export class AutoRedisModule {
                       )
                     : RedisModule.forRootAsync(
                           {
-                              imports: [ConfigureModule.forRoot(path)],
                               inject: [ConfigureService],
                               useFactory(service: ConfigureService) {
                                   return {

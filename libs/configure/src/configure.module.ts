@@ -1,9 +1,12 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigureService } from './configure.service';
 import { readFileSync } from 'fs';
 import { CONFIG_OPTION } from './constance';
 
-@Module({})
+@Module({
+    providers: [ConfigureService],
+    exports: [ConfigureService],
+})
 export class ConfigureModule {
     static forRoot(path: string): DynamicModule {
         const raw = readFileSync(path).toString();
