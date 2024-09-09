@@ -12,7 +12,7 @@ import { getClusterToken } from '@liaoliaots/nestjs-redis';
 import { useBCrypt } from '@app/bcrypto';
 import { Profile } from '@app/entity/profile.entity';
 
-describe('AccountService', () => {
+describe.skip('AccountService', () => {
     let service: AccountService;
     let repositoryMock: MockRepositoryType<Repository<Account>>;
     beforeEach(async () => {

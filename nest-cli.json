@@ -5,8 +5,12 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "assets": [".env", "cnofig.ts"],
-    "watchAssets": true
+    "assets": [
+      ".env",
+      "cnofig.ts"
+    ],
+    "watchAssets": true,
+    "webpackConfigPath": "./webpack.config.js"
   },
   "projects": {
     "configure": {
@@ -106,6 +110,15 @@
       "sourceRoot": "libs/auto-redis/src",
       "compilerOptions": {
         "tsConfigPath": "libs/auto-redis/tsconfig.lib.json"
+      }
+    },
+    "auto-database": {
+      "type": "library",
+      "root": "libs/auto-database",
+      "entryFile": "index",
+      "sourceRoot": "libs/auto-database/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/auto-database/tsconfig.lib.json"
       }
     }
   }

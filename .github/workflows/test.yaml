@@ -1,0 +1,25 @@
+name: Test
+
+on: pull_request
+
+env:
+    CI: true
+    REDIS_MODE: standalone
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
+              with:
+                version: 9
+                run_install: false
+            - uses: actions/setup-node
+            - run: pnpm i 
+            - run: node setup.js
+            - run: pnpm test
+
+

@@ -6,3 +6,12 @@ declare type ErrorResponse = {
     message: string;
     status: number;
 };
+
+declare const __TEST__: boolean;
+
+declare namespace NodeJS {
+    interface ProcessEnv {
+        CI: boolean;
+        REDIS_MODE: 'cluster' | 'standalone';
+    }
+}

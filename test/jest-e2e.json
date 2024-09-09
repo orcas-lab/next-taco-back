@@ -34,6 +34,8 @@
     "@app/avatar/(.*)": "<rootDir>/../libs/avatar/src/$1",
     "@app/avatar": "<rootDir>/../libs/avatar/src",
     "@app/auto-redis/(.*)": "<rootDir>/../libs/auto-redis/src/$1",
-    "@app/auto-redis": "<rootDir>/../libs/auto-redis/src"
+    "@app/auto-redis": "<rootDir>/../libs/auto-redis/src",
+    "@app/auto-database/(.*)": "<rootDir>/../libs/auto-database/src/$1",
+    "@app/auto-database": "<rootDir>/../libs/auto-database/src"
   }
 }
