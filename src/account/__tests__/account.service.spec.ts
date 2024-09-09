@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { mock } from 'mockjs';
 import { AccountError } from '@app/error';
 import { JwtModule } from '@app/jwt';
-import { getClusterToken } from '@liaoliaots/nestjs-redis';
+import { getClusterToken, getRedisToken } from '@liaoliaots/nestjs-redis';
 import { useBCrypt } from '@app/bcrypto';
 import { Profile } from '@app/entity/profile.entity';
 import { AvatarModule } from '@app/avatar';
@@ -29,6 +29,14 @@ describe('AccountService', () => {
             providers: [
                 {
                     provide: getClusterToken('default'),
+                    useValue: {
+                        set: jest.fn().mockResolvedValue(1),
+                        expire: jest.fn().mockResolvedValue(1),
+                        del: jest.fn().mockResolvedValue(1),
+                    },
+                },
+                {
+                    provide: getRedisToken('default'),
                     useValue: {
                         set: jest.fn().mockResolvedValue(1),
                         expire: jest.fn().mockResolvedValue(1),
