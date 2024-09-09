@@ -1,2 +1,0 @@
-file appendonly.aof.10.base.rdb seq 10 type b
-file appendonly.aof.10.incr.aof seq 10 type i
