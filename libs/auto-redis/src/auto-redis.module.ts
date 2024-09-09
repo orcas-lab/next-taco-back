@@ -38,16 +38,6 @@ export class AutoRedisModule {
                           {
                               inject: [ConfigureService],
                               async useFactory(service: ConfigureService) {
-                                  const redis = new RedisMemoryServer();
-                                  await redis.start();
-                                  if (process.env.CI) {
-                                      return {
-                                          config: {
-                                              host: await redis.getHost(),
-                                              port: await redis.getPort(),
-                                          },
-                                      };
-                                  }
                                   return {
                                       config: {
                                           ...service.get('redis.options'),

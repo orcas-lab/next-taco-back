@@ -42,7 +42,6 @@ describe('AccountController', () => {
                 password: '',
                 tid: '',
                 question: {},
-                avatar: '',
             }),
         ).resolves.toBeDefined();
     });

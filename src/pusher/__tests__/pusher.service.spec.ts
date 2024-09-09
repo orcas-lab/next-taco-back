@@ -1,41 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PusherService } from '../pusher.service';
-import { MockRepositoryType, mockRepository } from '@app/mock';
-import { Repository } from 'typeorm';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import {
-    Account,
-    BlackList,
-    Friend,
-    Message,
-    Profile,
-    Request,
-} from '@app/entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Message } from '@app/entity';
 import { AutoDatabaseModule } from '@app/auto-database';
 import { ConfigureModule } from '@app/configure';
 import { JwtModule } from '@app/jwt';
+import { mockRepository, MockRepositoryType } from '@app/mock';
+import { Repository } from 'typeorm';
 
 describe('PusherService', () => {
     let service: PusherService;
+    let repoMock: MockRepositoryType<Repository<Message>>;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 JwtModule.use(),
                 ConfigureModule.forRoot('config.toml'),
-                TypeOrmModule.forFeature([
-                    Account,
-                    BlackList,
-                    Friend,
-                    Message,
-                    Profile,
-                    Request,
-                ]),
                 AutoDatabaseModule,
             ],
-            providers: [PusherService],
+            providers: [
+                PusherService,
+                {
+                    provide: getRepositoryToken(Message),
+                    useValue: mockRepository<typeof Message>(),
+                },
+            ],
         }).compile();
 
         service = module.get<PusherService>(PusherService);
+        repoMock = module.get(getRepositoryToken(Message));
     }, 60 * 1000);
 
     it('should be defined', () => {
@@ -43,6 +36,7 @@ describe('PusherService', () => {
     });
 
     it('persistence', () => {
+        repoMock.save.mockImplementation((args) => Promise.resolve(args));
         expect(
             service.persistence({
                 source: '',

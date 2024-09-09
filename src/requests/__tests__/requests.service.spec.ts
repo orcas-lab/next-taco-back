@@ -27,7 +27,7 @@ describe('RequestsService', () => {
         expect(service).toBeDefined();
     });
     it('should not be throw', () => {
-        repository.findBy.mockResolvedValue([]);
+        repository.find.mockResolvedValue([]);
         expect(service.findAll('')).resolves.toStrictEqual([]);
     });
 });

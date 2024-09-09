@@ -3,6 +3,7 @@ const { RedisMemoryServer } = require('redis-memory-server');
 const { mkdirSync } = require('fs');
 async function setup() {
     mkdirSync('tmp');
+    mkdirSync('public');
     const db = await createDB({
         dbName: 'test',
         version: '8.4.2',

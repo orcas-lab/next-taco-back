@@ -11,13 +11,21 @@ import { JwtModule } from '@app/jwt';
 import { getClusterToken } from '@liaoliaots/nestjs-redis';
 import { useBCrypt } from '@app/bcrypto';
 import { Profile } from '@app/entity/profile.entity';
+import { AvatarModule } from '@app/avatar';
 
-describe.skip('AccountService', () => {
+describe('AccountService', () => {
     let service: AccountService;
     let repositoryMock: MockRepositoryType<Repository<Account>>;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ConfigureModule.forRoot('config.toml'), JwtModule.use()],
+            imports: [
+                ConfigureModule.forRoot('config.toml'),
+                JwtModule.use(),
+                AvatarModule.use({
+                    width: 64,
+                    height: 64,
+                }),
+            ],
             providers: [
                 {
                     provide: getClusterToken('default'),

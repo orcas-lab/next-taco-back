@@ -12,23 +12,6 @@ import { omit } from 'ramda';
         TypeOrmModule.forRootAsync({
             inject: [ConfigureService],
             async useFactory(config: ConfigureService) {
-                if (process.env.CI) {
-                    const db = await createDB({
-                        dbName: 'test',
-                        version: '8.4.2',
-                        deleteDBAfterStopped: true,
-                    });
-                    return {
-                        type: 'mysql',
-                        synchronize: true,
-                        autoLoadEntities: true,
-                        host: 'localhost',
-                        username: db.username,
-                        database: db.dbName,
-                        port: db.port,
-                        password: '',
-                    };
-                }
                 return {
                     type: 'mysql',
                     ...omit(['synchronize'], config.get('db')),
