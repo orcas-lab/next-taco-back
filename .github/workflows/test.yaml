@@ -25,5 +25,7 @@ jobs:
             - run: pnpm i 
             - run: node setup.js
             - run: pnpm test
-
+              env:
+                CI: true
+                REDIS_MODE: standalone
 
