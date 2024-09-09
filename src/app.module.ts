@@ -1,5 +1,5 @@
 import { ConfigureModule, ConfigureService } from '@app/configure';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
@@ -10,22 +10,29 @@ import { FriendsModule } from './friends/friends.module';
 import { PusherModule } from './pusher/pusher.module';
 import { RequestsModule } from './requests/requests.module';
 import { AutoRedisModule } from '@app/auto-redis';
-import { IRMQServiceOptions, RMQModule } from 'nestjs-rmq';
+import { RMQModule } from 'nestjs-rmq';
+import { join, resolve } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 
 @Module({
     imports: [
         ConfigureModule.forRoot('config.toml'),
         RMQModule.forRootAsync({
-            imports: [ConfigureModule.forRoot('config.toml')],
             inject: [ConfigureService],
             useFactory(service: ConfigureService) {
                 return {
-                    ...service.get('mq'),
-                } as IRMQServiceOptions;
+                    exchangeName: service.get('mq.exchangeName'),
+                    connections: [
+                        {
+                            login: service.get('mq.connections.login'),
+                            password: service.get('mq.connections.password'),
+                            host: service.get('mq.connections.host'),
+                        },
+                    ],
+                };
             },
         }),
         TypeOrmModule.forRootAsync({
-            imports: [ConfigureModule.forRoot('config.toml')],
             inject: [ConfigureService],
             useFactory(service: ConfigureService) {
                 const db = service.get('db');
@@ -48,4 +55,18 @@ import { IRMQServiceOptions, RMQModule } from 'nestjs-rmq';
         RequestsModule,
     ],
 })
-export class AppModule {}
+export class AppModule {
+    onModuleInit() {
+        const root = resolve(__dirname);
+        const dataRoot = join(root, 'data');
+        if (existsSync(dataRoot)) {
+            Logger.warn(
+                'dist/data exists, if you want restart server please remove',
+            );
+            return;
+        } else {
+            mkdirSync(dataRoot, { recursive: true });
+        }
+        writeFileSync(join(dataRoot, 'lock.file'), '');
+    }
+}
