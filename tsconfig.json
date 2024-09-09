@@ -96,6 +96,12 @@
       ],
       "@app/auto-redis/*": [
         "libs/auto-redis/src/*"
+      ],
+      "@app/auto-database": [
+        "libs/auto-database/src"
+      ],
+      "@app/auto-database/*": [
+        "libs/auto-database/src/*"
       ]
     }
   }

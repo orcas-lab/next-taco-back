@@ -1,7 +1,5 @@
 import { ConfigureModule, ConfigureService } from '@app/configure';
 import { Logger, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { omit } from 'ramda';
 import { AccountModule } from './account/account.module';
 import { JwtModule } from '@app/jwt';
 import 'reflect-metadata';
@@ -13,6 +11,7 @@ import { AutoRedisModule } from '@app/auto-redis';
 import { RMQModule } from 'nestjs-rmq';
 import { join, resolve } from 'path';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { AutoDatabaseModule } from '@app/auto-database';
 
 @Module({
     imports: [
@@ -32,20 +31,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
                 };
             },
         }),
-        TypeOrmModule.forRootAsync({
-            inject: [ConfigureService],
-            useFactory(service: ConfigureService) {
-                const db = service.get('db');
-                return {
-                    type: 'mysql',
-                    ...omit(['synchronize'], db),
-                    synchronize:
-                        db['synchronize'] === 'auto'
-                            ? Boolean(process.env.__DEV__)
-                            : (db['synchronize'] as boolean),
-                };
-            },
-        }),
+        AutoDatabaseModule,
         AutoRedisModule.use('config.toml'),
         JwtModule.use(),
         AccountModule,
