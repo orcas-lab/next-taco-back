@@ -15,7 +15,6 @@ import { Profile } from '@app/entity/profile.entity';
 describe('AccountService', () => {
     let service: AccountService;
     let repositoryMock: MockRepositoryType<Repository<Account>>;
-    let profileMock: MockRepositoryType<Repository<Profile>>;
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [ConfigureModule.forRoot('config.toml'), JwtModule.use()],
@@ -41,7 +40,6 @@ describe('AccountService', () => {
         }).compile();
         service = module.get<AccountService>(AccountService);
         repositoryMock = module.get(getRepositoryToken(Account));
-        profileMock = module.get(getRepositoryToken(Profile));
     });
 
     it('should be defined', () => {

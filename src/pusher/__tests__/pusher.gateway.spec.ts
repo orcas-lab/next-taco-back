@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PusherGateway } from "../PusherGateway";
+import { PusherGateway } from '../PusherGateway';
 import { PusherService } from '../pusher.service';
 import { JwtModule } from '@app/jwt';
 
