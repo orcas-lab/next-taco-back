@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule } from '@app/config';
 
 @Module({
-  imports: [],
+  imports: [ConfigModule.forRoot('config.toml')],
   controllers: [AppController],
   providers: [AppService],
 })
