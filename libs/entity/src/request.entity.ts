@@ -29,6 +29,8 @@ export class Request {
     update_at: number;
     @Column({ type: 'json' })
     meta: Record<string, string>;
+    @Column()
+    type: string;
 }
 
 export class PubReq {
@@ -37,4 +39,5 @@ export class PubReq {
     source: string;
     target: string;
     uuid: string;
+    type: string;
 }

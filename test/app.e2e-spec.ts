@@ -56,7 +56,9 @@ describe('AppController (e2e)', () => {
     afterAll(async () => {
         await db.destroy();
         await app.close();
-        ws.close();
+        if (ws) {
+            ws.close();
+        }
     });
     describe('register', () => {
         const registerData: RegisterReuqest = {
