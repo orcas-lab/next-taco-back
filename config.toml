@@ -1,0 +1,9 @@
+[app]
+override=true
+[keys]
+type="ecc"
+[jwt]
+[jwt.access_token]
+expire = "1d"
+[jwt.refresh_token]
+expire = "2d"

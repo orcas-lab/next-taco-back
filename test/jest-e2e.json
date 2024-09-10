@@ -14,6 +14,8 @@
     "@app/config/(.*)": "<rootDir>/../libs/config/src/$1",
     "@app/config": "<rootDir>/../libs/config/src",
     "@app/constant/(.*)": "<rootDir>/../libs/constant/src/$1",
-    "@app/constant": "<rootDir>/../libs/constant/src"
+    "@app/constant": "<rootDir>/../libs/constant/src",
+    "@app/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
+    "@app/jwt": "<rootDir>/../libs/jwt/src"
   }
 }

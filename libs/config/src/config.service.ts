@@ -39,8 +39,7 @@ export interface Configure {
     override: boolean;
   };
   keys: {
-    publicKeyName: string;
-    privateKeyName: string;
+    type: 'ecc';
   };
   jwt: {
     access_token: {
