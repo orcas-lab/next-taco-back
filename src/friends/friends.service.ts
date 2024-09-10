@@ -42,6 +42,7 @@ export class FriendsService {
         const worker_id = this.configure.get('worker_id') ?? 0;
         req.worker_id = worker_id;
         req.uuid = randomUUID();
+        req.type = 'friend::add';
         await this.Request.save(req);
         await this.mq.notify('notify:request', req);
         return { rid: req.uuid };
