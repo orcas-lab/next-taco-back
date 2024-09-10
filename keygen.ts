@@ -2,7 +2,7 @@ import { ECKeyPairOptions, generateKeyPairSync, KeyObject } from 'crypto';
 
 export const keyGen = () => {
   const { publicKey, privateKey } = generateKeyPairSync('ec', {
-    namedCurve: 'secp256k1',
+    namedCurve: 'prime256v1',
     publicKeyEncoding: {
       format: 'pem',
       type: 'spki',

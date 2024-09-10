@@ -35,6 +35,12 @@
       ],
       "@app/jwt/*": [
         "libs/jwt/src/*"
+      ],
+      "@app/keys": [
+        "libs/keys/src"
+      ],
+      "@app/keys/*": [
+        "libs/keys/src/*"
       ]
     }
   }
