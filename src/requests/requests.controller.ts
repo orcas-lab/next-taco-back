@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { AuthGuard } from '@app/shared/auth-guard.guard';
 import { User } from '../user.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PubReq } from '@app/entity';
 
 @UseGuards(AuthGuard)
@@ -10,6 +10,9 @@ import { PubReq } from '@app/entity';
 export class RequestsController {
     constructor(private readonly requestsService: RequestsService) {}
 
+    @ApiOperation({
+        deprecated: true,
+    })
     @ApiResponse({ status: HttpStatus.OK, type: [PubReq] })
     @Get()
     findAll(@User('tid') tid: string) {

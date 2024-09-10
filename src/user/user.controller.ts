@@ -20,7 +20,13 @@ import { User } from '../user.decorator';
 import { AuthGuard } from '@app/shared/auth-guard.guard';
 import { BanUser, UnBan, UpdateUserProfileRequest } from './dto/user.dto';
 import { TargetExistsGuard } from '@app/shared/target-exists.guard';
-import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiOperation,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 import { BlackList, Profile } from '@app/entity';
 import { Response } from 'express';
 import { ReadStream } from 'fs';
@@ -30,6 +36,10 @@ import { isEmpty } from 'ramda';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+    @ApiOperation({
+        description: '获取用户的个人信息',
+    })
     @ApiQuery({ name: 'tid', type: 'string', description: 'taco user id' })
     @ApiResponse({ status: HttpStatus.OK, type: Profile })
     @Get('profile')
@@ -37,6 +47,9 @@ export class UserController {
         return this.userService.getProfile({ tid });
     }
 
+    @ApiOperation({
+        description: '修改个人信息',
+    })
     @HttpCode(HttpStatus.NO_CONTENT)
     @UseGuards(AuthGuard)
     @Patch('profile')
@@ -50,6 +63,9 @@ export class UserController {
         return this.userService.updateProfile({ tid, ...data });
     }
 
+    @ApiOperation({
+        description: '将某个用户拉入黑名单',
+    })
     @UseGuards(AuthGuard, TargetExistsGuard)
     @Post('ban')
     @ApiBearerAuth()
@@ -61,6 +77,9 @@ export class UserController {
         });
     }
 
+    @ApiOperation({
+        description: '将某个用户移出黑名单',
+    })
     @UseGuards(AuthGuard, TargetExistsGuard)
     @ApiBearerAuth()
     @Delete('ban')
@@ -68,6 +87,9 @@ export class UserController {
         return this.userService.unban({ ...data, source: tid });
     }
 
+    @ApiOperation({
+        description: '获取某个用户的头像',
+    })
     @Get('avatar/:id')
     async getAvatar(@Param('id') id: string, @Res() response: Response) {
         const data = await this.userService.getAvatar(id);
@@ -78,6 +100,9 @@ export class UserController {
         }
     }
 
+    @ApiOperation({
+        description: '上传头像',
+    })
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('avatar'))
