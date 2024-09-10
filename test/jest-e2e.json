@@ -1,41 +1,9 @@
 {
-  "moduleFileExtensions": [
-    "js",
-    "json",
-    "ts"
-  ],
+  "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  },
-  "moduleNameMapper": {
-    "@app/configure/(.*)": "<rootDir>/../libs/configure/src/$1",
-    "@app/configure": "<rootDir>/../libs/configure/src",
-    "@app/interface/(.*)": "<rootDir>/../libs/interface/src/$1",
-    "@app/interface": "<rootDir>/../libs/interface/src",
-    "@app/entity/(.*)": "<rootDir>/../libs/entity/src/$1",
-    "@app/entity": "<rootDir>/../libs/entity/src",
-    "@app/bcrypto/(.*)": "<rootDir>/../libs/bcrypto/src/$1",
-    "@app/bcrypto": "<rootDir>/../libs/bcrypto/src",
-    "@app/error/(.*)": "<rootDir>/../libs/error/src/$1",
-    "@app/error": "<rootDir>/../libs/error/src",
-    "@app/mock/(.*)": "<rootDir>/../libs/mock/src/$1",
-    "@app/mock": "<rootDir>/../libs/mock/src",
-    "@app/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
-    "@app/jwt": "<rootDir>/../libs/jwt/src",
-    "@app/shared/(.*)": "<rootDir>/../libs/shared/src/$1",
-    "@app/shared": "<rootDir>/../libs/shared/src",
-    "@app/redis/(.*)": "<rootDir>/../libs/redis/src/$1",
-    "@app/redis": "<rootDir>/../libs/redis/src",
-    "@app/boring-avatar/(.*)": "<rootDir>/../libs/boring-avatar/src/$1",
-    "@app/boring-avatar": "<rootDir>/../libs/boring-avatar/src",
-    "@app/avatar/(.*)": "<rootDir>/../libs/avatar/src/$1",
-    "@app/avatar": "<rootDir>/../libs/avatar/src",
-    "@app/auto-redis/(.*)": "<rootDir>/../libs/auto-redis/src/$1",
-    "@app/auto-redis": "<rootDir>/../libs/auto-redis/src",
-    "@app/auto-database/(.*)": "<rootDir>/../libs/auto-database/src/$1",
-    "@app/auto-database": "<rootDir>/../libs/auto-database/src"
   }
 }
