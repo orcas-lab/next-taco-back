@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import avatar from 'avatars';
 
 @Entity({ name: 'Profile' })
@@ -22,11 +22,13 @@ export class Profile {
     @Column({ type: 'bigint', default: 0 })
     @ApiProperty()
     friends_total: number;
-    @Column({ type: 'bigint' })
+    @Column()
+    @CreateDateColumn()
     @ApiProperty()
-    create_at: number;
-    @Column({ type: 'bigint' })
-    update_at: number;
+    create_at: Date;
+    @Column()
+    @UpdateDateColumn()
+    update_at: Date;
 }
 
 export const createProfile = <T extends Record<string, any>>(data: T) => {
@@ -36,7 +38,5 @@ export const createProfile = <T extends Record<string, any>>(data: T) => {
     profile.avatar = data.avatar ?? avatar({});
     profile.description = '';
     profile.reputation = data.reputation;
-    profile.create_at = new Date().getTime();
-    profile.update_at = new Date().getTime();
     return profile;
 };

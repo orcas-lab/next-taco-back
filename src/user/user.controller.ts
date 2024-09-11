@@ -43,8 +43,8 @@ export class UserController {
     @ApiQuery({ name: 'tid', type: 'string', description: 'taco user id' })
     @ApiResponse({ status: HttpStatus.OK, type: Profile })
     @Get('profile')
-    getProfile(@Query('tid') tid: string) {
-        return this.userService.getProfile({ tid });
+    getProfile(@Query('tid') tid: string,@User('tid') tokenTid: string) {
+        return this.userService.getProfile({ tid }, tid===tokenTid);
     }
 
     @ApiOperation({

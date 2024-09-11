@@ -25,12 +25,22 @@ export class UserService {
         private readonly BlackList: Repository<BlackList>,
         private readonly config: ConfigureService,
     ) {}
-    getProfile(data: GetUserProfileRequest) {
+    getProfile(data: GetUserProfileRequest, isSelf:boolean) {
         const { tid } = data;
         return this.Profile.findOne({
             where: {
                 tid,
             },
+            select: {
+                create_at: isSelf,
+                update_at: isSelf,
+                friends_total:isSelf,
+                tid: true,
+                nick: true,
+                avatar: true,
+                description: true,
+                reputation: true
+            }
         });
     }
     async updateProfile(data: UpdateUserProfileRequest & { tid: string }) {
@@ -44,8 +54,6 @@ export class UserService {
         blackList.id = randomUUID();
         blackList.source = source;
         blackList.target = target;
-        blackList.create_at = new Date().getTime();
-        blackList.update_at = new Date().getTime();
         return this.BlackList.save(blackList);
     }
     unban(data: UnBan & { source: string }) {
