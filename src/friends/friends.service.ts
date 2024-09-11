@@ -172,10 +172,7 @@ export class FriendsService {
         friend.source = source;
         friend.target = target;
         friend.tag = '';
-        friend.create_at = time;
-        friend.update_at = time;
         friend.nick = '';
-        friend.uuid = randomUUID();
         await this.Friend.save(friend, { transaction: true });
         return;
     }
