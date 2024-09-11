@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'BlackList' })
 export class BlackList {
@@ -14,10 +14,12 @@ export class BlackList {
     @Index()
     @ApiProperty()
     target: string;
-    @Column({ type: 'bigint', default: new Date().getTime() })
+    @Column()
+    @CreateDateColumn()
     @ApiProperty()
     create_at: number;
-    @Column({ type: 'bigint', default: new Date().getTime() })
+    @Column()
+    @UpdateDateColumn()
     @ApiProperty()
     update_at: number;
 }

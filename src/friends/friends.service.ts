@@ -94,9 +94,25 @@ export class FriendsService {
             where: {
                 source: tid,
             },
-            skip: offset,
+            skip: offset * 100,
             take: 100,
-            relations: ['profile'],
+            relations: [
+                'profile',
+                'profile.tid',
+                'profile.nick',
+                'profile.description',
+                'profile.reputation',
+                'profile.avatar'
+            ],
+            select: {
+                profile: {
+                    tid: true,
+                    nick:true,
+                    description:true,
+                    reputation: true,
+                    avatar: true
+                }
+            }
         });
         const profile = await this.Profile.findOne({
             where: {
