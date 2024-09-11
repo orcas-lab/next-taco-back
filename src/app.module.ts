@@ -5,14 +5,20 @@ import { writeFileSync } from 'node:fs';
 import { ROOT } from '@app/constant';
 import { KeysModule } from '@app/keys';
 import { JwtModule } from '@app/jwt';
+import { DbModule } from '@app/db';
 
 @Module({
-    imports: [ConfigModule.forRoot('config.toml'), KeysModule, JwtModule],
+  imports: [
+    ConfigModule.forRoot('config.toml'),
+    KeysModule,
+    JwtModule,
+    DbModule,
+  ],
 })
 export class AppModule implements OnModuleInit {
-    private logger = new Logger('APP');
-    constructor(private config: ConfigService) {}
-    onModuleInit() {
-        writeFileSync(join(ROOT, 'lock'), '');
-    }
+  private logger = new Logger('APP');
+  constructor(private config: ConfigService) {}
+  onModuleInit() {
+    writeFileSync(join(ROOT, 'lock'), '');
+  }
 }

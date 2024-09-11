@@ -49,6 +49,13 @@ export interface Configure {
       expire: string;
     };
   };
+  db: {
+    host: string;
+    port: number;
+    database?: string;
+    username: string;
+    password: string;
+  };
 }
 
 @Injectable()

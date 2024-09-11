@@ -18,6 +18,10 @@
     "@app/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
     "@app/jwt": "<rootDir>/../libs/jwt/src",
     "@app/keys/(.*)": "<rootDir>/../libs/keys/src/$1",
-    "@app/keys": "<rootDir>/../libs/keys/src"
+    "@app/keys": "<rootDir>/../libs/keys/src",
+    "@app/db/(.*)": "<rootDir>/../libs/db/src/$1",
+    "@app/db": "<rootDir>/../libs/db/src",
+    "@app/utils/(.*)": "<rootDir>/../libs/utils/src/$1",
+    "@app/utils": "<rootDir>/../libs/utils/src"
   }
 }
