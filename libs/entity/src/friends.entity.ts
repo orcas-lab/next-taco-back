@@ -1,44 +1,36 @@
 import {
     Column,
+    CreateDateColumn,
     Entity,
     Index,
     JoinColumn,
     OneToOne,
     PrimaryColumn,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'Friend' })
 export class Friend {
-    @PrimaryGeneratedColumn()
-    id: number;
     @PrimaryColumn({ type: 'uuid' })
-    @ApiProperty()
-    uuid: string;
+    id:string;
     @Column()
-    @Index()
-    @ApiProperty()
     source: string;
     @Column()
-    @Index()
-    @ApiProperty()
     target: string;
     @Column()
-    @ApiProperty()
-    nick: string;
-    @Column({ default: 'DEFAULT_GROUP' })
-    @ApiProperty()
-    tag: string;
-    @Column({ default: new Date().getTime(), type: 'bigint' })
-    @ApiProperty()
-    create_at: number;
-    @Column({ default: new Date().getTime(), type: 'bigint' })
-    @ApiProperty()
-    update_at: number;
-    @OneToOne(() => Profile)
-    @JoinColumn({ name: 'target' })
-    @ApiProperty()
-    profile: Profile;
+    tag:string;
+    @Column()
+    nick:string;
+    @Column()
+    @CreateDateColumn()
+    create_at: Date;
+    @Column()
+    @UpdateDateColumn()
+    update_at: Date;
+    @OneToOne(()=>Profile)
+    @JoinColumn({name:'target'})
+    profile:Profile;
 }
