@@ -44,7 +44,6 @@ export class LoginResponse {
 }
 
 export class DeleteAccountRequest {
-    @IsNotEmpty()
     @IsNotEmptyObject()
     @ApiProperty()
     question: { [x: string]: string | number | boolean };
