@@ -13,7 +13,7 @@ import { BlackList } from './black-list.entity';
 
 @Entity({ name: 'Profile' })
 export class Profile {
-    @PrimaryColumn()
+    @PrimaryColumn({ select: true })
     @ApiProperty()
     tid: string;
     @Column()

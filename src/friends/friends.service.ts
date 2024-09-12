@@ -40,6 +40,7 @@ export class FriendsService {
         req.worker_id = worker_id;
         req.uuid = randomUUID();
         req.type = 'friend::add';
+        req.meta = {};
         await this.Request.save(req);
         await this.mq.notify('notify:request', req);
         return { rid: req.uuid };
@@ -69,9 +70,9 @@ export class FriendsService {
             blackList.source = data.source;
             blackList.target = data.target;
             blackList.id = randomUUID();
-            const time = new Date().getTime();
-            blackList.create_at = time;
-            blackList.update_at = time;
+            // const time = new Date().getTime();
+            // blackList.create_at = time;
+            // blackList.update_at = time;
             this.BlackList.save(blackList);
         }
         return;
@@ -93,17 +94,9 @@ export class FriendsService {
             },
             skip: offset * 100,
             take: 100,
-            relations: [
-                'profile',
-                'profile.tid',
-                'profile.nick',
-                'profile.description',
-                'profile.reputation',
-                'profile.avatar',
-            ],
+            relations: ['profile'],
             select: {
                 profile: {
-                    tid: true,
                     nick: true,
                     description: true,
                     reputation: true,
@@ -121,7 +114,7 @@ export class FriendsService {
         });
         return {
             friends: friends ?? [],
-            total: profile.friends_total,
+            total: Number(profile.friends_total),
             size: 100,
         };
     }
@@ -181,12 +174,12 @@ export class FriendsService {
     }
     private async addFriend(source: string, target: string) {
         const friend = new Friend();
-        const time = new Date().getTime();
         friend.source = source;
         friend.target = target;
         friend.tag = '';
         friend.nick = '';
-        await this.Friend.save(friend, { transaction: true });
+        friend.id = randomUUID();
+        await this.Friend.save(friend);
         return;
     }
     private async isRequestValide(rid: string) {

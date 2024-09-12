@@ -93,7 +93,7 @@ export const FriendError = {
         'OFFSET_IS_NOT_VALIDE',
     ),
     CAN_NOT_FIND_REQ: new ApiError(
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
         getCodes(Modules.Friend, ErrorFrom.USER, 4),
         'CAN_NOT_FIND_REQ',
     ),

@@ -223,17 +223,6 @@ describe('AppController (e2e)', () => {
         });
     });
 
-    describe('Friend', () => {
-        it.todo('Send Add Request');
-        it.todo('Delete Friend');
-        it.todo(
-            'Patch friend information (nick, tag, but profile should not be update)',
-        );
-        it.todo('Get Frined List');
-        it.todo('Accept add request');
-        it.todo('Reject add request');
-    });
-
     describe('Pusher', () => {
         it.todo('user-a send "hello-world" to user-b');
         it.todo('FAIL user-a send "hello-world" to user-b (not friend)');
