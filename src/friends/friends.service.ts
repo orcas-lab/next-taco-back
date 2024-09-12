@@ -35,10 +35,7 @@ export class FriendsService {
         req.source = data.source;
         req.target = data.target;
         const expire = this.configure.get('request.expire') ?? ms('7 days');
-        const timestamp = new Date().getTime();
-        req.expire_at = timestamp + expire;
-        req.create_at = timestamp;
-        req.update_at = timestamp;
+        req.expire_at = new Date(new Date().getTime() + expire);
         const worker_id = this.configure.get('worker_id') ?? 0;
         req.worker_id = worker_id;
         req.uuid = randomUUID();
@@ -102,17 +99,17 @@ export class FriendsService {
                 'profile.nick',
                 'profile.description',
                 'profile.reputation',
-                'profile.avatar'
+                'profile.avatar',
             ],
             select: {
                 profile: {
                     tid: true,
-                    nick:true,
-                    description:true,
+                    nick: true,
+                    description: true,
                     reputation: true,
-                    avatar: true
-                }
-            }
+                    avatar: true,
+                },
+            },
         });
         const profile = await this.Profile.findOne({
             where: {
@@ -198,7 +195,7 @@ export class FriendsService {
         if (isNil(await req)) {
             return 'IS_NIL';
         }
-        const isExpired = time > (await req).expire_at;
+        const isExpired = time > (await req).expire_at.getTime();
         if (isExpired) {
             return 'IS_EXPIRED';
         }

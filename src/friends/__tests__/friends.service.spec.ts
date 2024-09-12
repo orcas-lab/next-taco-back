@@ -84,7 +84,7 @@ describe('FriendsService', () => {
         repositorys.request.findOne.mockResolvedValue({
             source: 'test-1',
             target: 'test-2',
-            expire_at: new Date().getTime() + 1000 * 60 * 60,
+            expire_at: new Date(new Date().getTime() + 1000 * 60 * 60),
         } as Request);
         return expect(service.accept({ rid }, '')).resolves.not.toThrow();
     });
@@ -98,7 +98,7 @@ describe('FriendsService', () => {
         repositorys.request.findOne.mockResolvedValue({
             source: 'test-1',
             target: 'test-2',
-            expire_at: new Date().getTime() - 1000 * 60 * 60,
+            expire_at: new Date(new Date().getTime() - 1000 * 60 * 60),
         } as Request);
         expect(service.accept({ rid }, '')).rejects.toThrow(
             FriendError.REQUEST_EXPIRED,
@@ -112,7 +112,7 @@ describe('FriendsService', () => {
         repositorys.request.findOne.mockResolvedValue({
             source: 'test-1',
             target: 'test-2',
-            expire_at: new Date().getTime() + 1000 * 60 * 60,
+            expire_at: new Date(new Date().getTime() + 1000 * 60 * 60),
         } as Request);
         return expect(service.reject({ rid }, '')).resolves.not.toThrow();
     });
@@ -126,7 +126,7 @@ describe('FriendsService', () => {
         repositorys.request.findOne.mockResolvedValue({
             source: 'test-1',
             target: 'test-2',
-            expire_at: new Date().getTime() - 1000 * 60 * 60,
+            expire_at: new Date(new Date().getTime() - 1000 * 60 * 60),
         } as Request);
         expect(service.reject({ rid }, '')).rejects.toThrow(
             FriendError.REQUEST_EXPIRED,
