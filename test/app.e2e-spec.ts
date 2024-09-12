@@ -59,6 +59,16 @@ describe('AppController (e2e)', () => {
                     q1: 'a1',
                 },
             });
+        await request(app.getHttpServer())
+            .post('/account/register')
+            .send({
+                tid: 'tester-c',
+                email: 'testc@no-reply.com',
+                password: 'testc',
+                question: {
+                    q1: 'a1',
+                },
+            });
     }, 60 * 1000);
     afterAll(async () => {
         await db.destroy();
@@ -211,19 +221,6 @@ describe('AppController (e2e)', () => {
             expect(req.statusCode).toBe(HttpStatus.BAD_REQUEST);
             expect(req.body.message).toBe('QUESTION_INVALIDE');
         });
-    });
-    describe('User', () => {
-        it.todo('Get Self Profile');
-        it.todo(
-            'Get Other Profile (should not include create_at, update_at, friends_total)',
-        );
-        it.todo('Get Profile Of Deleted Users');
-        it.todo('Patch Self Profile');
-        it.todo('Fail Patch Other User Profile');
-        it.todo('Ban');
-        it.todo('Fail Ban (account not exists)');
-        it.todo('Unban');
-        it.todo('Fail unban (account not exists)');
     });
 
     describe('Friend', () => {

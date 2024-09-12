@@ -47,6 +47,11 @@ export const GlobalError = {
         getCodes(Modules.GLOBAL, ErrorFrom.USER, 2),
         'INTERNAL_ERR',
     ),
+    TARGET_NOT_EXISTS: new ApiError(
+        HttpStatus.NOT_FOUND,
+        getCodes(Modules.GLOBAL, ErrorFrom.USER, 3),
+        'TARGET_NOT_EXISTS',
+    ),
 };
 
 export const AccountError = {

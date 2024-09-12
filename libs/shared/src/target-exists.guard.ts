@@ -1,4 +1,5 @@
 import { Account } from '@app/entity';
+import { GlobalError } from '@app/error';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
@@ -18,6 +19,9 @@ export class TargetExistsGuard implements CanActivate {
             where: { tid },
             select: { tid: true },
         });
-        return !isNil(accountInfo);
+        if (isNil(accountInfo)) {
+            throw GlobalError.TARGET_NOT_EXISTS;
+        }
+        return true;
     }
 }
