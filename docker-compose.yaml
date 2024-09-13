@@ -101,7 +101,10 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     ports:
       - "5672:5672"
-
+  mqui:
+    image: rabbitmq:3-management
+    ports:
+        - "15672:15672"
 networks:
   redis-cluster:
     ipam:

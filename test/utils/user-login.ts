@@ -17,3 +17,6 @@ export const userLogin = async (
     };
     return tokens[tid];
 };
+
+export const getTokens = (name: string, key: 'accessToken' | 'refreshToken') =>
+    `Bearer ${tokens[name][key]}`;

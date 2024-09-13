@@ -7,7 +7,7 @@ import {
     Reject,
 } from './dto/friend.rquest.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BlackList, Friend, Profile, Request } from '@app/entity';
+import { BlackList, Friend, Profile, PubReq, Request } from '@app/entity';
 import { Repository } from 'typeorm';
 import { ConfigureService } from '@app/configure';
 import ms from 'ms';
@@ -42,7 +42,18 @@ export class FriendsService {
         req.type = 'friend::add';
         req.meta = {};
         await this.Request.save(req);
-        await this.mq.notify('notify:request', req);
+        const pubReq: PubReq = {
+            uuid: req.uuid,
+            type: req.type,
+            source: req.source,
+            target: req.target,
+            expire_at: req.expire_at,
+            create_at: req.create_at,
+        };
+        await this.mq.send('notify:request', {
+            payload: pubReq,
+            target: req.target,
+        });
         return { rid: req.uuid };
     }
     async deleteFriend(data: DeleteFriend & { source: string }) {

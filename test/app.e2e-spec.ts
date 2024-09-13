@@ -222,12 +222,4 @@ describe('AppController (e2e)', () => {
             expect(req.body.message).toBe('QUESTION_INVALIDE');
         });
     });
-
-    describe('Pusher', () => {
-        it.todo('user-a send "hello-world" to user-b');
-        it.todo('FAIL user-a send "hello-world" to user-b (not friend)');
-        it.todo(
-            'user-a send "add friend" request to user-b, user-b should get notify::request event',
-        );
-    });
 });

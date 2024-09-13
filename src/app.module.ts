@@ -21,11 +21,13 @@ import { AutoDatabaseModule } from '@app/auto-database';
             useFactory(service: ConfigureService) {
                 return {
                     exchangeName: service.get('mq.exchangeName'),
+                    queueName: 'taco.rpc',
                     connections: [
                         {
                             login: service.get('mq.connections.login'),
                             password: service.get('mq.connections.password'),
                             host: service.get('mq.connections.host'),
+                            port: 5672,
                         },
                     ],
                 };

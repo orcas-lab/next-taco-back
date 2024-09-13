@@ -43,8 +43,8 @@ export class Request {
 }
 
 export class PubReq {
-    create_at: number;
-    expire_at: number;
+    create_at: Date;
+    expire_at: Date;
     source: string;
     target: string;
     uuid: string;

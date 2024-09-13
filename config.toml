@@ -25,7 +25,7 @@ privateKeyPath="key.pri"
 [redis]
 nodes=[{host="127.0.0.1",port=6379}]
 [mq]
-exchangeName="taco_xchange"
+exchangeName="taco.exchange"
 [mq.connections]
 login="guest"
 password="guest"
