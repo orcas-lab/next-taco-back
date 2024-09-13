@@ -6,7 +6,7 @@ import { DataSource } from 'typeorm';
 import { Profile } from '@app/entity';
 import { BanUser, UpdateUserProfileRequest } from '../src/user/dto/user.dto';
 
-describe('User', () => {
+describe('User e2e', () => {
     let app: INestApplication<any>, db: DataSource;
     beforeAll(async () => {
         const handle = await initTest();

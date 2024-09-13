@@ -7,7 +7,7 @@ import { io, Socket } from 'socket.io-client';
 import { Message } from '../src/pusher/dto/pusher.dto';
 import { useToken } from './utils/useToken';
 
-describe('Pusher', () => {
+describe('Pusher e2e', () => {
     let app: INestApplication<any>, db: DataSource;
     const sockets: Socket<any, any>[] = [];
     beforeAll(async () => {

@@ -13,7 +13,7 @@ import {
     UpdateFriend,
 } from '../src/friends/dto/friend.rquest.dto';
 
-describe('Friend', () => {
+describe('Friend e2e', () => {
     let app: INestApplication<any>, db: DataSource;
     const rids: Record<string, [string, string][]> = {};
     beforeAll(async () => {

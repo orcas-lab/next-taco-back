@@ -22,7 +22,7 @@ const drop = async () => {
     }).initialize();
     await db.dropDatabase();
 };
-describe('AppController (e2e)', () => {
+describe('Account e2e', () => {
     let app: INestApplication;
     const tokens: Record<
         string,
