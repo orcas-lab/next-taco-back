@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { initTest } from './utils/init-test';
+import { DataSource, EntityManager } from 'typeorm';
+import { clearDatabase, initTest } from './utils/init-test';
 import { userLogin } from './utils/user-login';
 import { useToken } from './utils/useToken';
 import {
@@ -16,10 +16,12 @@ import {
 describe('Friend', () => {
     let app: INestApplication<any>, db: DataSource;
     const rids: Record<string, [string, string][]> = {};
-    beforeEach(async () => {
+    beforeAll(async () => {
         const handle = await initTest();
         app = handle.app;
         db = handle.db;
+    }, 60 * 1000);
+    beforeEach(async () => {
         await request(app.getHttpServer())
             .post('/account/register')
             .send({
@@ -50,8 +52,15 @@ describe('Friend', () => {
                     q1: 'a1',
                 },
             });
+        await userLogin(app, 'tester-a', 'testa');
+        await userLogin(app, 'tester-b', 'testb');
+        await userLogin(app, 'tester-c', 'testc');
     }, 60 * 1000);
     afterEach(async () => {
+        await clearDatabase(app);
+    });
+    afterAll(async () => {
+        await db.dropDatabase();
         await db.destroy();
         await app.close();
     });
