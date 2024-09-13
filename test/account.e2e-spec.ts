@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
 import { DataSource } from 'typeorm';
 import { Profile } from '@app/entity/profile.entity';
