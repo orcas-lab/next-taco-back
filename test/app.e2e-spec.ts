@@ -82,9 +82,9 @@ describe('AppController (e2e)', () => {
             const req = await request(app.getHttpServer())
                 .post('/account/register')
                 .send({
-                    tid: 'tester-c',
-                    email: 'testc@no-reply.com',
-                    password: 'testc',
+                    tid: 'tester-d',
+                    email: 'testd@no-reply.com',
+                    password: 'testd',
                     question: {
                         q1: 'a1',
                     },
