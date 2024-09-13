@@ -17,6 +17,13 @@ jobs:
                 ports: '5672:5672'
                 definitions: '${{ github.workspace }}/.ci/definitions.json'
                 container-name: 'mqtt'
+            - uses: actions/setup-node@v4
+              with:
+                cache: 'pnpm'
+                node-version: 20.x
+            - run: pnpm i
+            - run: node setup.js
+            - run: pnpm test:e2e
     unit-test:
         runs-on: ubuntu-latest
         steps:
