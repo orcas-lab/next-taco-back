@@ -1,7 +1,7 @@
 const { createDB } = require('mysql-memory-server');
 const { RedisMemoryServer } = require('redis-memory-server');
 const { mkdirSync } = require('fs');
-async function setup() {
+async function init() {
     mkdirSync('tmp');
     mkdirSync('public');
     const db = await createDB({
@@ -31,4 +31,4 @@ Ip: ${await redis.getIp()}
     await redis.stop();
 }
 
-setup().then(() => {});
+init().then(() => {});

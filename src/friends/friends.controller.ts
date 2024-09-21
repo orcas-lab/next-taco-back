@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    DefaultValuePipe,
     Delete,
     Get,
     HttpStatus,
@@ -74,8 +75,8 @@ export class FriendsController {
     @ApiResponse({ status: HttpStatus.OK, type: GetFriendListResponse })
     async getFriendList(
         @User('tid') tid: string,
-        @Query('limit') limit: number,
-        @Query('offset') offset: number,
+        @Query('limit', new DefaultValuePipe(100)) limit: number,
+        @Query('offset', new DefaultValuePipe(0)) offset: number,
     ) {
         if (
             Number.isNaN(limit) ||

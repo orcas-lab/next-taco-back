@@ -7,7 +7,7 @@ import {
     Reject,
 } from './dto/friend.rquest.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BlackList, Friend, Profile, Request } from '@app/entity';
+import { BlackList, Friend, Profile, PubReq, Request } from '@app/entity';
 import { Repository } from 'typeorm';
 import { ConfigureService } from '@app/configure';
 import ms from 'ms';
@@ -35,16 +35,25 @@ export class FriendsService {
         req.source = data.source;
         req.target = data.target;
         const expire = this.configure.get('request.expire') ?? ms('7 days');
-        const timestamp = new Date().getTime();
-        req.expire_at = timestamp + expire;
-        req.create_at = timestamp;
-        req.update_at = timestamp;
+        req.expire_at = new Date(new Date().getTime() + expire);
         const worker_id = this.configure.get('worker_id') ?? 0;
         req.worker_id = worker_id;
         req.uuid = randomUUID();
         req.type = 'friend::add';
+        req.meta = {};
         await this.Request.save(req);
-        await this.mq.notify('notify:request', req);
+        const pubReq: PubReq = {
+            uuid: req.uuid,
+            type: req.type,
+            source: req.source,
+            target: req.target,
+            expire_at: req.expire_at,
+            create_at: req.create_at,
+        };
+        await this.mq.send('notify:request', {
+            payload: pubReq,
+            target: req.target,
+        });
         return { rid: req.uuid };
     }
     async deleteFriend(data: DeleteFriend & { source: string }) {
@@ -72,9 +81,9 @@ export class FriendsService {
             blackList.source = data.source;
             blackList.target = data.target;
             blackList.id = randomUUID();
-            const time = new Date().getTime();
-            blackList.create_at = time;
-            blackList.update_at = time;
+            // const time = new Date().getTime();
+            // blackList.create_at = time;
+            // blackList.update_at = time;
             this.BlackList.save(blackList);
         }
         return;
@@ -96,23 +105,15 @@ export class FriendsService {
             },
             skip: offset * 100,
             take: 100,
-            relations: [
-                'profile',
-                'profile.tid',
-                'profile.nick',
-                'profile.description',
-                'profile.reputation',
-                'profile.avatar'
-            ],
+            relations: ['profile'],
             select: {
                 profile: {
-                    tid: true,
-                    nick:true,
-                    description:true,
+                    nick: true,
+                    description: true,
                     reputation: true,
-                    avatar: true
-                }
-            }
+                    avatar: true,
+                },
+            },
         });
         const profile = await this.Profile.findOne({
             where: {
@@ -124,7 +125,7 @@ export class FriendsService {
         });
         return {
             friends: friends ?? [],
-            total: profile.friends_total,
+            total: Number(profile.friends_total),
             size: 100,
         };
     }
@@ -184,12 +185,12 @@ export class FriendsService {
     }
     private async addFriend(source: string, target: string) {
         const friend = new Friend();
-        const time = new Date().getTime();
         friend.source = source;
         friend.target = target;
         friend.tag = '';
         friend.nick = '';
-        await this.Friend.save(friend, { transaction: true });
+        friend.id = randomUUID();
+        await this.Friend.save(friend);
         return;
     }
     private async isRequestValide(rid: string) {
@@ -198,7 +199,7 @@ export class FriendsService {
         if (isNil(await req)) {
             return 'IS_NIL';
         }
-        const isExpired = time > (await req).expire_at;
+        const isExpired = time > (await req).expire_at.getTime();
         if (isExpired) {
             return 'IS_EXPIRED';
         }

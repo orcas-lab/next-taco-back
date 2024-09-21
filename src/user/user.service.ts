@@ -25,7 +25,7 @@ export class UserService {
         private readonly BlackList: Repository<BlackList>,
         private readonly config: ConfigureService,
     ) {}
-    getProfile(data: GetUserProfileRequest, isSelf:boolean) {
+    getProfile(data: GetUserProfileRequest, isSelf: boolean) {
         const { tid } = data;
         return this.Profile.findOne({
             where: {
@@ -34,18 +34,27 @@ export class UserService {
             select: {
                 create_at: isSelf,
                 update_at: isSelf,
-                friends_total:isSelf,
+                friends_total: isSelf,
+                blackList: isSelf,
                 tid: true,
                 nick: true,
                 avatar: true,
                 description: true,
-                reputation: true
-            }
+                reputation: true,
+            },
         });
     }
     async updateProfile(data: UpdateUserProfileRequest & { tid: string }) {
         const { tid, nick, description } = data;
-        await this.Profile.update({ tid }, { nick, description });
+        const profile = this.Profile.create();
+        profile.tid = tid;
+        if (nick !== undefined) {
+            profile.nick = nick;
+        }
+        if (description !== undefined) {
+            profile.description = description;
+        }
+        await this.Profile.save(profile);
         return;
     }
     banUser(data: BanUser & { source: string }) {
@@ -62,6 +71,15 @@ export class UserService {
             source,
             target,
         });
+    }
+    async banList(tid: string, page: number) {
+        const blackList = await this.Profile.find({
+            where: { tid },
+            select: { blackList: true },
+            take: 100,
+            skip: page * 100,
+        });
+        return blackList;
     }
     getAvatar(tid: string) {
         const ext = '.png';

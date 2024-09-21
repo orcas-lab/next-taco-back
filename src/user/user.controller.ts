@@ -43,8 +43,12 @@ export class UserController {
     @ApiQuery({ name: 'tid', type: 'string', description: 'taco user id' })
     @ApiResponse({ status: HttpStatus.OK, type: Profile })
     @Get('profile')
-    getProfile(@Query('tid') tid: string,@User('tid') tokenTid: string) {
-        return this.userService.getProfile({ tid }, tid===tokenTid);
+    @UseGuards(AuthGuard)
+    getProfile(@Query('tid') tid: string, @User('tid') tokenTid: string) {
+        return this.userService.getProfile(
+            { tid },
+            !tid ? true : tid === tokenTid,
+        );
     }
 
     @ApiOperation({
@@ -66,6 +70,13 @@ export class UserController {
     @ApiOperation({
         description: '将某个用户拉入黑名单',
     })
+    @UseGuards(AuthGuard)
+    @Get('ban')
+    @ApiBearerAuth()
+    @ApiResponse({ status: HttpStatus.OK, type: [BlackList] })
+    getBanList(@User('tid') tid: string, @Query('page') page: number) {
+        return this.userService.banList(tid, page);
+    }
     @UseGuards(AuthGuard, TargetExistsGuard)
     @Post('ban')
     @ApiBearerAuth()

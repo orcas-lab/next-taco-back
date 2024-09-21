@@ -50,6 +50,7 @@ export class AccountController {
         description: '删除指定用户, 但是需要提交该用户的问题答案',
     })
     @Delete('/')
+    @UseGuards(AuthGuard)
     async delete(@User('tid') tid: string, @Body() data: DeleteAccountRequest) {
         return this.accountService.delete({ ...data, tid });
     }

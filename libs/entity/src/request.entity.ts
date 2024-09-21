@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    Index,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Request {
@@ -18,15 +25,17 @@ export class Request {
     @Column()
     @ApiProperty()
     target: string;
-    @Column({ type: 'bigint' })
+    @Column()
     @ApiProperty()
-    expire_at: number;
-    @Column({ type: 'bigint' })
+    expire_at: Date;
+    @Column()
     @ApiProperty()
-    create_at: number;
-    @Column({ type: 'bigint' })
+    @CreateDateColumn()
+    create_at: Date;
+    @Column()
     @ApiProperty()
-    update_at: number;
+    @UpdateDateColumn()
+    update_at: Date;
     @Column({ type: 'json' })
     meta: Record<string, string>;
     @Column()
@@ -34,8 +43,8 @@ export class Request {
 }
 
 export class PubReq {
-    create_at: number;
-    expire_at: number;
+    create_at: Date;
+    expire_at: Date;
     source: string;
     target: string;
     uuid: string;

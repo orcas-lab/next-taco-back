@@ -3,7 +3,6 @@ import { AutoRedisService } from './auto-redis.service';
 import { ClusterModule, RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigureService } from '@app/configure';
 import { config } from 'dotenv';
-import { RedisMemoryServer } from 'redis-memory-server';
 config({ path: '.env' });
 
 @Module({

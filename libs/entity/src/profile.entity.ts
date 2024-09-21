@@ -1,10 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinTable,
+    ManyToMany,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import avatar from 'avatars';
+import { BlackList } from './black-list.entity';
 
 @Entity({ name: 'Profile' })
 export class Profile {
-    @PrimaryColumn()
+    @PrimaryColumn({ select: true })
     @ApiProperty()
     tid: string;
     @Column()
@@ -19,6 +28,9 @@ export class Profile {
     @Column()
     @ApiProperty()
     reputation: number;
+    @ManyToMany(() => BlackList)
+    @JoinTable()
+    blackList: BlackList[];
     @Column({ type: 'bigint', default: 0 })
     @ApiProperty()
     friends_total: number;

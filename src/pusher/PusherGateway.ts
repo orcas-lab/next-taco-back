@@ -16,9 +16,15 @@ import { PusherError } from '@app/error';
 import { WsAuthGuard } from '@app/shared/ws-auth.guard';
 import { IsFriendGuard } from '@app/shared/is-friend.guard';
 import { WsExceptionFilter } from '@app/shared/ws-exception-filter/ws-exception-filter.filter';
-import { RMQRoute, RMQValidate } from 'nestjs-rmq';
+import {
+    ExtendedMessage,
+    RMQMessage,
+    RMQRoute,
+    RMQService,
+    RMQValidate,
+} from 'nestjs-rmq';
 
-@WebSocketGateway({
+@WebSocketGateway(4000, {
     cors: {
         origin: '*',
     },
@@ -30,6 +36,7 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
     constructor(
         private readonly pusherService: PusherService,
         private readonly jwt: JwtService,
+        private readonly rmqService: RMQService,
     ) {}
     @UseGuards(WsAuthGuard, IsFriendGuard)
     @SubscribeMessage('message')
@@ -48,13 +55,17 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
     }
 
     @RMQValidate()
-    @RMQRoute('notify:request')
-    async notifyReuqest(data: RequestNotice) {
+    @RMQRoute('notify:request', { manualAck: true })
+    async notifyReuqest(
+        data: RequestNotice,
+        @RMQMessage message: ExtendedMessage,
+    ) {
         this.server.to(`${data.target}`).emit('notify:request', data);
+        this.rmqService.ack(message);
+        return {};
     }
 
     handleConnection(client: Socket) {
-        Logger.debug('Client connect');
         if (!client.handshake.headers.authorization) {
             client.emit('error', new PusherError(-1, 'INVALIDE_TOKEN'));
             client.disconnect(true);
@@ -64,7 +75,10 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
             .replace('Bearer', '')
             .trim();
         try {
-            this.jwt.verify(token, { algorithms: ['RS256'] });
+            const { tid }: { tid: string } = this.jwt.verify(token, {
+                algorithms: ['RS256'],
+            });
+            client.join(tid);
         } catch {
             client.emit('error', new PusherError(-1, 'INVALIDE_TOKEN'));
             client.disconnect(true);
