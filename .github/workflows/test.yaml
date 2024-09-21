@@ -33,9 +33,11 @@ jobs:
                 mysql version: '8.0'
                 mysql database: 'taco'
                 mysql root password: 'root'
-            - uses: mihai-dinculescu/redis-action@v1.2.0
+            - uses: chenjuneking/redis-setup-action@v1
               with:
-                redis version: 'latest'
+                version: 7
+                hostPort: 6379
+                containerPort: 6379
             - run: pnpm i
             - run: pnpm test:e2e
     unit-test:
