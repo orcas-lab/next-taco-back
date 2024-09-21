@@ -94,6 +94,9 @@
       "json",
       "ts"
     ],
+    "setupFiles": [
+        "setups.j"
+    ],
     "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
