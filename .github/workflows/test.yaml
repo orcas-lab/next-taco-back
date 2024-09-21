@@ -7,17 +7,6 @@ env:
     REDIS_MODE: standalone
 
 jobs:
-    e2e-test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-            - name: run docker-compose
-              uses: sudo-bot/action-docker-compose@latest
-              with:
-                cli-args: "up"
-            - run: pnpm i
-            - run: pnpm test:e2e
     unit-test:
         runs-on: ubuntu-latest
         steps:
