@@ -6,10 +6,10 @@ import { Friend, Message, Profile } from '@app/entity';
 import { JwtModule } from '@app/jwt';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Message, Friend, Profile]),
-        JwtModule.use(),
-    ],
-    providers: [PusherGateway, PusherService],
+  imports: [
+    TypeOrmModule.forFeature([Message, Friend, Profile]),
+    JwtModule.use(),
+  ],
+  providers: [PusherGateway, PusherService],
 })
 export class PusherModule {}

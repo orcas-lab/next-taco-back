@@ -6,16 +6,16 @@ import { Message } from '@app/entity';
 import { randomUUID } from 'crypto';
 @Injectable()
 export class PusherService {
-    constructor(
-        @InjectRepository(Message)
-        private Message: Repository<Message>,
-    ) {}
-    persistence(data: MessageDTO & { source: string }) {
-        const msg = new Message();
-        msg.sender = data.source;
-        msg.target = data.target;
-        msg.msg = data.msg;
-        msg.uuid = randomUUID();
-        return this.Message.save(msg);
-    }
+  constructor(
+    @InjectRepository(Message)
+    private Message: Repository<Message>,
+  ) {}
+  persistence(data: MessageDTO & { source: string }) {
+    const msg = new Message();
+    msg.sender = data.source;
+    msg.target = data.target;
+    msg.msg = data.msg;
+    msg.uuid = randomUUID();
+    return this.Message.save(msg);
+  }
 }

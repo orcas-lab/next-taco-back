@@ -7,8 +7,8 @@ import { BlackList } from '@app/entity/black-list.entity';
 import { Account } from '@app/entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Account, Profile, BlackList])],
-    controllers: [UserController],
-    providers: [UserService],
+  imports: [TypeOrmModule.forFeature([Account, Profile, BlackList])],
+  controllers: [UserController],
+  providers: [UserService],
 })
 export class UserModule {}

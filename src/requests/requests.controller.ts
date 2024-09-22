@@ -8,14 +8,14 @@ import { PubReq } from '@app/entity';
 @UseGuards(AuthGuard)
 @Controller('requests')
 export class RequestsController {
-    constructor(private readonly requestsService: RequestsService) {}
+  constructor(private readonly requestsService: RequestsService) {}
 
-    @ApiOperation({
-        deprecated: true,
-    })
-    @ApiResponse({ status: HttpStatus.OK, type: [PubReq] })
-    @Get()
-    findAll(@User('tid') tid: string) {
-        return this.requestsService.findAll(tid);
-    }
+  @ApiOperation({
+    deprecated: true,
+  })
+  @ApiResponse({ status: HttpStatus.OK, type: [PubReq] })
+  @Get()
+  findAll(@User('tid') tid: string) {
+    return this.requestsService.findAll(tid);
+  }
 }
