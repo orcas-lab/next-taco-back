@@ -6,6 +6,7 @@ import { ConfigureModule } from '@app/configure';
 import { JwtModule } from '@app/jwt';
 import { mockRepository, MockRepositoryType } from '@app/mock';
 import { Repository } from 'typeorm';
+import { KeysService } from '@app/keys';
 
 describe('PusherService', () => {
   let service: PusherService;
@@ -18,6 +19,12 @@ describe('PusherService', () => {
         {
           provide: getRepositoryToken(Message),
           useValue: mockRepository<typeof Message>(),
+        },
+        {
+          provide: KeysService,
+          useValue: {
+            sign: () => '',
+          },
         },
       ],
     }).compile();
@@ -37,6 +44,7 @@ describe('PusherService', () => {
         source: '',
         target: '',
         msg: '',
+        senderSign: '',
       }),
     ).resolves.toBeDefined();
   });

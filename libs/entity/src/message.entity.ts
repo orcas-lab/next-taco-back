@@ -10,4 +10,8 @@ export class Message {
   target: string;
   @Column()
   msg: string;
+  @Column()
+  sender_sign: string;
+  @Column()
+  server_sign: string;
 }

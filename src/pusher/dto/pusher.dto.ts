@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNotEmptyObject,
   IsObject,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -12,6 +13,9 @@ export class Message {
   target: string;
   @IsString()
   msg: string;
+  @IsString()
+  @IsOptional()
+  senderSign?: string;
 }
 
 export class Notice {

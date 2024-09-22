@@ -7,7 +7,7 @@ const map = new Map();
 jest.mock('node:fs', () => {
   return {
     existsSync: () => false,
-    mkdirSync: () => { },
+    mkdirSync: () => {},
     writeFileSync: (file: string, content: string) => {
       map.set(file, content);
       return content;

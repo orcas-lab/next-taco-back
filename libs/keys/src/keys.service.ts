@@ -9,7 +9,7 @@ export class KeysService {
     private readonly privateKey: string,
     @Inject(PUB)
     private readonly publicKey: string,
-  ) { }
+  ) {}
   sign(data: any) {
     const sign = createSign('RSA-SHA256');
     const signature = sign.update(data).sign(this.privateKey, 'hex');
