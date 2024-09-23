@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "husky",
+    "prepare": "husky",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
@@ -20,10 +20,16 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles --forceExit",
     "test:vitest": "vitest",
-    "precommit": "lint-staged"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.ts": "pnpm lint && pnpm format"
+    "*.ts": [
+      "pnpm lint",
+      "pnpm format"
+    ],
+    "*.js": [
+      "pnpm lint"
+    ]
   },
   "husky": {
     "hooks": {
