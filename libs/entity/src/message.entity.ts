@@ -10,8 +10,8 @@ export class Message {
   target: string;
   @Column()
   msg: string;
-  @Column()
+  @Column({ default: '' })
   sender_sign: string;
-  @Column()
+  @Column({ default: '' })
   server_sign: string;
 }

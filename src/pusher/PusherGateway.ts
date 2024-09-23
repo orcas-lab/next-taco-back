@@ -46,10 +46,8 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
     @WsUser('tid') source: string,
   ) {
     const msg = await this.pusherService.persistence({ ...data, source });
-    return {
-      event: 'message',
-      data: msg,
-    };
+    this.server.to(data.target).emit('message', msg);
+    return {};
   }
 
   @RMQValidate()
@@ -63,7 +61,7 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
     return {};
   }
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     if (!client.handshake.headers.authorization) {
       client.emit('error', new PusherError(-1, 'INVALIDE_TOKEN'));
       client.disconnect(true);
@@ -76,7 +74,7 @@ export class PusherGateway implements OnGatewayConnection<Socket> {
       const { tid }: { tid: string } = this.jwt.verify(token, {
         algorithms: ['RS256'],
       });
-      client.join(tid);
+      await client.join(tid);
     } catch {
       client.emit('error', new PusherError(-1, 'INVALIDE_TOKEN'));
       client.disconnect(true);

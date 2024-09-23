@@ -12,7 +12,7 @@ import { PRI, PUB } from './constant';
 export class KeysModule {
   private static logger: Logger = new Logger('KeyModule');
   static use(global: boolean = false): DynamicModule {
-    const root = resolve(__dirname);
+    const root = resolve(process.cwd());
     const data = join(root, 'data', 'keys');
     if (fs.existsSync(data)) {
       const priKey = fs.readFileSync(join(data, 'pri.key'));
@@ -36,6 +36,9 @@ export class KeysModule {
     }
     if (!fs.existsSync(join(root, 'data'))) {
       fs.mkdirSync(join(root, 'data'));
+    }
+    if (!fs.existsSync(data)) {
+      fs.mkdirSync(data);
     }
     const { privateKey, publicKey } = generateKeyPairSync('ec', {
       namedCurve: 'sect239k1',

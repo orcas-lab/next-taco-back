@@ -111,30 +111,32 @@ describe('Pusher e2e', () => {
       extraHeaders: {
         authorization: getTokens('tester-a', 'accessToken'),
       },
+      autoConnect: false,
     });
     const b = io('http://localhost:4000', {
       extraHeaders: {
         authorization: `Bearer ${bToken}`,
       },
+      autoConnect: false,
     });
     sockets.push(a);
     sockets.push(b);
     a.connect();
     b.connect();
-    const errorCallback = jest.fn();
-    const msgCallback = jest.fn();
-    a.on('error', errorCallback);
-    b.on('msg', msgCallback);
     a.emit('message', {
       target: 'tester-b',
       msg: 'hello-world',
     } as Message);
+    const errorCallback = jest.fn();
+    const msgCallback = jest.fn();
+    a.on('error', errorCallback);
+    b.on('message', msgCallback);
     return new Promise((resolve) => {
       setTimeout(() => {
         expect(errorCallback).not.toHaveBeenCalled();
         expect(msgCallback).toHaveBeenCalled();
         resolve(true);
-      }, 2000);
+      }, 1000);
     });
   });
   it('tester-a send "add friend" request to tester-c, should trigger tester-c "notify:request" event', async () => {
