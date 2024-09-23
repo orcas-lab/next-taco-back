@@ -5,7 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@app/shared/http-exception.filter';
 import { WsExceptionFilter } from '@app/shared/ws-exception-filter/ws-exception-filter.filter';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+    logger: ['log', 'verbose', 'debug', 'warn'],
+  });
   const conf = new DocumentBuilder()
     .setTitle('Taco')
     .setVersion('1.0')

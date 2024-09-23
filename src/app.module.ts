@@ -12,6 +12,7 @@ import { RMQModule } from 'nestjs-rmq';
 import { join, resolve } from 'path';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { AutoDatabaseModule } from '@app/auto-database';
+import { KeysModule } from '@app/keys';
 
 @Module({
   imports: [
@@ -30,6 +31,22 @@ import { AutoDatabaseModule } from '@app/auto-database';
               port: 5672,
             },
           ],
+        };
+      },
+    }),
+    KeysModule.registerAsync({
+      inject: [ConfigureService],
+      useFactory(service: ConfigureService) {
+        const type = service.get('keys.type') ?? 'ec';
+        return {
+          type,
+          ec:
+            type !== 'ec'
+              ? null
+              : {
+                  nameCurved: service.get('keys.ec.nameCurved') ?? 'sect239k1',
+                },
+          rsa: type !== 'rsa' ? null : service.get('keys.rsa'),
         };
       },
     }),

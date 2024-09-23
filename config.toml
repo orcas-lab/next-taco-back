@@ -1,32 +1,35 @@
 [api]
-prefix='/api'
+prefix = '/api'
 [asset]
 [asset.avatar]
-fs_path="./public"
-ext=".png"
+fs_path = "./public"
+ext = ".png"
 
 [db]
-host="localhost"
-port=3306
-username="root"
-password="root"
-database="taco"
-synchronize=true
-autoLoadEntities=true
+host = "localhost"
+port = 3306
+username = "root"
+password = "root"
+database = "taco"
+synchronize = true
+autoLoadEntities = true
 
 [bcrypt]
-salt="VG!ha(Rwa_xurpzyB4"
-cost=12
+salt = "VG!ha(Rwa_xurpzyB4"
+cost = 12
 
 [jwt]
-expire='7d'
-publicKeyPath="key.pub"
-privateKeyPath="key.pri"
+expire = '7d'
+publicKeyPath = "key.pub"
+privateKeyPath = "key.pri"
 [redis]
-nodes=[{host="127.0.0.1",port=6379}]
+nodes = [{ host = "127.0.0.1", port = 6379 }]
 [mq]
-exchangeName="taco.exchange"
+exchangeName = "taco.exchange"
 [mq.connections]
-login="guest"
-password="guest"
-host="localhost"
+login = "guest"
+password = "guest"
+host = "localhost"
+
+[keys]
+type = "rsa"

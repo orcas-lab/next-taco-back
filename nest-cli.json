@@ -120,15 +120,6 @@
       "compilerOptions": {
         "tsConfigPath": "libs/auto-database/tsconfig.lib.json"
       }
-    },
-    "keys": {
-      "type": "library",
-      "root": "libs/keys",
-      "entryFile": "index",
-      "sourceRoot": "libs/keys/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/keys/tsconfig.lib.json"
-      }
     }
   }
 }
