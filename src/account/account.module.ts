@@ -8,15 +8,15 @@ import { Profile } from '@app/entity/profile.entity';
 import { AvatarModule } from '@app/avatar';
 
 @Module({
-    imports: [
-        ConfigureModule.forRoot('config.toml'),
-        TypeOrmModule.forFeature([Account, Profile]),
-        AvatarModule.use({
-            width: 200,
-            height: 200,
-        }),
-    ],
-    controllers: [AccountController],
-    providers: [AccountService],
+  imports: [
+    ConfigureModule.forRoot('config.toml'),
+    TypeOrmModule.forFeature([Account, Profile]),
+    AvatarModule.use({
+      width: 200,
+      height: 200,
+    }),
+  ],
+  controllers: [AccountController],
+  providers: [AccountService],
 })
 export class AccountModule {}

@@ -14,47 +14,45 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { AutoDatabaseModule } from '@app/auto-database';
 
 @Module({
-    imports: [
-        ConfigureModule.forRoot('config.toml'),
-        RMQModule.forRootAsync({
-            inject: [ConfigureService],
-            useFactory(service: ConfigureService) {
-                return {
-                    exchangeName: service.get('mq.exchangeName'),
-                    queueName: 'taco.rpc',
-                    connections: [
-                        {
-                            login: service.get('mq.connections.login'),
-                            password: service.get('mq.connections.password'),
-                            host: service.get('mq.connections.host'),
-                            port: 5672,
-                        },
-                    ],
-                };
+  imports: [
+    ConfigureModule.forRoot('config.toml'),
+    RMQModule.forRootAsync({
+      inject: [ConfigureService],
+      useFactory(service: ConfigureService) {
+        return {
+          exchangeName: service.get('mq.exchangeName'),
+          queueName: 'taco.rpc',
+          connections: [
+            {
+              login: service.get('mq.connections.login'),
+              password: service.get('mq.connections.password'),
+              host: service.get('mq.connections.host'),
+              port: 5672,
             },
-        }),
-        AutoDatabaseModule,
-        AutoRedisModule.use('config.toml'),
-        JwtModule.use(),
-        AccountModule,
-        UserModule,
-        FriendsModule,
-        PusherModule,
-        RequestsModule,
-    ],
+          ],
+        };
+      },
+    }),
+    AutoDatabaseModule,
+    AutoRedisModule.use('config.toml'),
+    JwtModule.use(),
+    AccountModule,
+    UserModule,
+    FriendsModule,
+    PusherModule,
+    RequestsModule,
+  ],
 })
 export class AppModule {
-    onModuleInit() {
-        const root = resolve(__dirname);
-        const dataRoot = join(root, 'data');
-        if (existsSync(dataRoot)) {
-            Logger.warn(
-                'dist/data exists, if you want restart server please remove',
-            );
-            return;
-        } else {
-            mkdirSync(dataRoot, { recursive: true });
-        }
-        writeFileSync(join(dataRoot, 'lock.file'), '');
+  onModuleInit() {
+    const root = resolve(__dirname);
+    const dataRoot = join(root, 'data');
+    if (existsSync(dataRoot)) {
+      Logger.warn('dist/data exists, if you want restart server please remove');
+      return;
+    } else {
+      mkdirSync(dataRoot, { recursive: true });
     }
+    writeFileSync(join(dataRoot, 'lock.file'), '');
+  }
 }

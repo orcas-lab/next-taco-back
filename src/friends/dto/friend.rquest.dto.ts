@@ -3,60 +3,60 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AddFriend {
-    @IsString()
-    @ApiProperty()
-    target: string;
+  @IsString()
+  @ApiProperty()
+  target: string;
 }
 
 export class AddFriendResponse {
-    @ApiProperty()
-    rid: string;
+  @ApiProperty()
+  rid: string;
 }
 
 export class DeleteFriend {
-    @IsString()
-    @ApiProperty()
-    target: string;
-    @IsString()
-    @ApiProperty()
-    type: 'single' | 'both';
-    @IsBoolean()
-    @IsOptional()
-    @ApiProperty()
-    ban?: boolean;
+  @IsString()
+  @ApiProperty()
+  target: string;
+  @IsString()
+  @ApiProperty()
+  type: 'single' | 'both';
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty()
+  ban?: boolean;
 }
 
 export class UpdateFriend {
-    @IsString()
-    @ApiProperty()
-    target: string;
-    @IsString()
-    @IsOptional()
-    @ApiProperty()
-    tag?: string;
-    @IsString()
-    @IsOptional()
-    @ApiProperty()
-    nick?: string;
+  @IsString()
+  @ApiProperty()
+  target: string;
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  tag?: string;
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  nick?: string;
 }
 
 export class Accept {
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    rid: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  rid: string;
 }
 
 export class Reject {
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    rid: string;
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  rid: string;
 }
 
 export class GetFriendListResponse {
-    @ApiProperty({ type: [Friend] })
-    friends: Friend[];
-    @ApiProperty()
-    total: number;
+  @ApiProperty({ type: [Friend] })
+  friends: Friend[];
+  @ApiProperty()
+  total: number;
 }

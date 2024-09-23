@@ -102,6 +102,12 @@
       ],
       "@app/auto-database/*": [
         "libs/auto-database/src/*"
+      ],
+      "@app/keys": [
+        "libs/keys/src"
+      ],
+      "@app/keys/*": [
+        "libs/keys/src/*"
       ]
     }
   }

@@ -3,18 +3,18 @@ import { RequestsController } from '../requests.controller';
 import { RequestsService } from '../requests.service';
 
 describe.skip('RequestsController', () => {
-    let controller: RequestsController;
+  let controller: RequestsController;
 
-    beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            controllers: [RequestsController],
-            providers: [RequestsService],
-        }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [RequestsController],
+      providers: [RequestsService],
+    }).compile();
 
-        controller = module.get<RequestsController>(RequestsController);
-    });
+    controller = module.get<RequestsController>(RequestsController);
+  });
 
-    it('should be defined', () => {
-        expect(controller).toBeDefined();
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
 });

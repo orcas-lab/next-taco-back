@@ -8,3 +8,4 @@ mysql
 .env
 .vscode
 public
+!libs/keys
