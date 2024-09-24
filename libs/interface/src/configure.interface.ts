@@ -1,4 +1,4 @@
-import { RSAKeyPairOptions } from 'crypto';
+import { ECKeyPairOptions, RSAKeyPairOptions } from 'crypto';
 import { ClusterNode, ClusterOptions } from 'ioredis';
 
 export interface ConfigOption {
@@ -50,9 +50,7 @@ export interface ConfigOption {
   worker_id?: number;
   keys: {
     type: 'ec' | 'rsa';
-    ec?: {
-      nameCurved: string;
-    } | null;
+    ec?: ECKeyPairOptions<'pem', 'pem'> | null;
     rsa?: RSAKeyPairOptions<'pem', 'pem'> | null;
   };
 }
