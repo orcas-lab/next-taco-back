@@ -19,7 +19,19 @@ describe('KeysService', () => {
   let service: KeysService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KeysModule.use(false)],
+      imports: [
+        KeysModule.registerAsync({
+          imports: [],
+          useFactory: () => {
+            return {
+              type: 'ec',
+              ec: {
+                nameCurved: 'P-521',
+              },
+            };
+          },
+        }),
+      ],
     }).compile();
 
     service = module.get<KeysService>(KeysService);
